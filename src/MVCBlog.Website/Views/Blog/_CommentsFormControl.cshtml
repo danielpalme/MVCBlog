@@ -1,0 +1,24 @@
+@model MVCBlog.Core.Entities.BlogEntryComment
+
+<div class="form-group">
+    @Html.LabelFor(m => m.Name)
+    @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.Email)
+    @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.Homepage)
+    @Html.TextBoxFor(m => m.Homepage, new { @class = "form-control" })
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.Comment)
+    @Html.TextAreaFor(m => m.Comment, new { rows = 7, @class = "form-control" })
+</div>
+<div class="form-group">
+    @Html.SpamProtectionTimeStamp()
+    @Html.AntiForgeryToken()
+    <input id="submitCommentForm" type="submit" value="@Common.Submit" class="btn btn-primary" />
+    @Html.ValidationMessage("submit")
+</div>

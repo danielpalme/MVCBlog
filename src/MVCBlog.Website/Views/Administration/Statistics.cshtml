@@ -1,0 +1,74 @@
+@model MVCBlog.Website.Models.OutputModels.Administration.Downloads
+
+@section ScriptContent {
+    <script type="text/javascript" src="@Links.Scripts.raphael_min_js"></script>
+    <script type="text/javascript" src="@Links.Scripts.popup_js"></script>
+    <script type="text/javascript" src="@Links.Scripts.feedstatisticschart_js"></script>
+}
+
+<h2>@Common.Blog</h2>
+<table class="table table-bordered table-hover">
+    <tr class="active">
+        <th>@Common.Post</th>
+        <th>@Common.Visits</th>
+        <th>@Common.File</th>
+        <th>@Common.Downloads</th>
+    </tr>
+
+    @foreach (var item in this.Model.BlogEntries)
+    {
+        <tr>
+            <td>@Html.ActionLink(item.Header, item.Url, MVC.Blog.Name)</td>
+            <td>@item.Visits</td>
+            <td>
+                @foreach (var file in item.BlogEntryFiles)
+                {
+                    @file.Name<text>.</text>@file.Extension<br />
+                }
+            </td>
+            <td>
+                @foreach (var file in item.BlogEntryFiles)
+                {
+                    @file.Counter<br />
+                }
+            </td>
+        </tr>
+    }
+</table>
+
+<br />
+
+<h2>@Common.RSSReaders</h2>
+<table id="data">
+    <tfoot>
+        <tr>
+            @foreach (var day in this.Model.FeedStatistics)
+            {
+                <th>@day.Key.ToShortDateString()</th>
+            }
+        </tr>
+    </tfoot>
+    <tbody>
+        <tr>
+            @foreach (var day in this.Model.FeedStatistics)
+            {
+                <td>@day.Sum(f => f.Users)</td>
+            }
+        </tr>
+        <tr>
+            @foreach (var day in this.Model.FeedStatistics)
+            {
+                string aggregators = string.Join("\n", day.Where(f => f.Identifier == null).Select(f => f.Application + ": " + f.Users));
+                <td>
+                    @aggregators
+
+                    @if (day.Any(f => f.Identifier != null))
+                    {
+                        @Common.SingleUsers<text>:</text> @day.Where(f => f.Identifier != null).Sum(f => f.Users)
+                    }
+                </td>
+            }
+        </tr>
+    </tbody>
+</table>
+<div id="holder" style="height: 300px; width: 100%;"></div>

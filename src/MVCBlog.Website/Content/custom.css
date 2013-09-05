@@ -1,0 +1,31 @@
+body {
+    padding-top: 80px;
+    padding-bottom: 40px;
+}
+
+.rss {
+    height: 25px;
+    width: 25px;
+    background: url('../gx/rss.png') no-repeat;
+    position: relative;
+    top: 7px;
+    left: 15px;
+}
+
+.avatar {
+    margin: 0 8px 8px 0;
+}
+
+.picture {
+  float: left;
+  margin-right: 20px;
+  margin-bottom: 5px;
+}
+
+.form-control-inline {
+    display: inline-block;
+    width: inherit;
+}
+
+.input-validation-error{border-color:#c00;background-color:#fee}
+.field-validation-error{color:#c00}

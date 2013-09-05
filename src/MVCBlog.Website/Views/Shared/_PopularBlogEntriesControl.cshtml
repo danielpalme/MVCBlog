@@ -1,0 +1,10 @@
+@model IEnumerable<MVCBlog.Core.Entities.BlogEntry>
+
+<div>
+    <ul class="list-unstyled">
+        @foreach (var blogEntry in this.Model)
+        { 
+            <li>@Html.ActionLink(blogEntry.Header, blogEntry.Url)</li>
+        }
+    </ul>
+</div>

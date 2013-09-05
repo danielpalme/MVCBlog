@@ -1,0 +1,41 @@
+@model MVCBlog.Website.Models.OutputModels.Blog.BlogEntryDetail
+
+<br />
+<div class="well">    
+    <div id="printing" class="pull-right">
+        <script type="text/javascript">
+            /* <![CDATA[ */
+            document.write('<a href="#" title="@Common.Print" class="printicon"><i class="glyphicon glyphicon-print"></i><\/a>');
+            /* ]]> */
+        </script>
+    </div>
+    <div>
+        <i class="glyphicon glyphicon-tags"></i>
+        <span class="bold">@Common.Tags</span>:
+        @{
+            string separator = ", ";
+            var tags = this.Model.BlogEntry.Tags.Select(t => t.Name).OrderBy(t => t).ToArray();
+        }
+        @for (int i = 0; i < tags.Length; i++)
+        {
+            if (i == tags.Length - 1)
+            {
+                separator = string.Empty;
+            }
+   
+            @Html.ActionLink(tags[i], MVC.Blog.Index(tags[i], string.Empty, null))@separator
+        }
+    </div>
+</div>
+
+@if (this.Model.RelatedBlogEntries.Length > 0)
+{
+    <hr />
+    <h2>@Common.RelatedPosts</h2>
+    <ul class="unstyled">
+        @foreach (var blogEntry in this.Model.RelatedBlogEntries)
+        {
+            <li>@Html.ActionLink(blogEntry.Header, blogEntry.Url)</li>
+        }
+    </ul>
+}

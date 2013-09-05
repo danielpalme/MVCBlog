@@ -1,0 +1,55 @@
+﻿@model MVCBlog.Website.Models.OutputModels.Blog.IndexModel
+
+@{
+    Layout = "~/Views/Shared/Sidebar.Layout.cshtml";
+}
+
+@section HeaderContent {
+    <link rel="canonical" href="@this.Request.Url.GetLeftPart(UriPartial.Authority)@Url.Content("~/")" />
+}
+
+@section HeroUnit {
+    @if (!this.Request.IsAuthenticated && !this.Model.Entries.Any())
+    {
+        <div class="jumbotron">
+            <h1>MVC Blog</h1>
+            <p>@Common.HeroText</p>
+            <p>@Html.ActionLink(@Common.Login, MVC.Administration.Index(), new { @class = "btn btn-primary btn-large" })</p>
+        </div>
+    }
+}
+
+@if (!string.IsNullOrEmpty(this.Model.Tag) || !string.IsNullOrEmpty(this.Model.Search))
+{
+    <div class="well">
+        @if (!string.IsNullOrEmpty(this.Model.Tag))
+        {
+            <i class="glyphicon glyphicon-tag"></i>
+            @Common.Tag<text>: @this.Model.Tag</text> 
+        }
+        else if (!string.IsNullOrEmpty(this.Model.Search))
+        {
+            <i class="glyphicon glyphicon-search"></i>
+            @Common.Search<text>: @this.Model.Search</text>
+        }
+    </div>
+}
+
+@if (!this.Model.Entries.Any())
+{
+    @Common.NoData
+}
+else
+{
+    foreach (var entry in this.Model.Entries)
+    {
+        <h2>@Html.ActionLink(entry.Header, entry.Url)</h2>
+         @:<article>
+                Html.RenderPartial(MVC.Blog.Views._BlogEntryHeaderControl, entry);
+                @Html.Raw(entry.ShortContent);
+                <p>@Html.ActionLink(Common.Continue, entry.Url)</p>
+         @:</article>
+    }
+
+    Html.RenderPartial(MVC.Blog.Views._PagingControl, this.Model);
+}

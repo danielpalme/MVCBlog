@@ -1,0 +1,15 @@
+@model IEnumerable<MVCBlog.Core.Entities.Image>
+
+<form action="@Url.Action(MVC.Administration.ImageUpload())" method="post" enctype="multipart/form-data">
+    <h2>@Common.Upload</h2>
+    <div class="form-group">
+        <input type="file" name="file" id="file" />
+    </div>
+    <button type="submit" class="btn btn-primary">@Common.Upload</button>
+</form>
+    
+<h2>@Common.Images</h2>
+@foreach (var image in this.Model)
+{
+    <a class="lightbox" href="@Url.Content(image.RelativePath)" rel="screenshots"><img src="@Url.Content(image.RelativePath)" alt="@image.Name" title="@image.Name" /></a>
+}

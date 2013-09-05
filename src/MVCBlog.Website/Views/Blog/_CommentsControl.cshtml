@@ -1,0 +1,72 @@
+@model MVCBlog.Website.Models.OutputModels.Blog.BlogEntryDetail
+
+<a id="comments"></a>
+<div id="commentscontainer" class="hidden-print">
+    @if (!this.Model.HideNewCommentsForm)
+    {
+        <hr />
+        <h2>@Common.NewComment</h2>
+
+        using (Html.BeginForm(this.Model.BlogEntry.Url, MVC.Blog.Name, FormMethod.Post, new { id = "commentForm" }))
+        {
+            Html.RenderPartial(MVC.Blog.Views._CommentsFormControl, new MVCBlog.Core.Entities.BlogEntryComment());
+        }
+    }
+
+    <hr />
+    <h2>@Common.Comments</h2>
+    @{
+        int counter = 0;
+    }
+
+    @if (!this.Model.BlogEntry.BlogEntryComments.Any())
+    {
+        <p>@Common.NoComments</p>
+    }
+
+    @foreach (var comment in this.Model.BlogEntry.BlogEntryComments.OrderBy(c => c.Created))
+    {
+        counter++;
+        string id = "comment" + counter.ToString();
+
+        string cssClass = "text-info";
+        if (comment.AdminPost)
+        {
+            cssClass = "label label-info";
+        }
+
+        <div>
+            <a id="@id"></a>
+            @if (!string.IsNullOrEmpty(comment.Email))
+            {
+                <img class="avatar pull-left" alt="@Html.Encode(comment.Name)" src="http://www.gravatar.com/avatar/@comment.Email.ToLowerInvariant().EncryptMD5().ToLowerInvariant()?d=@Url.Encode(this.Request.Url.GetLeftPart(UriPartial.Authority) + @Links.gx.avatar_png)" />
+            }
+            else
+            {
+                <img class="avatar pull-left" alt="@Html.Encode(comment.Name)" src="@Links.gx.avatar_png" />
+            }
+
+            <p><span class="@cssClass">@comment.Name</span><br />
+            <small>
+                @comment.Created.ToShortDateString()
+                @if (!string.IsNullOrEmpty(comment.Homepage))
+                {
+                    <text>|</text>
+                    @comment.Homepage
+                }
+                @if (this.Request.IsAuthenticated)
+                { 
+                    <text>|</text>
+                    @Html.ActionLink(Common.Delete, MVC.Blog.DeleteComment(comment.Id), new { onclick = "if (!confirm('" + Common.DeleteCommentConfirmation + "')) { return false;}" })
+                }
+             </small></p>
+
+            @Html.Raw(Html.Encode(comment.Comment).Replace("\n", "<br />"))
+        </div>
+        
+        if (counter < this.Model.BlogEntry.BlogEntryComments.Count)
+        {
+            <hr />
+        }
+    }
+</div>

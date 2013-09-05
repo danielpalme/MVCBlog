@@ -1,0 +1,9 @@
+@model IEnumerable<MVCBlog.Core.Entities.BlogEntryFile>
+
+@foreach (var file in this.Model)
+{
+    <i class="glyphicon glyphicon-download"></i> @Html.ActionLink(file.Name + "." + file.Extension, MVC.Blog.Download(file.Id)) <text>- </text> @Common.Downloads<text>:</text>
+    @file.Counter<text> </text>
+    @Html.ActionLink(Common.Delete, MVC.Administration.FileDelete(file.Id))
+    <br />
+}

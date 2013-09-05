@@ -1,0 +1,18 @@
+@model IEnumerable<Palmmedia.Common.Net.PingBack.PingBackResult>
+
+<table class="table table-bordered table-hover">
+    <tr class="active">
+        <th>@Common.URL</th>
+        <th>@Common.Success</th>
+        <th>@Common.ErrorPingback</th>
+    </tr>
+
+@foreach (var item in Model)
+{
+    <tr>
+        <td>@item.Url</td>
+        <td>@item.Success</td>
+        <td>@item.Message</td>
+    </tr>
+}
+</table>

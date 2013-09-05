@@ -1,0 +1,12 @@
+@model MVCBlog.Website.Models.OutputModels.Blog.BlogEntryDetail
+
+@if (this.Model.BlogEntry.BlogEntryPingbacks.Count > 0)
+{
+    <hr />
+    <h2>@Common.Pingbacks</h2>
+    
+     foreach (var pingback in this.Model.BlogEntry.BlogEntryPingbacks.OrderBy(c => c.Created))
+     {
+         <a href="@pingback.Homepage">@pingback.Homepage</a>
+     }
+}

@@ -1,0 +1,10 @@
+﻿@if (Request.IsAuthenticated)
+{
+    @Html.ActionLink(@Common.Management, MVC.Administration.Index())
+    <text>|</text>
+    @Html.ActionLink(@Common.Logout, MVC.Login.Logout())
+}
+else
+{
+    @Html.ActionLink(@Common.Login, MVC.Administration.Index())
+}

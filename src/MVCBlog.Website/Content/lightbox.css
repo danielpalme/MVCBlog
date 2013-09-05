@@ -1,0 +1,127 @@
+#lightbox{
+    position: absolute;
+    left: 0;
+    width: 100%;
+    z-index: 100;
+    text-align: center;
+    line-height: 0;
+    }
+
+#lightbox a img{ border: none; }
+
+#outerImageContainer{
+    position: relative;
+    background-color: #fff;
+    width: 250px;
+    height: 250px;
+    margin: 0 auto;
+    }
+
+#imageContainer{
+    padding: 10px;
+    }
+
+#loading{
+    position: absolute;
+    top: 40%;
+    left: 0%;
+    height: 25%;
+    width: 100%;
+    text-align: center;
+    line-height: 0;
+    }
+#hoverNav{
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 10;
+    }
+#imageContainer>#hoverNav{ left: 0;}
+#hoverNav a{ outline: none;}
+
+#prevLink, #nextLink{
+    width: 49%;
+    height: 100%;
+    background: transparent url(../gx/lightbox/blank.gif) no-repeat; /* Trick IE into showing hover */
+    display: block;
+    }
+#prevLink { left: 0; float: left;}
+#nextLink { right: 0; float: right;}
+#prevLink:hover, #prevLink:visited:hover { background: url(../gx/lightbox/prev.gif) left 50% no-repeat; }
+#nextLink:hover, #nextLink:visited:hover { background: url(../gx/lightbox/next.gif) right 50% no-repeat; }
+
+/*** START : next / previous text links ***/
+#nextLinkText, #prevLinkText{
+font-weight:bold;
+text-decoration: none;
+}
+#nextLinkText{
+padding-left: 20px;
+}
+#prevLinkText{
+padding-right: 20px;
+}
+/*** END : next / previous text links ***/
+/*** START : added padding when navbar is on top ***/
+
+.ontop #imageData {
+    padding-top: 5px;
+}
+
+/*** END : added padding when navbar is on top ***/
+
+#imageDataContainer{
+    font: 10px Verdana, Helvetica, sans-serif;
+    background-color: #fff;
+    margin: 0 auto;
+    line-height: 1.4em;
+    }
+
+#imageData{
+    padding:0 10px;
+    }
+#imageData #imageDetails{ width: 70%; float: left; text-align: left; }	
+#imageData #caption{ font-weight: bold;	}
+#imageData #numberDisplay{ display: block; clear: left; padding-bottom: 1.0em;	}
+#imageData #bottomNavClose{ width: 66px; float: right;  padding-bottom: 0.7em;	}
+#imageData #helpDisplay {clear: left; float: left; display: block; }
+
+#overlay{
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 90;
+    width: 100%;
+    height: 500px;
+    background-color: #000;
+    filter:alpha(opacity=60);
+    -moz-opacity: 0.6;
+    opacity: 0.6;
+    display: none;
+    }
+    
+
+.clearfix:after {
+    content: "."; 
+    display: block; 
+    height: 0; 
+    clear: both; 
+    visibility: hidden;
+    }
+
+* html>body .clearfix {
+    display: inline-block; 
+    width: 100%;
+    }
+
+* html .clearfix {
+    /* Hides from IE-mac \*/
+    height: 1%;
+    /* End hide from IE-mac */
+    }	
+
+#lightboxIframe {
+    display: none;
+}	

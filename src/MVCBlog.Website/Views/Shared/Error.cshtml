@@ -1,0 +1,9 @@
+﻿@model System.Web.Mvc.HandleErrorInfo
+
+<p>
+    @Common.Error
+</p>
+@if (this.Request.IsAuthenticated && this.Model != null && this.Model.Exception != null)
+{
+    @Html.Raw(Html.Encode(this.Model.Exception.ToString()).Replace("\n", "<br />"))
+}

@@ -1,0 +1,28 @@
+﻿@{
+    Layout = "~/Views/Shared/Site.Layout.cshtml";
+}
+
+@section HeaderContent {
+    @RenderSection("HeaderContent", false)
+}
+
+@section ScriptContent {
+    @RenderSection("ScriptContent", false)
+}
+
+@section HeroUnit {
+    @RenderSection("HeroUnit", false)
+}
+
+<div class="row">
+    <div class="col-md-9">
+         @RenderBody()
+    </div>
+    <div class="col-md-3">
+        <h3>@Common.Tags</h3>
+        @{Html.RenderAction(MVC.Blog.Tags());}
+
+        <h3>@Common.PopularPosts</h3>
+        @{Html.RenderAction(MVC.Blog.PopularBlogEntries());}
+    </div>
+</div>

@@ -1,0 +1,36 @@
+@model MVCBlog.Website.Models.OutputModels.Blog.BlogEntryDetail
+
+@{
+    Layout = "~/Views/Shared/Sidebar.Layout.cshtml";
+}
+
+<article>
+@{Html.RenderPartial(MVC.Blog.Views._BlogEntryHeaderControl, this.Model.BlogEntry);}
+@Html.Raw(this.Model.BlogEntry.ShortContent)
+@if (this.Model.BlogEntry.Content != null)
+{
+    @Html.Raw(this.Model.BlogEntry.Content)
+}
+
+@if (this.Model.BlogEntry.BlogEntryFiles.Count > 0)
+{
+    <h2>@Common.Downloads</h2>
+    <p>
+        @foreach (var file in this.Model.BlogEntry.BlogEntryFiles)
+        {
+            <i class="glyphicon glyphicon-download"></i> @Html.ActionLink(file.Name + "." + file.Extension, MVC.Blog.Download(file.Id))
+            if (this.Request.IsAuthenticated)
+            {
+                <text>- @Common.Downloads: </text>@file.Counter
+            }
+            <br />
+        }
+    </p>
+}
+</article>
+
+@{Html.RenderPartial(MVC.Blog.Views._MetaInformationControl, this.Model);}
+
+@{Html.RenderPartial(MVC.Blog.Views._CommentsControl, this.Model);}
+
+@{Html.RenderPartial(MVC.Blog.Views._PingbacksControl, this.Model);}

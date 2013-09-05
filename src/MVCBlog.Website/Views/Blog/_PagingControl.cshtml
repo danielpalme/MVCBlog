@@ -1,0 +1,32 @@
+@model MVCBlog.Website.Models.OutputModels.Blog.IndexModel
+
+@if (this.Model.TotalPages > 1)
+{
+    int nextPage = -1;
+
+    if (!this.Model.CurrentPage.HasValue)
+    {
+        nextPage = 2;
+    }
+    else if (this.Model.CurrentPage.HasValue && this.Model.CurrentPage.Value < this.Model.TotalPages)
+    {
+        nextPage = this.Model.CurrentPage.Value + 1;
+    }
+    
+    <div>
+        @if (this.Model.CurrentPage.HasValue && this.Model.CurrentPage.Value > 1)
+        {                                     
+            @Html.ActionLink(Common.PreviousPage, MVC.Blog.Index(this.Model.Tag, this.Model.Search, this.Model.CurrentPage.Value - 1), new { rel = "prev" });
+
+            if (nextPage != -1)
+            {
+                <text>|</text>
+            }
+        }
+
+        @if (nextPage != -1)
+        {
+            @Html.ActionLink(Common.NextPage, MVC.Blog.Index(this.Model.Tag, this.Model.Search, nextPage), new { rel = "next" });
+        }
+    </div>
+}

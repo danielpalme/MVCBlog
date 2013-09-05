@@ -1,0 +1,24 @@
+﻿@model MVCBlog.Website.Models.InputModels.Login.LoginFormInput
+
+@using (Html.BeginForm())
+{
+    <div class="form-group">
+        @Html.LabelFor(m => m.Username)
+        @Html.TextBoxFor(m => m.Username, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Password)
+        @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        <label class="checkbox">
+            @Html.CheckBoxFor(m => m.RememberMe)
+            @Html.DisplayNameFor(m => m.RememberMe)
+        </label>
+    </div>
+    <div class="form-group">
+        @Html.AntiForgeryToken()
+        <input type="submit" value="@Common.Login" class="btn btn-primary"/>
+        @Html.ValidationMessage("login")
+    </div>
+}

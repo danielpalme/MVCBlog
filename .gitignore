@@ -1,0 +1,8 @@
+*.suo
+*proj.user
+/src/*/bin/*
+/src/*/obj/*
+/src/MVCBlog.Website/_bin_deployableAssemblies/*
+*.Cache
+/src/packages/*
+!/src/packages/repositories.config
