@@ -1,8 +1,5 @@
 @model MVCBlog.Core.Entities.BlogEntry
 
-@{
-    string author = this.Model.Author == null ? string.Empty : " " + Common.By + " " + this.Model.Author;
-}
 <p>
     <i class="glyphicon glyphicon-calendar"></i> <time datetime="@this.Model.PublishDate.ToString("yyyy-MM-dd")">@this.Model.PublishDate.ToShortDateString()</time>
 
