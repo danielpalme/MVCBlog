@@ -41,7 +41,7 @@ namespace MVCBlog.Website.Controllers
                 return this.View();
             }
 
-            if (!Membership.ValidateUser(loginFormInput.Username, loginFormInput.Password))
+            if (!FormsAuthentication.Authenticate(loginFormInput.Username, loginFormInput.Password))
             {
                 ModelState.AddModelError("login", Properties.Common.LoginFailure);
                 return this.View();
