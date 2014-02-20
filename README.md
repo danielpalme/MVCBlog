@@ -1,7 +1,7 @@
 MVCBlog
 =======
 
-Blog engine based on ASP.NET MVC 4 and Twitter Bootstrap 3
+Blog engine based on ASP.NET MVC 5 and Twitter Bootstrap 3
 
 See this blog post for details:  
 [www.palmmedia.de/Blog/2013/9/6/aspnet-mvc-4-blog-engine-based-on-twitter-bootstrap](http://www.palmmedia.de/Blog/2013/9/9/aspnet-mvc-4-blog-engine-based-on-twitter-bootstrap)
