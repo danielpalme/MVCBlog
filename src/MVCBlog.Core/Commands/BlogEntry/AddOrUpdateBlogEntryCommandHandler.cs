@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using MVCBlog.Core.Database;
 using MVCBlog.Core.Entities;
 
@@ -18,28 +19,28 @@ namespace MVCBlog.Core.Commands
             this.repository = repository;
         }
 
-        public void Handle(AddBlogEntryCommand command)
+        public async Task HandleAsync(AddBlogEntryCommand command)
         {
             this.AddTags(command.Entity, command.Tags);
 
             this.repository.BlogEntries.Add(command.Entity);
-            this.repository.SaveChanges();
+            await this.repository.SaveChangesAsync();
         }
 
-        public void Handle(UpdateBlogEntryCommand command)
+        public async Task HandleAsync(UpdateBlogEntryCommand command)
         {
             this.AddTags(command.Entity, command.Tags);
 
             var entry = this.repository.Entry(command.Entity);
 
-            if (entry.State == System.Data.EntityState.Detached)
+            if (entry.State == System.Data.Entity.EntityState.Detached)
             {
                 this.repository.BlogEntries.Attach(command.Entity);
             }
 
-            entry.State = System.Data.EntityState.Modified;
+            entry.State = System.Data.Entity.EntityState.Modified;
 
-            this.repository.SaveChanges();
+            await this.repository.SaveChangesAsync();
         }
 
         /// <summary>

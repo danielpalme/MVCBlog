@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Data.Entity;
 using System.Linq;
 using System.ServiceModel.Syndication;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Web.UI.WebControls;
 using MVCBlog.Core.Commands;
@@ -113,9 +114,9 @@ namespace MVCBlog.Website.Controllers
         /// <param name="id">The id.</param>
         /// <returns>A view showing a single <see cref="BlogEntry"/>.</returns>
         [SiteMapTitle("Header")]
-        public virtual ActionResult Entry(string id)
+        public async virtual Task<ActionResult> Entry(string id)
         {
-            var entry = this.GetByHeader(id);
+            var entry = await this.GetByHeader(id);
 
             if (entry == null)
             {
@@ -125,7 +126,7 @@ namespace MVCBlog.Website.Controllers
             if (!this.Request.IsAuthenticated)
             {
                 entry.Visits++;
-                this.updateBlogEntryCommandHandler.Handle(new UpdateCommand<BlogEntry>()
+                await this.updateBlogEntryCommandHandler.HandleAsync(new UpdateCommand<BlogEntry>()
                 {
                     Entity = entry
                 });
@@ -134,7 +135,7 @@ namespace MVCBlog.Website.Controllers
             return this.View(new BlogEntryDetail()
             {
                 BlogEntry = entry,
-                RelatedBlogEntries = this.GetRelatedBlogEntries(entry)
+                RelatedBlogEntries = await this.GetRelatedBlogEntries(entry)
             });
         }
 
@@ -148,9 +149,9 @@ namespace MVCBlog.Website.Controllers
         [Palmmedia.Common.Net.Mvc.SpamProtection(4)]
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public virtual ActionResult Entry(string id, [Bind(Include = "Name, Email, Homepage, Comment")] BlogEntryComment blogEntryComment)
+        public async virtual Task<ActionResult> Entry(string id, [Bind(Include = "Name, Email, Homepage, Comment")] BlogEntryComment blogEntryComment)
         {
-            var entry = this.GetByHeader(id);
+            var entry = await this.GetByHeader(id);
 
             if (entry == null)
             {
@@ -172,7 +173,7 @@ namespace MVCBlog.Website.Controllers
                 }
                 else
                 {
-                    errorModel.RelatedBlogEntries = this.GetRelatedBlogEntries(entry);
+                    errorModel.RelatedBlogEntries = await this.GetRelatedBlogEntries(entry);
                     return this.View(errorModel);
                 }
             }
@@ -181,7 +182,7 @@ namespace MVCBlog.Website.Controllers
             blogEntryComment.BlogEntryId = entry.Id;
             entry.BlogEntryComments.Add(blogEntryComment);
 
-            this.addBlogEntryCommentCommandHandler.Handle(new AddBlogEntryCommentCommand()
+            await this.addBlogEntryCommentCommandHandler.HandleAsync(new AddBlogEntryCommentCommand()
             {
                 Entity = blogEntryComment
             });
@@ -198,7 +199,7 @@ namespace MVCBlog.Website.Controllers
             }
             else
             {
-                model.RelatedBlogEntries = this.GetRelatedBlogEntries(entry);
+                model.RelatedBlogEntries = await this.GetRelatedBlogEntries(entry);
                 return this.View(model);
             }
         }
@@ -209,12 +210,12 @@ namespace MVCBlog.Website.Controllers
         /// <returns>A view showing a tag cloud.</returns>
         [ChildActionOnly]
         [OutputCache(Duration = 3600)]
-        public virtual ActionResult Tags()
+        public async virtual Task<ActionResult> Tags()
         {
-            var tags = this.repository.Tags
+            var tags = await this.repository.Tags
                 .AsNoTracking()
                 .OrderBy(t => t.Name)
-                .ToArray();
+                .ToArrayAsync();
 
             if (tags.Length > 0)
             {
@@ -232,13 +233,13 @@ namespace MVCBlog.Website.Controllers
         /// <returns>A view showing the most populars the blog entries.</returns>
         [ChildActionOnly]
         [OutputCache(Duration = 3600)]
-        public virtual ActionResult PopularBlogEntries()
+        public async virtual Task<ActionResult> PopularBlogEntries()
         {
-            var blogEntries = this.repository.BlogEntries
+            var blogEntries = await this.repository.BlogEntries
                 .AsNoTracking()
                 .OrderByDescending(b => b.Visits)
                 .Take(5)
-                .ToArray();
+                .ToArrayAsync();
 
             if (blogEntries.Length > 0)
             {
@@ -255,14 +256,14 @@ namespace MVCBlog.Website.Controllers
         /// </summary>
         /// <returns>RSS-Feed of all <see cref="BlogEntry">BlogEntries</see>.</returns>
         [OutputCache(CacheProfile = "Long")]
-        public virtual ActionResult Feed()
+        public async virtual Task<ActionResult> Feed()
         {
-            var entries = this.repository.BlogEntries
+            var entries = await this.repository.BlogEntries
                 .Include(b => b.Tags)
                 .AsNoTracking()
                 .Where(b => b.Visible && b.PublishDate <= DateTime.Now)
                 .OrderByDescending(b => b.PublishDate)
-                .ToArray();
+                .ToArrayAsync();
 
             string baseUrl = this.Request.Url.GetLeftPart(UriPartial.Authority);
 
@@ -323,9 +324,9 @@ namespace MVCBlog.Website.Controllers
         /// <param name="id">The id.</param>
         /// <returns>A view showing all <see cref="BlogEntry">BlogEntries</see>.</returns>
         [Authorize]
-        public virtual ActionResult Delete(Guid id)
+        public async virtual Task<ActionResult> Delete(Guid id)
         {
-            this.deleteBlogEntryCommandHander.Handle(new DeleteBlogEntryCommand()
+            await this.deleteBlogEntryCommandHander.HandleAsync(new DeleteBlogEntryCommand()
             {
                 Id = id
             });
@@ -339,9 +340,9 @@ namespace MVCBlog.Website.Controllers
         /// <param name="id">The id.</param>
         /// <returns>A view showing all <see cref="BlogEntry">BlogEntries</see>.</returns>
         [Authorize]
-        public virtual ActionResult DeleteComment(Guid id)
+        public async virtual Task<ActionResult> DeleteComment(Guid id)
         {
-            this.deleteBlogEntryCommentCommandHander.Handle(new DeleteCommand<BlogEntryComment>()
+            await this.deleteBlogEntryCommentCommandHander.HandleAsync(new DeleteCommand<BlogEntryComment>()
             {
                 Id = id
             });
@@ -354,11 +355,11 @@ namespace MVCBlog.Website.Controllers
         /// </summary>
         /// <param name="id">The id.</param>
         /// <returns>The <see cref="BlogEntryFile"/> as Download.</returns>
-        public virtual ActionResult Download(Guid id)
+        public async virtual Task<ActionResult> Download(Guid id)
         {
-            var blogEntryFile = this.repository.BlogEntryFiles
+            var blogEntryFile = await this.repository.BlogEntryFiles
                 .AsNoTracking()
-                .SingleOrDefault(b => b.Id == id);
+                .SingleOrDefaultAsync(b => b.Id == id);
 
             if (blogEntryFile == null)
             {
@@ -367,7 +368,7 @@ namespace MVCBlog.Website.Controllers
 
             blogEntryFile.Counter++;
 
-            this.updateBlogEntryFileCommandHandler.Handle(new UpdateCommand<BlogEntryFile>()
+            await this.updateBlogEntryFileCommandHandler.HandleAsync(new UpdateCommand<BlogEntryFile>()
             {
                 Entity = blogEntryFile
             });
@@ -393,7 +394,7 @@ namespace MVCBlog.Website.Controllers
         /// <returns>
         /// The <see cref="BlogEntry"/> with the given header.
         /// </returns>
-        private BlogEntry GetByHeader(string header)
+        private Task<BlogEntry> GetByHeader(string header)
         {
             var entry = this.repository.BlogEntries
                 .Include(b => b.Tags)
@@ -402,7 +403,7 @@ namespace MVCBlog.Website.Controllers
                 .Include(b => b.BlogEntryPingbacks)
                 .AsNoTracking()
                 .Where(e => (e.Visible && e.PublishDate <= DateTime.Now) || this.Request.IsAuthenticated)
-                .SingleOrDefault(e => e.HeaderUrl.Equals(header));
+                .SingleOrDefaultAsync(e => e.HeaderUrl.Equals(header));
 
             return entry;
         }
@@ -446,7 +447,7 @@ namespace MVCBlog.Website.Controllers
         /// <returns>
         /// The related <see cref="BlogEntry">BlogEntries</see>.
         /// </returns>
-        private BlogEntry[] GetRelatedBlogEntries(BlogEntry entry)
+        private Task<BlogEntry[]> GetRelatedBlogEntries(BlogEntry entry)
         {
             var tagIds = entry.Tags.Select(t => t.Id).ToArray();
 
@@ -457,7 +458,7 @@ namespace MVCBlog.Website.Controllers
                 .OrderByDescending(e => e.Tags.Count(t => tagIds.Contains(t.Id)))
                 .ThenByDescending(e => e.Created)
                 .Take(3)
-                .ToArray();
+                .ToArrayAsync();
 
             return query;
         }

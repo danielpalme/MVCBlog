@@ -1,4 +1,5 @@
-﻿using MVCBlog.Core.Database;
+﻿using System.Threading.Tasks;
+using MVCBlog.Core.Database;
 
 namespace MVCBlog.Core.Commands
 {
@@ -11,7 +12,7 @@ namespace MVCBlog.Core.Commands
             this.repository = repository;
         }
 
-        public void Handle(AddImageCommand command)
+        public async Task HandleAsync(AddImageCommand command)
         {
             int indexOfLastDot = command.FileName.LastIndexOf('.');
             string name = command.FileName.Substring(0, indexOfLastDot);
@@ -21,7 +22,7 @@ namespace MVCBlog.Core.Commands
             image.Data = command.Data;
 
             this.repository.Images.Add(image);
-            this.repository.SaveChanges();
+            await this.repository.SaveChangesAsync();
         }
     }
 }

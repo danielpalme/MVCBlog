@@ -1,5 +1,6 @@
 ﻿using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Threading.Tasks;
 using MVCBlog.Core.Entities;
 
 namespace MVCBlog.Core.Database
@@ -49,12 +50,16 @@ namespace MVCBlog.Core.Database
         DbEntityEntry Entry(object entity);
 
         /// <summary>
-        /// Saves all changes made in this context to the underlying database.
+        /// Asynchronously saves all changes made in this context to the underlying database.
         /// </summary>
         /// <returns>
-        /// The number of objects written to the underlying database.
+        /// A task that represents the asynchronous save operation.
+        /// The task result contains the number of objects written to the underlying database.
         /// </returns>
-        /// <exception cref="T:System.InvalidOperationException">Thrown if the context has been disposed.</exception>
-        int SaveChanges();
+        /// <remarks>
+        /// Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        /// that any asynchronous operations have completed before calling another method on this context.
+        /// </remarks>
+        Task<int> SaveChangesAsync();
     }
 }

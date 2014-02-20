@@ -1,6 +1,7 @@
 using System;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using MVCBlog.Core.Commands;
@@ -83,22 +84,24 @@ namespace MVCBlog.Website.Controllers
         /// Shows all downloads.
         /// </summary>
         /// <returns>View showing all downloads.</returns>
-        public virtual ActionResult Statistics()
+        public async virtual Task<ActionResult> Statistics()
         {
             var minDate = DateTime.Now.Subtract(new TimeSpan(60, 0, 0, 0));
 
+            var feedStatistics = await this.repository.FeedStatistics
+                    .AsNoTracking()
+                    .OrderBy(f => f.Application)
+                    .ToArrayAsync();
+
             var model = new MVCBlog.Website.Models.OutputModels.Administration.Downloads()
             {
-                BlogEntries = this.repository.BlogEntries
+                BlogEntries = await this.repository.BlogEntries
                     .Include(b => b.BlogEntryFiles)
                     .AsNoTracking()
                     .OrderByDescending(f => f.PublishDate)
-                    .ToArray(),
+                    .ToArrayAsync(),
 
-                FeedStatistics = this.repository.FeedStatistics
-                    .AsNoTracking()
-                    .OrderBy(f => f.Application)
-                    .AsEnumerable()
+                FeedStatistics = feedStatistics
                     .GroupBy(f => f.Created.Date)
                     .OrderBy(f => f.Key)
             };
@@ -111,13 +114,13 @@ namespace MVCBlog.Website.Controllers
         /// </summary>
         /// <param name="id">The Id of the <see cref="BlogEntry"/>.</param>
         /// <returns>A view showing a single <see cref="BlogEntry"/>.</returns>
-        public virtual ActionResult EditBlogEntry(Guid? id)
+        public async virtual Task<ActionResult> EditBlogEntry(Guid? id)
         {
-            var blogEntry = id.HasValue ? this.repository.BlogEntries
+            var blogEntry = id.HasValue ? await this.repository.BlogEntries
                     .Include(b => b.Tags)
                     .Include(b => b.BlogEntryFiles)
                     .AsNoTracking()
-                .Single(b => b.Id == id.Value) : new BlogEntry()
+                .SingleAsync(b => b.Id == id.Value) : new BlogEntry()
                 {
                     PublishDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, 0, 0)
                 };
@@ -125,8 +128,8 @@ namespace MVCBlog.Website.Controllers
             var model = new EditBlogEntry()
             {
                 BlogEntry = blogEntry,
-                Tags = this.repository.Tags.AsNoTracking().OrderBy(t => t.Name).ToArray(),
-                Images = this.repository.Images.AsNoTracking().OrderByDescending(t => t.Created).ToArray(),
+                Tags = await this.repository.Tags.AsNoTracking().OrderBy(t => t.Name).ToArrayAsync(),
+                Images = await this.repository.Images.AsNoTracking().OrderByDescending(t => t.Created).ToArrayAsync(),
                 IsUpdate = id.HasValue
             };
 
@@ -142,24 +145,24 @@ namespace MVCBlog.Website.Controllers
         /// <returns>A view showing a single <see cref="BlogEntry"/>.</returns>
         [HttpPost]
         [ValidateInput(false)]
-        public virtual ActionResult EditBlogEntry(Guid? id, [Bind(Include = "Header, Author, ShortContent, Content, Visible")]BlogEntry blogEntry, FormCollection formValues)
+        public async virtual Task<ActionResult> EditBlogEntry(Guid? id, [Bind(Include = "Header, Author, ShortContent, Content, Visible")]BlogEntry blogEntry, FormCollection formValues)
         {
             if (!this.ModelState.IsValid)
             {
                 return this.View(new EditBlogEntry()
                 {
                     BlogEntry = blogEntry,
-                    Tags = this.repository.Tags.AsNoTracking().OrderBy(t => t.Name).ToArray(),
-                    Images = this.repository.Images.AsNoTracking().OrderByDescending(t => t.Created).ToArray(),
+                    Tags = await this.repository.Tags.AsNoTracking().OrderBy(t => t.Name).ToArrayAsync(),
+                    Images = await this.repository.Images.AsNoTracking().OrderByDescending(t => t.Created).ToArrayAsync(),
                     IsUpdate = id.HasValue
                 });
             }
 
             if (id.HasValue)
             {
-                var existingBlogEntry = this.repository.BlogEntries
+                var existingBlogEntry = await this.repository.BlogEntries
                     .Include(b => b.Tags)
-                    .Single(b => b.Id == id.Value);
+                    .SingleAsync(b => b.Id == id.Value);
                 existingBlogEntry.Header = blogEntry.Header;
                 existingBlogEntry.Author = blogEntry.Author;
                 existingBlogEntry.ShortContent = blogEntry.ShortContent;
@@ -176,7 +179,7 @@ namespace MVCBlog.Website.Controllers
 
             if (id.HasValue)
             {
-                this.updateBlogEntryCommandHandler.Handle(new UpdateBlogEntryCommand()
+                await this.updateBlogEntryCommandHandler.HandleAsync(new UpdateBlogEntryCommand()
                 {
                     Entity = blogEntry,
                     Tags = tags
@@ -184,14 +187,14 @@ namespace MVCBlog.Website.Controllers
             }
             else
             {
-                this.addBlogEntryCommandHandler.Handle(new AddBlogEntryCommand()
+                await this.addBlogEntryCommandHandler.HandleAsync(new AddBlogEntryCommand()
                 {
                     Entity = blogEntry,
                     Tags = tags
                 });
             }
 
-            return this.RedirectToAction(MVC.Administration.EditBlogEntry(blogEntry.Id));
+            return this.RedirectToAction(MVC.Administration.EditBlogEntry(blogEntry.Id).Result);
         }
 
         /// <summary>
@@ -200,10 +203,10 @@ namespace MVCBlog.Website.Controllers
         /// <param name="id">The Id of the <see cref="BlogEntry"/>.</param>
         /// <returns>A view showing the results of the pingback requests.</returns>
         [HttpPost]
-        public virtual ActionResult PerformPingbacks(Guid id)
+        public async virtual Task<ActionResult> PerformPingbacks(Guid id)
         {
-            var blogEntry = this.repository.BlogEntries
-                    .Single(b => b.Id == id);
+            var blogEntry = await this.repository.BlogEntries
+                    .SingleAsync(b => b.Id == id);
 
             var pingbackResults = Palmmedia.Common.Net.PingBack.PingBackService.PerformPingBack(
                 this.Request.Url.GetLeftPart(UriPartial.Authority) + Url.Action(blogEntry.Url, MVC.Blog.Name),
@@ -219,14 +222,14 @@ namespace MVCBlog.Website.Controllers
         /// <param name="file">The uploaded file.</param>
         /// <returns>A view showing a single <see cref="BlogEntry"/>.</returns>
         [HttpPost]
-        public virtual ActionResult FileUpload(Guid id, HttpPostedFileBase file)
+        public async virtual Task<ActionResult> FileUpload(Guid id, HttpPostedFileBase file)
         {
             if (file != null && file.ContentLength > 0)
             {
                 var content = new byte[file.ContentLength];
                 file.InputStream.Read(content, 0, file.ContentLength);
 
-                this.addOrUpdateBlogEntryFileCommandHandler.Handle(new AddOrUpdateBlogEntryFileCommand()
+                await this.addOrUpdateBlogEntryFileCommandHandler.HandleAsync(new AddOrUpdateBlogEntryFileCommand()
                 {
                     BlogEntryId = id,
                     FileName = file.FileName,
@@ -234,7 +237,7 @@ namespace MVCBlog.Website.Controllers
                 });
             }
 
-            return this.RedirectToAction(MVC.Administration.EditBlogEntry(id));
+            return this.RedirectToAction(MVC.Administration.EditBlogEntry(id).Result);
         }
 
         /// <summary>
@@ -242,26 +245,26 @@ namespace MVCBlog.Website.Controllers
         /// </summary>
         /// <param name="id">The file id.</param>
         /// <returns>A view showing a single <see cref="BlogEntry"/>.</returns>
-        public virtual ActionResult FileDelete(Guid id)
+        public async virtual Task<ActionResult> FileDelete(Guid id)
         {
-            this.deleteBlogEntryFileCommandHandler.Handle(new DeleteBlogEntryFileCommand()
+            await this.deleteBlogEntryFileCommandHandler.HandleAsync(new DeleteBlogEntryFileCommand()
             {
                 Id = id
             });
 
-            return this.RedirectToAction(MVC.Administration.EditBlogEntry(id));
+            return this.RedirectToAction(MVC.Administration.EditBlogEntry(id).Result);
         }
 
         /// <summary>
         /// Shows all <see cref="MVCBlog.Core.Entities.Image">Images</see>.
         /// </summary>
         /// <returns>A view showing all <see cref="MVCBlog.Core.Entities.Image">Images</see>.</returns>
-        public virtual ActionResult Images()
+        public async virtual Task<ActionResult> Images()
         {
-            var images = this.repository.Images
+            var images = await this.repository.Images
                 .AsNoTracking()
                 .OrderByDescending(t => t.Created)
-                .ToArray();
+                .ToArrayAsync();
 
             return this.View(images);
         }
@@ -272,21 +275,21 @@ namespace MVCBlog.Website.Controllers
         /// <param name="file">The uploaded file.</param>
         /// <returns>A view showing all <see cref="MVCBlog.Core.Entities.Image">Images</see>.</returns>
         [HttpPost]
-        public virtual ActionResult ImageUpload(HttpPostedFileBase file)
+        public async virtual Task<ActionResult> ImageUpload(HttpPostedFileBase file)
         {
             if (file != null && file.ContentLength > 0)
             {
                 var content = new byte[file.ContentLength];
                 file.InputStream.Read(content, 0, file.ContentLength);
 
-                this.addImageCommandHandler.Handle(new AddImageCommand()
+                await this.addImageCommandHandler.HandleAsync(new AddImageCommand()
                 {
                     FileName = file.FileName,
                     Data = content
                 });
             }
 
-            return this.RedirectToAction(MVC.Administration.Images());
+            return this.RedirectToAction(MVC.Administration.Images().Result);
         }
     }
 }

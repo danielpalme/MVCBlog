@@ -1,7 +1,8 @@
-﻿namespace MVCBlog.Core.Commands
+﻿using System.Threading.Tasks;
+namespace MVCBlog.Core.Commands
 {
     public interface ICommandHandler<TCommand>
     {
-        void Handle(TCommand command);
+        Task HandleAsync(TCommand command);
     }
 }

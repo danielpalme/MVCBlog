@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Palmmedia.Common")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Palmmedia 2013")]
+[assembly: AssemblyCompany("Palmmedia")]
 [assembly: AssemblyProduct("Palmmedia.Common")]
-[assembly: AssemblyCopyright("Copyright © Palmmedia 2013")]
+[assembly: AssemblyCopyright("Copyright © Palmmedia 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

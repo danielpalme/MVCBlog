@@ -1,6 +1,8 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using MVCBlog.Core.Database;
 using MVCBlog.Core.Entities;
+using System.Data.Entity;
 
 namespace MVCBlog.Core.Commands
 {
@@ -13,14 +15,14 @@ namespace MVCBlog.Core.Commands
             this.repository = repository;
         }
 
-        public void Handle(AddOrUpdateBlogEntryFileCommand command)
+        public async Task HandleAsync(AddOrUpdateBlogEntryFileCommand command)
         {
             int indexOfLastDot = command.FileName.LastIndexOf('.');
             string name = command.FileName.Substring(0, indexOfLastDot);
             string extension = command.FileName.Substring(indexOfLastDot + 1, command.FileName.Length - indexOfLastDot - 1);
 
-            BlogEntryFile blogEntryFile = this.repository.BlogEntryFiles
-                .SingleOrDefault(f => f.BlogEntryId == command.BlogEntryId && f.Name == name && f.Extension == extension);
+            BlogEntryFile blogEntryFile = await this.repository.BlogEntryFiles
+                .SingleOrDefaultAsync(f => f.BlogEntryId == command.BlogEntryId && f.Name == name && f.Extension == extension);
 
             if (blogEntryFile == null)
             {
@@ -30,7 +32,7 @@ namespace MVCBlog.Core.Commands
 
             blogEntryFile.Data = command.Data;
 
-            this.repository.SaveChanges();
+            await this.repository.SaveChangesAsync();
         }
     }
 }

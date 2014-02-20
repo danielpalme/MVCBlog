@@ -1,5 +1,7 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using MVCBlog.Core.Database;
+using System.Data.Entity;
 
 namespace MVCBlog.Core.Commands
 {
@@ -12,16 +14,16 @@ namespace MVCBlog.Core.Commands
             this.repository = repository;
         }
 
-        public void Handle(DeleteBlogEntryFileCommand command)
+        public async Task HandleAsync(DeleteBlogEntryFileCommand command)
         {
-            var entity = this.repository.BlogEntryFiles.SingleOrDefault(e => e.Id == command.Id);
+            var entity = await this.repository.BlogEntryFiles.SingleOrDefaultAsync(e => e.Id == command.Id);
 
             if (entity != null)
             {
                 this.repository.BlogEntryFiles.Remove(entity);
                 entity.DeleteData();
 
-                this.repository.SaveChanges();
+                await this.repository.SaveChangesAsync();
             }
         }
     }

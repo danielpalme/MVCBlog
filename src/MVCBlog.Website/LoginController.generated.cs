@@ -104,8 +104,10 @@ namespace MVCBlog.Website.Controllers
     {
         public T4MVC_LoginController() : base(Dummy.Instance) { }
 
+        [NonAction]
         partial void IndexOverride(T4MVC_System_Web_Mvc_ActionResult callInfo);
 
+        [NonAction]
         public override System.Web.Mvc.ActionResult Index()
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Index);
@@ -113,8 +115,10 @@ namespace MVCBlog.Website.Controllers
             return callInfo;
         }
 
+        [NonAction]
         partial void IndexOverride(T4MVC_System_Web_Mvc_ActionResult callInfo, MVCBlog.Website.Models.InputModels.Login.LoginFormInput loginFormInput, string returnUrl);
 
+        [NonAction]
         public override System.Web.Mvc.ActionResult Index(MVCBlog.Website.Models.InputModels.Login.LoginFormInput loginFormInput, string returnUrl)
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Index);
@@ -124,8 +128,10 @@ namespace MVCBlog.Website.Controllers
             return callInfo;
         }
 
+        [NonAction]
         partial void LogoutOverride(T4MVC_System_Web_Mvc_ActionResult callInfo);
 
+        [NonAction]
         public override System.Web.Mvc.ActionResult Logout()
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Logout);

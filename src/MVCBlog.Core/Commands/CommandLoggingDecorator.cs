@@ -1,4 +1,5 @@
 ﻿
+using System.Threading.Tasks;
 namespace MVCBlog.Core.Commands
 {
     public class CommandLoggingDecorator<TCommand> : ICommandHandler<TCommand>
@@ -15,11 +16,11 @@ namespace MVCBlog.Core.Commands
             this.handler = handler;
         }
 
-        public void Handle(TCommand command)
+        public async Task HandleAsync(TCommand command)
         {
             Logger.Info("Executing command " + command.GetType().Name);
 
-            this.handler.Handle(command);
+            await this.handler.HandleAsync(command);
         }
     }
 }

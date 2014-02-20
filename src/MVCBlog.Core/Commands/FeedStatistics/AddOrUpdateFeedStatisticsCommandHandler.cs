@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using MVCBlog.Core.Database;
 using MVCBlog.Core.Entities;
+using System.Data.Entity;
 
 namespace MVCBlog.Core.Commands
 {
@@ -16,15 +18,15 @@ namespace MVCBlog.Core.Commands
             this.repository = repository;
         }
 
-        public void Handle(AddOrUpdateSingleFeedUserCommand command)
+        public async Task HandleAsync(AddOrUpdateSingleFeedUserCommand command)
         {
             this.DeleteOldStatistics();
 
             DateTime currentDay = DateTime.Now.Date;
             DateTime nextDay = DateTime.Now.Date.AddDays(1);
 
-            var existingFeedStatistic = this.repository.FeedStatistics
-                .FirstOrDefault(f => f.Identifier == command.Identifier
+            var existingFeedStatistic = await this.repository.FeedStatistics
+                .FirstOrDefaultAsync(f => f.Identifier == command.Identifier
                     && f.Application == command.Application
                     && f.Identifier != null
                     && f.Created >= currentDay
@@ -45,18 +47,18 @@ namespace MVCBlog.Core.Commands
                 existingFeedStatistic.Visits++;
             }
 
-            this.repository.SaveChanges();
+            await this.repository.SaveChangesAsync();
         }
 
-        public void Handle(AddOrUpdateFeedAggregatorFeedUserCommand command)
+        public async Task HandleAsync(AddOrUpdateFeedAggregatorFeedUserCommand command)
         {
             this.DeleteOldStatistics();
 
             DateTime currentDay = DateTime.Now.Date;
             DateTime nextDay = DateTime.Now.Date.AddDays(1);
 
-            var existingFeedStatistic = this.repository.FeedStatistics
-                .FirstOrDefault(f => f.Application == command.Application
+            var existingFeedStatistic = await this.repository.FeedStatistics
+                .FirstOrDefaultAsync(f => f.Application == command.Application
                     && f.Identifier == null
                     && f.Created >= currentDay
                     && f.Created < nextDay);
@@ -76,7 +78,7 @@ namespace MVCBlog.Core.Commands
                 existingFeedStatistic.Visits++;
             }
 
-            this.repository.SaveChanges();
+            await this.repository.SaveChangesAsync();
         }
 
         private void DeleteOldStatistics()

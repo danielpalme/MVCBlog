@@ -1,6 +1,6 @@
 ﻿<#
 /*
-T4MVC Version 3.7.3
+T4MVC Version 3.7.5
 Find latest version and documentation at http://mvccontrib.codeplex.com/wikipage?title=T4MVC
 Discuss on StackOverflow or on Codeplex (https://t4mvc.codeplex.com/discussions)
 
@@ -67,7 +67,7 @@ using <#=referencedNamespace #>;
 <#manager.EndBlock(); #>
 
 [<#= GeneratedCode #>, DebuggerNonUserCode]
-public static class <#=settings.HelpersPrefix #>
+public static partial class <#=settings.HelpersPrefix #>
 {
 <#if (settings.IncludeAreasToken) { #>
 public static class Areas
@@ -332,8 +332,10 @@ foreach (var group in controller.UniqueParameterNamesGroupedByActionName) if (gr
         public <#=controller.DerivedClassName #>() : base(Dummy.Instance) { }
 
 <#foreach (var method in controller.ActionMethods.Where(m => !m.IsCustomReturnType)) { #>
+        [NonAction]
         partial void <#=method.Name #>Override(T4MVC_<#=method.ReturnTypeUniqueName #> callInfo<#if (method.Parameters.Count > 0) { #>, <#method.WriteFormalParameters(true); #><#}#>);
 
+        [NonAction]
         public override <#=method.ReturnTypeFullName #> <#=method.Name #>(<#method.WriteFormalParameters(true); #>)
         {
             var callInfo = new T4MVC_<#=method.ReturnTypeUniqueName #>(Area, Name, ActionNames.<#=method.ActionName #><# if (method.ActionUrlHttps) {#>, "https"<#}#>);

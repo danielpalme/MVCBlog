@@ -8,8 +8,6 @@ using SimpleInjector;
 using SimpleInjector.Extensions;
 using SimpleInjector.Integration.Web.Mvc;
 
-[assembly: WebActivator.PreApplicationStartMethod(typeof(MVCBlog.Website.SimpleInjectorInitializer), "Initialize")]
-
 namespace MVCBlog.Website
 {
     /// <summary>

@@ -10,7 +10,7 @@
     <mvcSiteMapNode title="$resources:SiteMapLocalizations,About_Index" controller="About" action="Index"/>
     <mvcSiteMapNode title="$resources:SiteMapLocalizations,Imprint_Index" controller="Imprint" action="Index"/>
     <mvcSiteMapNode title="$resources:SiteMapLocalizations,Error_NotFound" controller="Error" action="NotFound"/>
-    <mvcSiteMapNode title="$resources:SiteMapLocalizations,Administration_Index" controller="Administration">
+    <mvcSiteMapNode title="$resources:SiteMapLocalizations,Administration_Index" controller="Administration" action="Index">
       <mvcSiteMapNode title="$resources:SiteMapLocalizations,Administration_EditBlogEntry" action="EditBlogEntry" preservedRouteParameters="id" />
       <mvcSiteMapNode title="$resources:SiteMapLocalizations,Administration_Pingback" action="PerformPingbacks"/>
       <mvcSiteMapNode title="$resources:SiteMapLocalizations,Administration_Statistics" action="Statistics"/>

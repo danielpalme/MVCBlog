@@ -288,4 +288,7 @@
   <data name="ShowPost" xml:space="preserve">
     <value>Blogeintrag anzeigen</value>
   </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Bearbeiten</value>
+  </data>
 </root>

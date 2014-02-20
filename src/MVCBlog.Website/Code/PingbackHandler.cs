@@ -145,7 +145,7 @@ namespace MVCBlog.Website
             blogEntryPingback.BlogEntryId = this.blogEntry.Id;
             this.blogEntry.BlogEntryPingbacks.Add(blogEntryPingback);
 
-            this.AddBlogEntryPingbackCommandHandler.Handle(new AddBlogEntryPingbackCommand()
+            this.AddBlogEntryPingbackCommandHandler.HandleAsync(new AddBlogEntryPingbackCommand()
             {
                 Entity = blogEntryPingback
             });

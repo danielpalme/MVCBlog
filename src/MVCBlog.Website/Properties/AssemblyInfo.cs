@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Palmmedia")]
 [assembly: AssemblyProduct("MVCBlog")]
-[assembly: AssemblyCopyright("Copyright © Palmmedia 2013")]
+[assembly: AssemblyCopyright("Copyright © Palmmedia 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

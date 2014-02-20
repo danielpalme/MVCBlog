@@ -1,5 +1,6 @@
 ﻿using System.Configuration;
 using System.Text;
+using System.Threading.Tasks;
 using MVCBlog.Core.Database;
 using MVCBlog.Core.Service;
 
@@ -16,10 +17,10 @@ namespace MVCBlog.Core.Commands
             this.messageService = messageService;
         }
 
-        public void Handle(AddBlogEntryPingbackCommand command)
+        public async Task HandleAsync(AddBlogEntryPingbackCommand command)
         {
             this.repository.BlogEntryPingbacks.Add(command.Entity);
-            this.repository.SaveChanges();
+            await this.repository.SaveChangesAsync();
 
             string subject = ConfigurationManager.AppSettings["PingbackNotificationSubject"];
             string email = ConfigurationManager.AppSettings["adminEmail"];

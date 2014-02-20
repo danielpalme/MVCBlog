@@ -43,33 +43,38 @@ namespace MVCBlog.Website.Controllers
 
         [NonAction]
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public virtual System.Web.Mvc.ActionResult EditBlogEntry()
+        public virtual System.Threading.Tasks.Task<System.Web.Mvc.ActionResult> EditBlogEntry()
         {
-            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.EditBlogEntry);
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.EditBlogEntry);
+            return System.Threading.Tasks.Task.FromResult(callInfo as ActionResult);
         }
         [NonAction]
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public virtual System.Web.Mvc.ActionResult PerformPingbacks()
+        public virtual System.Threading.Tasks.Task<System.Web.Mvc.ActionResult> PerformPingbacks()
         {
-            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.PerformPingbacks);
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.PerformPingbacks);
+            return System.Threading.Tasks.Task.FromResult(callInfo as ActionResult);
         }
         [NonAction]
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public virtual System.Web.Mvc.ActionResult FileUpload()
+        public virtual System.Threading.Tasks.Task<System.Web.Mvc.ActionResult> FileUpload()
         {
-            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.FileUpload);
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.FileUpload);
+            return System.Threading.Tasks.Task.FromResult(callInfo as ActionResult);
         }
         [NonAction]
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public virtual System.Web.Mvc.ActionResult FileDelete()
+        public virtual System.Threading.Tasks.Task<System.Web.Mvc.ActionResult> FileDelete()
         {
-            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.FileDelete);
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.FileDelete);
+            return System.Threading.Tasks.Task.FromResult(callInfo as ActionResult);
         }
         [NonAction]
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public virtual System.Web.Mvc.ActionResult ImageUpload()
+        public virtual System.Threading.Tasks.Task<System.Web.Mvc.ActionResult> ImageUpload()
         {
-            return new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.ImageUpload);
+            var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.ImageUpload);
+            return System.Threading.Tasks.Task.FromResult(callInfo as ActionResult);
         }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
@@ -185,8 +190,10 @@ namespace MVCBlog.Website.Controllers
     {
         public T4MVC_AdministrationController() : base(Dummy.Instance) { }
 
+        [NonAction]
         partial void IndexOverride(T4MVC_System_Web_Mvc_ActionResult callInfo);
 
+        [NonAction]
         public override System.Web.Mvc.ActionResult Index()
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Index);
@@ -194,85 +201,101 @@ namespace MVCBlog.Website.Controllers
             return callInfo;
         }
 
+        [NonAction]
         partial void StatisticsOverride(T4MVC_System_Web_Mvc_ActionResult callInfo);
 
-        public override System.Web.Mvc.ActionResult Statistics()
+        [NonAction]
+        public override System.Threading.Tasks.Task<System.Web.Mvc.ActionResult> Statistics()
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Statistics);
             StatisticsOverride(callInfo);
-            return callInfo;
+            return System.Threading.Tasks.Task.FromResult(callInfo as ActionResult);
         }
 
+        [NonAction]
         partial void EditBlogEntryOverride(T4MVC_System_Web_Mvc_ActionResult callInfo, System.Guid? id);
 
-        public override System.Web.Mvc.ActionResult EditBlogEntry(System.Guid? id)
+        [NonAction]
+        public override System.Threading.Tasks.Task<System.Web.Mvc.ActionResult> EditBlogEntry(System.Guid? id)
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.EditBlogEntry);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "id", id);
             EditBlogEntryOverride(callInfo, id);
-            return callInfo;
+            return System.Threading.Tasks.Task.FromResult(callInfo as ActionResult);
         }
 
+        [NonAction]
         partial void EditBlogEntryOverride(T4MVC_System_Web_Mvc_ActionResult callInfo, System.Guid? id, MVCBlog.Core.Entities.BlogEntry blogEntry, System.Web.Mvc.FormCollection formValues);
 
-        public override System.Web.Mvc.ActionResult EditBlogEntry(System.Guid? id, MVCBlog.Core.Entities.BlogEntry blogEntry, System.Web.Mvc.FormCollection formValues)
+        [NonAction]
+        public override System.Threading.Tasks.Task<System.Web.Mvc.ActionResult> EditBlogEntry(System.Guid? id, MVCBlog.Core.Entities.BlogEntry blogEntry, System.Web.Mvc.FormCollection formValues)
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.EditBlogEntry);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "id", id);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "blogEntry", blogEntry);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "formValues", formValues);
             EditBlogEntryOverride(callInfo, id, blogEntry, formValues);
-            return callInfo;
+            return System.Threading.Tasks.Task.FromResult(callInfo as ActionResult);
         }
 
+        [NonAction]
         partial void PerformPingbacksOverride(T4MVC_System_Web_Mvc_ActionResult callInfo, System.Guid id);
 
-        public override System.Web.Mvc.ActionResult PerformPingbacks(System.Guid id)
+        [NonAction]
+        public override System.Threading.Tasks.Task<System.Web.Mvc.ActionResult> PerformPingbacks(System.Guid id)
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.PerformPingbacks);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "id", id);
             PerformPingbacksOverride(callInfo, id);
-            return callInfo;
+            return System.Threading.Tasks.Task.FromResult(callInfo as ActionResult);
         }
 
+        [NonAction]
         partial void FileUploadOverride(T4MVC_System_Web_Mvc_ActionResult callInfo, System.Guid id, System.Web.HttpPostedFileBase file);
 
-        public override System.Web.Mvc.ActionResult FileUpload(System.Guid id, System.Web.HttpPostedFileBase file)
+        [NonAction]
+        public override System.Threading.Tasks.Task<System.Web.Mvc.ActionResult> FileUpload(System.Guid id, System.Web.HttpPostedFileBase file)
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.FileUpload);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "id", id);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "file", file);
             FileUploadOverride(callInfo, id, file);
-            return callInfo;
+            return System.Threading.Tasks.Task.FromResult(callInfo as ActionResult);
         }
 
+        [NonAction]
         partial void FileDeleteOverride(T4MVC_System_Web_Mvc_ActionResult callInfo, System.Guid id);
 
-        public override System.Web.Mvc.ActionResult FileDelete(System.Guid id)
+        [NonAction]
+        public override System.Threading.Tasks.Task<System.Web.Mvc.ActionResult> FileDelete(System.Guid id)
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.FileDelete);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "id", id);
             FileDeleteOverride(callInfo, id);
-            return callInfo;
+            return System.Threading.Tasks.Task.FromResult(callInfo as ActionResult);
         }
 
+        [NonAction]
         partial void ImagesOverride(T4MVC_System_Web_Mvc_ActionResult callInfo);
 
-        public override System.Web.Mvc.ActionResult Images()
+        [NonAction]
+        public override System.Threading.Tasks.Task<System.Web.Mvc.ActionResult> Images()
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.Images);
             ImagesOverride(callInfo);
-            return callInfo;
+            return System.Threading.Tasks.Task.FromResult(callInfo as ActionResult);
         }
 
+        [NonAction]
         partial void ImageUploadOverride(T4MVC_System_Web_Mvc_ActionResult callInfo, System.Web.HttpPostedFileBase file);
 
-        public override System.Web.Mvc.ActionResult ImageUpload(System.Web.HttpPostedFileBase file)
+        [NonAction]
+        public override System.Threading.Tasks.Task<System.Web.Mvc.ActionResult> ImageUpload(System.Web.HttpPostedFileBase file)
         {
             var callInfo = new T4MVC_System_Web_Mvc_ActionResult(Area, Name, ActionNames.ImageUpload);
             ModelUnbinderHelpers.AddRouteValues(callInfo.RouteValueDictionary, "file", file);
             ImageUploadOverride(callInfo, file);
-            return callInfo;
+            return System.Threading.Tasks.Task.FromResult(callInfo as ActionResult);
         }
 
     }

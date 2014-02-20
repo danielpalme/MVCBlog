@@ -60,8 +60,6 @@ namespace MVCBlog.Website
         /// <param name="request">The request.</param>
         private void RegisterRequest(HttpRequest request)
         {
-            
-
             var match = Regex.Match(request.UserAgent ?? string.Empty, AGGREGATORPATTERN, RegexOptions.Compiled);
 
             string application = request.Browser.Browser + " " + request.Browser.Version;
@@ -81,7 +79,7 @@ namespace MVCBlog.Website
                 }
 
                 var addOrUpdateFeedAggregatorFeedUserCommandCommandHandler = DependencyResolver.Current.GetService<ICommandHandler<AddOrUpdateFeedAggregatorFeedUserCommand>>();
-                addOrUpdateFeedAggregatorFeedUserCommandCommandHandler.Handle(new AddOrUpdateFeedAggregatorFeedUserCommand()
+                addOrUpdateFeedAggregatorFeedUserCommandCommandHandler.HandleAsync(new AddOrUpdateFeedAggregatorFeedUserCommand()
                 {
                     Application = application,
                     Users = int.Parse(numberOfSubscribers)
@@ -90,7 +88,7 @@ namespace MVCBlog.Website
             else
             {
                 var addOrUpdateSingleFeedUserCommandHandler = DependencyResolver.Current.GetService<ICommandHandler<AddOrUpdateSingleFeedUserCommand>>();
-                addOrUpdateSingleFeedUserCommandHandler.Handle(new AddOrUpdateSingleFeedUserCommand()
+                addOrUpdateSingleFeedUserCommandHandler.HandleAsync(new AddOrUpdateSingleFeedUserCommand()
                 {
                     Application = application,
                     Identifier = (request.UserHostAddress + request.UserAgent).EncryptSha1()

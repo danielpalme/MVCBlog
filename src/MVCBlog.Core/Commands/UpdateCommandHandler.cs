@@ -1,4 +1,5 @@
-﻿using MVCBlog.Core.Database;
+﻿using System.Threading.Tasks;
+using MVCBlog.Core.Database;
 
 namespace MVCBlog.Core.Commands
 {
@@ -11,18 +12,18 @@ namespace MVCBlog.Core.Commands
             this.repository = repository;
         }
 
-        public void Handle(UpdateCommand<T> command)
+        public async Task HandleAsync(UpdateCommand<T> command)
         {
             var entry = this.repository.Entry(command.Entity);
 
-            if (entry.State == System.Data.EntityState.Detached)
+            if (entry.State == System.Data.Entity.EntityState.Detached)
             {
                 this.repository.Set<T>().Attach(command.Entity);
             }
 
-            entry.State = System.Data.EntityState.Modified;
+            entry.State = System.Data.Entity.EntityState.Modified;
 
-            this.repository.SaveChanges();
+            await this.repository.SaveChangesAsync();
         }
     }
 }

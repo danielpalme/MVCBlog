@@ -1,4 +1,5 @@
-﻿using MVCBlog.Core.Database;
+﻿using System.Threading.Tasks;
+using MVCBlog.Core.Database;
 
 namespace MVCBlog.Core.Commands
 {
@@ -11,10 +12,10 @@ namespace MVCBlog.Core.Commands
             this.repository = repository;
         }
 
-        public void Handle(AddCommand<T> command)
+        public async Task HandleAsync(AddCommand<T> command)
         {
             this.repository.Set<T>().Add(command.Entity);
-            this.repository.SaveChanges();
+            await this.repository.SaveChangesAsync();
         }
     }
 }
