@@ -210,12 +210,12 @@ namespace MVCBlog.Website.Controllers
         /// <returns>A view showing a tag cloud.</returns>
         [ChildActionOnly]
         [OutputCache(Duration = 3600)]
-        public async virtual Task<ActionResult> Tags()
+        public virtual ActionResult Tags()
         {
-            var tags = await this.repository.Tags
+            var tags = this.repository.Tags
                 .AsNoTracking()
                 .OrderBy(t => t.Name)
-                .ToArrayAsync();
+                .ToArray();
 
             if (tags.Length > 0)
             {
@@ -233,13 +233,13 @@ namespace MVCBlog.Website.Controllers
         /// <returns>A view showing the most populars the blog entries.</returns>
         [ChildActionOnly]
         [OutputCache(Duration = 3600)]
-        public async virtual Task<ActionResult> PopularBlogEntries()
+        public virtual ActionResult PopularBlogEntries()
         {
-            var blogEntries = await this.repository.BlogEntries
+            var blogEntries = this.repository.BlogEntries
                 .AsNoTracking()
                 .OrderByDescending(b => b.Visits)
                 .Take(5)
-                .ToArrayAsync();
+                .ToArray();
 
             if (blogEntries.Length > 0)
             {
