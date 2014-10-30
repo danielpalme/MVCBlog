@@ -1,6 +1,6 @@
 ﻿<#
 /*
-T4MVC Version 3.7.5
+T4MVC Version 3.10.0
 Find latest version and documentation at http://mvccontrib.codeplex.com/wikipage?title=T4MVC
 Discuss on StackOverflow or on Codeplex (https://t4mvc.codeplex.com/discussions)
 
@@ -44,8 +44,8 @@ Please use in accordance to the MvcContrib license (http://mvccontrib.codeplex.c
 // Don't change it directly as your change would get overwritten.  Instead, make changes
 // to the .tt file (i.e. the T4 template) and save it to regenerate this file.
 
-// Make sure the compiler doesn't complain about missing Xml comments
-#pragma warning disable 1591
+// Make sure the compiler doesn't complain about missing Xml comments and CLS compliance
+#pragma warning disable 1591, 3008, 3009
 #region T4MVC
 
 using System;
@@ -54,6 +54,7 @@ using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Hosting;
 using System.Web.Mvc;
@@ -133,7 +134,14 @@ internal partial class T4MVC_<#=resultType.UniqueName #> : <#=resultType.FullNam
 namespace <#=settings.LinksNamespace #>
 {
 <#
-foreach (string folder in settings.StaticFilesFolders.Concat(GetStaticFilesViewFolders())) {
+var inAreas = Areas
+	.Where(a => !string.IsNullOrEmpty(a.Name))
+	.SelectMany(a => settings.StaticFilesFolders.Select(b => settings.AreasFolder + "\\" + a.Name + "\\" + b));
+
+foreach (string folder in settings.StaticFilesFolders
+	.Concat(GetStaticFilesViewFolders())
+	.Concat(inAreas)
+	) {
     ProcessStaticFiles(Project, folder);
 }
 #>
@@ -196,10 +204,22 @@ namespace <#=controller.Namespace #>
         }
 
         [<#= GeneratedCode #>, DebuggerNonUserCode]
+        protected RedirectToRouteResult RedirectToAction(Task<ActionResult> taskResult)
+        {
+            return RedirectToAction(taskResult.Result);
+        }
+
+        [<#= GeneratedCode #>, DebuggerNonUserCode]
         protected RedirectToRouteResult RedirectToActionPermanent(ActionResult result)
         {
             var callInfo = result.GetT4MVCResult();
             return RedirectToRoutePermanent(callInfo.RouteValueDictionary);
+        }
+
+        [<#= GeneratedCode #>, DebuggerNonUserCode]
+        protected RedirectToRouteResult RedirectToActionPermanent(Task<ActionResult> taskResult)
+        {
+            return RedirectToActionPermanent(taskResult.Result);
         }
 
 <#foreach (var method in controller.ActionMethodsUniqueWithoutParameterlessOverload) { #>
@@ -397,7 +417,7 @@ namespace System.Web.Mvc {
 
 <#manager.StartFooter(); #>
 #endregion T4MVC
-#pragma warning restore 1591
+#pragma warning restore 1591, 3008, 3009
 <#manager.EndBlock(); #>
 <#settings.SaveChanges(manager); #>
 <#manager.Process(settings.SplitIntoMultipleFiles); #>
@@ -521,6 +541,10 @@ void PrepareDataToRender(TextTransformation tt)
     // Get the path of the root folder of the app
     AppRoot = Path.GetDirectoryName(Project.FullName) + '\\';
 
+    // Process controllers and views from project root
+    ProcessProjectRoot(Project);
+
+    // Process controllers and views from areas.
     ProcessAreas(Project);
 }
 
@@ -537,11 +561,32 @@ Project GetProjectContainingT4File(DTE dte)
     return projectItem.ContainingProject;
 }
 
+void ProcessProjectRoot(Project project)
+{
+    var area = new AreaInfo() { Name = null };
+
+    // process controllers and views from their folders
+    ProcessAreaControllers(project.ProjectItems, area, null);
+    ProcessAreaViews(project.ProjectItems, area, null);
+
+    // does the project root contain a folder which follows the "feature folder" convention?
+    // If yes, controllers and views from there are added to the existing default area. 
+    // this means, if you use both conventions, you cannot have two controllers with the same name!
+    if (!String.IsNullOrEmpty(settings.FeatureFolderRootArea)) 
+    {
+        ProjectItem featureFolderItem = GetProjectItem(project, settings.FeatureFolderRootArea);
+        if (featureFolderItem != null)
+        {
+            ProcessArea(featureFolderItem, area);
+        }
+    }
+
+    Areas.Add(area);
+    DefaultArea = area;
+}
+
 void ProcessAreas(Project project)
 {
-    // Process the default area
-    ProcessArea(project.ProjectItems, null);
-
     // Get the Areas folder
     ProjectItem areaProjectItem = GetProjectItem(project, settings.AreasFolder);
     
@@ -552,7 +597,7 @@ void ProcessAreas(Project project)
         {
             if (IsFolder(item))
             {
-                ProcessArea(item.ProjectItems, item.Name);
+                ProcessArea(item, null);
             }
         }
     }
@@ -567,38 +612,57 @@ void ProcessAreas(Project project)
 
         if (IsFolder(portableAreaProjectItem))
         {
-            ProcessArea(portableAreaProjectItem.ProjectItems, portableAreaProjectItem.Name);
+            ProcessArea(portableAreaProjectItem, null);
         }
     }
 }
 
-void ProcessArea(ProjectItems areaFolderItems, string name)
+void ProcessArea(ProjectItem areaFolder, AreaInfo existingArea)
 {
-    var area = new AreaInfo() { Name = name };
-    ProcessAreaControllers(areaFolderItems, area);
-    ProcessAreaViews(areaFolderItems, area);
-    Areas.Add(area);
+    var area = existingArea ?? new AreaInfo() { Name = areaFolder.Name };
+    area.IsFeatureFolderArea = IsFeatureFolderArea(area.Name, areaFolder);
 
-    if (String.IsNullOrEmpty(name))
-        DefaultArea = area;
+    ProcessAreaControllers(areaFolder.ProjectItems, area, areaFolder);
+    ProcessAreaViews(areaFolder.ProjectItems, area, areaFolder);
+
+    if (existingArea == null)
+        Areas.Add(area);
 }
 
-void ProcessAreaControllers(ProjectItems areaFolderItems, AreaInfo area)
+void ProcessAreaControllers(ProjectItems areaFolderItems, AreaInfo area, ProjectItem areaFolder)
 {
-    // Get area Controllers folder
-    ProjectItem controllerProjectItem = GetProjectItem(areaFolderItems, settings.ControllersFolder);
-    if (controllerProjectItem == null)
-        return;
+    if (area.IsFeatureFolderArea)
+    {
+        // Every folder within the area might contain controllers when using "FeatureFolders".
+        ProcessControllersRecursive(areaFolder, area);
+    }
+    else
+    {
+        // Get area Controllers folder
+        ProjectItem controllerProjectItem = GetProjectItem(areaFolderItems, settings.ControllersFolder);
+        if (controllerProjectItem == null)
+            return;
 
-    ProcessControllersRecursive(controllerProjectItem, area);
+        ProcessControllersRecursive(controllerProjectItem, area);
+    }
 }
 
-void ProcessAreaViews(ProjectItems areaFolderItems, AreaInfo area)
+void ProcessAreaViews(ProjectItems areaFolderItems, AreaInfo area, ProjectItem areaFolder)
 {
-    // Get area Views folder
-    ProjectItem viewsProjectItem = GetProjectItem(areaFolderItems, settings.ViewsRootFolder);
-    if (viewsProjectItem == null)
-        return;
+    ProjectItem viewsProjectItem;
+
+    if (area.IsFeatureFolderArea)
+    {
+        // For "FeatureFolders", we don't have to search for a "Views"-folder since the area directly contains the feature-folders holding the views.
+        viewsProjectItem = areaFolder;
+    }
+    else
+    {
+        // Get area Views folder
+        viewsProjectItem = GetProjectItem(areaFolderItems, settings.ViewsRootFolder);
+        if (viewsProjectItem == null)
+            return;
+    }
 
     ProcessAllViews(viewsProjectItem, area);
 }
@@ -796,7 +860,8 @@ void ProcessControllerActionMethods(ControllerInfo controllerInfo, CodeClass2 cu
             // We only support action methods that return an ActionResult and Task<ActionResult> derived types
             if (!method.Type.CodeType.get_IsDerivedFrom("System.Web.Mvc.ActionResult") && method.Type.CodeType.FullName !="System.Threading.Tasks.Task<System.Web.Mvc.ActionResult>")
             {
-                Warning(String.Format("{0} doesn't support {1}.{2} because it doesn't return a supported {3} type", T4FileName, type.Name, method.Name, method.Type.CodeType.FullName));
+                // Comment out warning, as it's more annoying than helpful
+                //Warning(String.Format("{0} doesn't support {1}.{2} because it doesn't return a supported {3} type", T4FileName, type.Name, method.Name, method.Type.CodeType.FullName));
                 continue;
             }
 
@@ -964,9 +1029,32 @@ IEnumerable<string> GetStaticFilesViewFolders()
     {
         foreach (var area in Areas)
         {
-            yield return area.Name == null ?
-                settings.ViewsRootFolder :
-                settings.AreasFolder + "\\" + area.Name + "\\" + settings.ViewsRootFolder;
+            if (area.Name == null)
+            {
+                // project root
+
+                yield return settings.ViewsRootFolder;
+
+                if (area.IsFeatureFolderArea)
+                {
+                    foreach (var controller in area.Controllers)
+                        yield return settings.FeatureFolderRootArea + "\\" + controller.Name;
+                }
+            }
+            else
+            {
+                // areas
+
+                if (area.IsFeatureFolderArea)
+                {
+                    foreach (var controller in area.Controllers)
+                        yield return settings.AreasFolder + "\\" + area.Name + "\\" + controller.Name;
+                }
+                else
+                {
+                    yield return settings.AreasFolder + "\\" + area.Name + "\\" + settings.ViewsRootFolder;
+                }
+            }
         }
     }
 }
@@ -1036,8 +1124,18 @@ PopIndent();
     else { #>
 <#+
 if (!settings.ExcludedStaticFileExtensions.Any(extension => projectItem.Name.EndsWith(extension, StringComparison.OrdinalIgnoreCase))) {
+    // if it's a Typescript file
+    if (projectItem.Name.EndsWith(".ts")) {
+        string tsJavascriptName =  projectItem.Name.Replace(".ts", ".js");
+        string minifiedName = projectItem.Name.Replace(".ts", ".min.js");
+        if (AddTimestampToStaticLink(projectItem)) { #>
+    public static readonly string <#=name#> = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/<#=minifiedName#>") ? Url("<#=minifiedName#>")+"?"+T4MVCHelpers.TimestampString(URLPATH + "/<#=minifiedName#>") : Url("<#=tsJavascriptName#>")+"?"+T4MVCHelpers.TimestampString(URLPATH + "/<#=tsJavascriptName#>");
+        <#+} else {#>
+    public static readonly string <#=name#> = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/<#=minifiedName#>") ? Url("<#=minifiedName#>") : Url("<#=tsJavascriptName#>");
+<#+}  #>
+<#+}
     // if it's a non-minified javascript file
-    if (projectItem.Name.EndsWith(".js") && !projectItem.Name.EndsWith(".min.js")) { 
+    else if (projectItem.Name.EndsWith(".js") && !projectItem.Name.EndsWith(".min.js")) {
         string minifiedName = projectItem.Name.Replace(".js", ".min.js");
         if (AddTimestampToStaticLink(projectItem)) { #>
     public static readonly string <#=name#> = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/<#=minifiedName#>") ? Url("<#=minifiedName#>")+"?"+T4MVCHelpers.TimestampString(URLPATH + "/<#=minifiedName#>") : Url("<#=projectItem.Name#>")+"?"+T4MVCHelpers.TimestampString(URLPATH + "/<#=projectItem.Name#>");
@@ -1160,8 +1258,10 @@ static bool IsAsyncController(CodeClass2 type)
 static string GetVirtualPath(ProjectItem item)
 {
     string fileFullPath = item.get_FileNames(0);
+
+    // Ignore files that are not under the app root (e.g. they could be linked files)
     if (!fileFullPath.StartsWith(AppRoot, StringComparison.OrdinalIgnoreCase))
-        throw new Exception(string.Format("File {0} is not under app root {1}. Please report issue.", fileFullPath, AppRoot));
+        return null;
 
     // Make a virtual path from the physical path
     return "~/" + fileFullPath.Substring(AppRoot.Length).Replace('\\', '/');
@@ -1262,6 +1362,24 @@ static bool IsFolder(ProjectItem item)
     return (item.Kind == EnvDTE.Constants.vsProjectItemKindPhysicalFolder);
 }
 
+static bool IsFeatureFolderArea(string areaName, ProjectItem areaFolder)
+{
+    // default-area with regular convention?
+    if (areaFolder == null)
+        return false;
+
+    if (String.IsNullOrEmpty(areaName))
+    {
+        // Are we looking at the "Features" folder in the project root?
+        return areaFolder.Name == settings.FeatureFolderRootArea;
+    }
+    else
+    {
+        // is it a FeatureFolder area?
+        return settings.FeatureFolderAreas.Contains("*") || settings.FeatureFolderAreas.Contains(areaFolder.Name);
+    }
+}
+
 static string MakeClassName(string ns, string classname)
 {
     return String.IsNullOrEmpty(ns) ? classname :
@@ -1314,6 +1432,7 @@ class AreaInfo
 
     public string Name { get; set; }
     public HashSet<ControllerInfo> Controllers { get; set; }
+    public bool IsFeatureFolderArea { get; set; }
 
     public string Namespace
     {
@@ -1573,7 +1692,11 @@ class ViewsFolderInfo
             viewFieldName = Sanitize(viewName);
  
         HasNonQualifiedViewNames = HasNonQualifiedViewNames | useNonQualifiedViewName;
-        Views[viewFieldName] = useNonQualifiedViewName ? Path.GetFileNameWithoutExtension(viewName) : GetVirtualPath(item);
+        string virtualPath = GetVirtualPath(item);
+        if (virtualPath != null)
+        {
+	        Views[viewFieldName] = useNonQualifiedViewName ? Path.GetFileNameWithoutExtension(viewName) : virtualPath;
+        }
     }
 
     public bool HasNonQualifiedViewNames { get; private set; }
@@ -1806,6 +1929,8 @@ class MvcSettings : XmlSettings
         this.AreasFolder = "Areas";
         this.PortableAreas = new XmlStringArray(new string[] {
         }, "Area");
+        this.FeatureFolderAreas = new XmlStringArray(new string[] {
+        }, "Area");
         this.IncludeAreasToken = false;
         this.ControllersFolder = "Controllers";
         this.ViewsRootFolder = "Views";
@@ -1831,6 +1956,7 @@ class MvcSettings : XmlSettings
             ".ascx"
         }, "Extension");
         this.ExcludedViewExtensions = new XmlStringArray(new string[] {
+            ".cs",
             ".master",
             ".js",
             ".css"
@@ -1857,6 +1983,12 @@ class MvcSettings : XmlSettings
 
     [System.ComponentModel.Description("You can list folders containing portable areas here")]
     public IEnumerable<string> PortableAreas { get; set; }
+
+    [System.ComponentModel.Description("Name of folder in your project root that follows the FeatureFolder convention (controllers and views are placed within the same folder)")]
+    public string FeatureFolderRootArea { get; set; }
+
+    [System.ComponentModel.Description("Names of areas which follow the FeatureFolder convention (controllers and views are placed within the same folder).\r\nUse <Area>*</Area> if you only use Areas with FeatureFolders")]
+    public IEnumerable<string> FeatureFolderAreas { get; set; }
 
     [System.ComponentModel.Description("Choose whether you want to include an 'Areas' token when referring to areas.\r\ne.g. Assume the Area is called Blog and the Controller is Post:\r\n- When false use MVC.Blog.Post.etc...\r\n- When true use MVC.Areas.Blog.Post.etc...")]
     public bool IncludeAreasToken { get; set; }

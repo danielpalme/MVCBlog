@@ -3,8 +3,8 @@
 // Don't change it directly as your change would get overwritten.  Instead, make changes
 // to the .tt file (i.e. the T4 template) and save it to regenerate this file.
 
-// Make sure the compiler doesn't complain about missing Xml comments
-#pragma warning disable 1591
+// Make sure the compiler doesn't complain about missing Xml comments and CLS compliance
+#pragma warning disable 1591, 3008, 3009
 #region T4MVC
 
 using System;
@@ -13,6 +13,7 @@ using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Hosting;
 using System.Web.Mvc;
@@ -78,10 +79,10 @@ namespace Links
         public static readonly string custom_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/custom.min.js") ? Url("custom.min.js") : Url("custom.js");
         public static readonly string customEditBlogEntry_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/customEditBlogEntry.min.js") ? Url("customEditBlogEntry.min.js") : Url("customEditBlogEntry.js");
         public static readonly string feedstatisticschart_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/feedstatisticschart.min.js") ? Url("feedstatisticschart.min.js") : Url("feedstatisticschart.js");
-        public static readonly string jquery_2_1_0_intellisense_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/jquery-2.1.0.intellisense.min.js") ? Url("jquery-2.1.0.intellisense.min.js") : Url("jquery-2.1.0.intellisense.js");
-        public static readonly string jquery_2_1_0_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/jquery-2.1.0.min.js") ? Url("jquery-2.1.0.min.js") : Url("jquery-2.1.0.js");
-        public static readonly string jquery_2_1_0_min_js = Url("jquery-2.1.0.min.js");
-        public static readonly string jquery_2_1_0_min_map = Url("jquery-2.1.0.min.map");
+        public static readonly string jquery_2_1_1_intellisense_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/jquery-2.1.1.intellisense.min.js") ? Url("jquery-2.1.1.intellisense.min.js") : Url("jquery-2.1.1.intellisense.js");
+        public static readonly string jquery_2_1_1_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/jquery-2.1.1.min.js") ? Url("jquery-2.1.1.min.js") : Url("jquery-2.1.1.js");
+        public static readonly string jquery_2_1_1_min_js = Url("jquery-2.1.1.min.js");
+        public static readonly string jquery_2_1_1_min_map = Url("jquery-2.1.1.min.map");
         public static readonly string jquery_autocomplete_pack_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/jquery.autocomplete.pack.min.js") ? Url("jquery.autocomplete.pack.min.js") : Url("jquery.autocomplete.pack.js");
         public static readonly string jquery_lightbox_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/jquery.lightbox.min.js") ? Url("jquery.lightbox.min.js") : Url("jquery.lightbox.js");
         public static readonly string jquery_validate_vsdoc_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/jquery.validate-vsdoc.min.js") ? Url("jquery.validate-vsdoc.min.js") : Url("jquery.validate-vsdoc.js");
@@ -93,6 +94,8 @@ namespace Links
         public static readonly string raphael_min_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/raphael-min.min.js") ? Url("raphael-min.min.js") : Url("raphael-min.js");
         public static readonly string raphael_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/raphael.min.js") ? Url("raphael.min.js") : Url("raphael.js");
         public static readonly string respond_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/respond.min.js") ? Url("respond.min.js") : Url("respond.js");
+        public static readonly string respond_matchmedia_addListener_js = T4MVCHelpers.IsProduction() && T4Extensions.FileExists(URLPATH + "/respond.matchmedia.addListener.min.js") ? Url("respond.matchmedia.addListener.min.js") : Url("respond.matchmedia.addListener.js");
+        public static readonly string respond_matchmedia_addListener_min_js = Url("respond.matchmedia.addListener.min.js");
         public static readonly string respond_min_js = Url("respond.min.js");
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public static class SyntaxHighlighter {
@@ -953,6 +956,6 @@ internal static class T4MVCHelpers {
 
 
 #endregion T4MVC
-#pragma warning restore 1591
+#pragma warning restore 1591, 3008, 3009
 
 
