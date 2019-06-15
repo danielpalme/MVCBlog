@@ -1,0 +1,95 @@
+﻿@inject Microsoft.Extensions.Options.IOptionsMonitor<MVCBlog.Business.BlogSettings> BlogSettings
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer
+<!DOCTYPE html>
+<html class="administration">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - @BlogSettings.CurrentValue.BlogName</title>
+    <link rel="stylesheet" href="~/dist/combined.min.css" asp-append-version="true" />
+    <link rel="shortcut icon" href="~/favicon.ico" type="image/x-icon" />
+    <link rel="apple-touch-icon" href="~/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" href="~/apple-touch-icon_192.png" sizes="192x192" />
+    <meta name="theme-color" content="#2F5890">
+    <meta name="msapplication-navbutton-color" content="#2F5890">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#2F5890">
+</head>
+<body>
+    @if (this.TempData.ContainsKey(MVCBlog.Web.Infrastructure.Mvc.ControllerExtensions.SuccessMessage))
+    {
+        <div class="successmessage">
+            @this.TempData[MVCBlog.Web.Infrastructure.Mvc.ControllerExtensions.SuccessMessage]
+        </div>
+    }
+    @if (this.TempData.ContainsKey(MVCBlog.Web.Infrastructure.Mvc.ControllerExtensions.WarningMessage))
+    {
+        <div class="warningmessage">
+            @this.TempData[MVCBlog.Web.Infrastructure.Mvc.ControllerExtensions.WarningMessage]
+        </div>
+    }
+    @if (this.TempData.ContainsKey(MVCBlog.Web.Infrastructure.Mvc.ControllerExtensions.ErrorMessage))
+    {
+        <div class="errormessage">
+            @this.TempData[MVCBlog.Web.Infrastructure.Mvc.ControllerExtensions.ErrorMessage]
+        </div>
+    }
+    <div class="flexcontainer">
+        <nav-menu class="flexmenu d-print-none">
+            <ul class="home expandedonly">
+                <li><a href="~/"><i class="fas fa-home"></i></a></li>
+            </ul>
+
+            <ul class="hamburger">
+                <li>
+                    <a href="#" class="togglemenu">
+                        <i class="fas fa-bars"></i>
+                    </a>
+                </li>
+            </ul>
+            <ul class="navigation">
+                <li title="@Localizer["Blog entries"]" class="@((string)ViewData["SelectedMenuItem"] == "BlogEntries" ? "link-active" : "")">
+                    <a asp-action="Index" asp-controller="Administration">
+                        <i class="fas fa-th" aria-hidden="true"></i><span class="expandedonly"> @Localizer["Blog entries"]</span>
+                    </a>
+                </li>
+                <li title="@Localizer["Downloads"]" class="ident identshadow @((string)ViewData["SelectedMenuItem"] == "Downloads" ? "link-active" : "")">
+                    <a asp-action="Downloads" asp-controller="Administration">
+                        <i class="fa fa-chart-line" aria-hidden="true"></i><span class="expandedonly"> @Localizer["Downloads"]</span>
+                    </a>
+                </li>
+                <li title="@Localizer["Images"]" class="@((string)ViewData["SelectedMenuItem"] == "Images" ? "link-active" : "")">
+                    <a asp-action="Images" asp-controller="Administration">
+                        <i class="fas fa-images" aria-hidden="true"></i><span class="expandedonly"> @Localizer["Images"]</span>
+                    </a>
+                </li>
+                <li title="@Localizer["Users"]" class="@((string)ViewData["SelectedMenuItem"] == "Users" ? "link-active" : "")">
+                    <a asp-action="Users" asp-controller="Administration">
+                        <i class="fas fa-users" aria-hidden="true"></i><span class="expandedonly"> @Localizer["Users"]</span>
+                    </a>
+                </li>
+            </ul>
+        </nav-menu>
+        <div class="flexcontent">
+            <div class="container-fluid">
+                <div class="titlebar">
+                    <div class="float-right d-print-none">
+                        <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Blog", new { area = "" })">
+                            <button type="submit" class="btn btn-link text-light"><i class="fas fa-sign-out-alt"></i></button>
+                        </form>
+                    </div>
+
+                    <h1>
+                        @ViewData["Title"]
+                    </h1>
+                </div>
+                <div class="maincontent">
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/dist/combined.min.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

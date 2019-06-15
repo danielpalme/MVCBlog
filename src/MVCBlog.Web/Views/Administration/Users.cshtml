@@ -1,0 +1,56 @@
+﻿@model MVCBlog.Web.Models.Administration.UsersViewModel
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer
+@{
+    ViewData["Title"] = Localizer["Users"];
+    ViewData["SelectedMenuItem"] = "Users";
+}
+
+<form class="form-inline d-print-none" method="get">
+    <div class="input-group input-group-sm mb-2 mr-sm-2">
+        <div class="input-group-prepend">
+            <div class="input-group-text"><i class="fa fa-search"></i></div>
+        </div>
+        <input asp-for="SearchTerm" class="form-control" placeholder="@Localizer["Search"]" />
+    </div>
+    <input type="hidden" name="@nameof(Model.Users.Paging.Top)" value="@Model.Users.Paging.Top" />
+    <button type="submit" class="btn btn-primary btn-sm mb-2 mr-2">@Localizer["Filter"]</button>
+</form>
+@if (Model.Users.TotalNumberOfItems > 0)
+{
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover table-striped table-sm">
+            <thead>
+                <tr>
+                    <th paged-result="this.Model.Users" sort-column="@nameof(MVCBlog.Data.User.LastName)">@Html.DisplayNameFor(m => m.Users.First().LastName)</th>
+                    <th paged-result="this.Model.Users" sort-column="@nameof(MVCBlog.Data.User.FirstName)">@Html.DisplayNameFor(m => m.Users.First().FirstName)</th>
+                    <th paged-result="this.Model.Users" sort-column="@nameof(MVCBlog.Data.User.Email)">@Html.DisplayNameFor(m => m.Users.First().Email)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model.Users)
+                {
+                    <tr>
+                        <td>@user.LastName</td>
+                        <td>@user.FirstName</td>
+                        <td>
+                            @if (user.EmailConfirmed)
+                            {
+                                <i class="far fa-check-square text-success"></i>
+                            }
+                            else
+                            {
+                                <i class="far fa-square text-danger"></i>
+                            }
+                            <a href="mailto:@user.Email">@user.Email</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <pager paged-result="this.Model.Users"></pager>
+}
+else
+{
+    <p>@Localizer["No users found"]</p>
+}

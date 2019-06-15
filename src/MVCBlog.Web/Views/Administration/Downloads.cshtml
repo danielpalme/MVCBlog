@@ -1,0 +1,64 @@
+﻿@model MVCBlog.Web.Models.Administration.DownloadViewModel
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer
+@{
+    ViewData["Title"] = Localizer["Downloads"];
+    ViewData["SelectedMenuItem"] = "Downloads";
+}
+
+<form class="form-inline d-print-none" method="get">
+    <div class="input-group input-group-sm mb-2 mr-sm-2">
+        <div class="input-group-prepend">
+            <div class="input-group-text"><i class="fa fa-search"></i></div>
+        </div>
+        <input asp-for="SearchTerm" class="form-control" placeholder="@Localizer["Search"]" />
+    </div>
+    <input type="hidden" name="@nameof(Model.BlogEntries.Paging.Top)" value="@Model.BlogEntries.Paging.Top" />
+    <button type="submit" class="btn btn-primary btn-sm mb-2 mr-2">@Localizer["Filter"]</button>
+</form>
+@if (Model.BlogEntries.TotalNumberOfItems > 0)
+{
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover table-striped table-sm">
+            <colgroup>
+                <col />
+                <col style="width: 100px;" />
+                <col />
+                <col style="width: 100px;" />
+            </colgroup>
+            <thead>
+                <tr>
+                    <th paged-result="this.Model.BlogEntries" sort-column="@nameof(BlogEntry.Header)">@Html.DisplayNameFor(m => m.BlogEntries.First().Header)</th>
+                    <th paged-result="this.Model.BlogEntries" sort-column="@nameof(BlogEntry.Visits)" class="text-right">@Html.DisplayNameFor(m => m.BlogEntries.First().Visits)</th>
+                    <th>@Localizer["File"]</th>
+                    <th class="text-right">@Localizer["Downloads"]</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var blogEntry in Model.BlogEntries)
+                {
+                    <tr>
+                        <td><a href="~/Blog/@blogEntry.Url">@blogEntry.Header</a></td>
+                        <td class="text-right">@blogEntry.Visits</td>
+                        <td>
+                            @foreach (var blogEntryFile in blogEntry.BlogEntryFiles.OrderBy(f => f.Name))
+                            {
+                                <a href="~/Blog/Download/@blogEntryFile.Id">@blogEntryFile.Name</a><br />
+                            }
+                        </td>
+                        <td class="text-right">
+                            @foreach (var blogEntryFile in blogEntry.BlogEntryFiles.OrderBy(f => f.Name))
+                            {
+                                @blogEntryFile.Counter<br />
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <pager paged-result="this.Model.BlogEntries"></pager>
+}
+else
+{
+    <p>@Localizer["No blog entries found"]</p>
+}

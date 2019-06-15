@@ -1,0 +1,45 @@
+﻿// Configure bundling and minification for the project.
+// More info at https://go.microsoft.com/fwlink/?LinkId=808241
+[
+  {
+    "outputFileName": "wwwroot/dist/combined.min.css",
+    // An array of relative input file paths. Globbing patterns supported
+    "inputFiles": [
+      "wwwroot/lib/bootstrap/css/bootstrap.css",
+      "wwwroot/lib/fontawesome/all.min.css",
+      "wwwroot/lib/select2/css/select2.min.css",
+      "wwwroot/lib/select2-bootstrap4-theme/select2-bootstrap4.min.css",
+      "wwwroot/lib/gijgo/css/gijgo.min.css",
+      "wwwroot/css/OpenSans_GoogleFonts.css",
+      "wwwroot/css/site.css"
+    ],
+    
+    "minify": {
+      "enabled": true,
+      "adjustRelativePaths": true
+    }
+  },
+
+  {
+    "outputFileName": "wwwroot/dist/combined.min.js",
+    "inputFiles": [
+      "wwwroot/lib/jquery/dist/jquery.js",
+      "wwwroot/lib/jquery-validation/dist/jquery.validate.js",
+      "wwwroot/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js",
+      "wwwroot/lib/popper/popper.js",
+      "wwwroot/lib/bootstrap/js/bootstrap.js",
+      "wwwroot/lib/select2/js/select2.js",
+      "wwwroot/lib/select2/js/i18n/de.js",
+      "wwwroot/lib/gijgo/js/gijgo.min.js",
+      "wwwroot/lib/gijgo/js/messages/messages.de-de.min.js",
+      "wwwroot/js/site.js"
+    ],
+    // Optionally specify minification options
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    // Optionally generate .map file
+    "sourceMap": false
+  }
+]

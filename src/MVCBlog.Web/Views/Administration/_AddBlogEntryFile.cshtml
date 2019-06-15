@@ -1,0 +1,13 @@
+﻿@model MVCBlog.Web.Models.Administration.AddBlogEntryFileViewModel
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer
+
+<form asp-controller="Administration" asp-action="AddBlogEntryFile" enctype="multipart/form-data" class="form-inline d-print-none">
+    <div class="form-group input-group-sm">
+        <input asp-for="File" class="form-control" />
+        <span asp-validation-for="File" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input asp-for="BlogEntryId" type="hidden" />
+        <button type="submit" class="btn btn-info btn-sm ml-2">@Localizer["Add"]</button>
+    </div>
+</form>

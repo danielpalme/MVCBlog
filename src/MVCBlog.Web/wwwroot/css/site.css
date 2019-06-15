@@ -1,0 +1,258 @@
+﻿/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  white-space: nowrap;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  line-height: 58px; /* Vertically center the text there */
+}
+
+/* Custom styles
+-------------------------------------------------- */
+
+html, body {
+    font-family: "Open Sans", sans-serif;
+}
+
+html {
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+button.accept-policy {
+    font-size: 1rem;
+    line-height: inherit;
+}
+
+.banner {
+    background-image: url(../banner.png);
+    background-repeat: no-repeat;
+    background-position-x: 50%;
+    background-color: #2F5890;
+    height: 250px;
+    display: block;
+    margin: 25px 0 20px 0;
+}
+
+input.input-validation-error, select.input-validation-error, textarea.input-validation-error {
+    border: 1px solid #c00;
+    background-color: #ffa0a0;
+}
+
+/* Administration
+-------------------------------------------------- */
+
+html.administration, html.administration body {
+    height: 100%;
+}
+
+    html.administration body {
+        margin-bottom: 0;
+    }
+
+.flexcontainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    width: 100%;
+    align-items: stretch;
+    height: 100%
+}
+
+.fs-container-fluid {
+    height: 100%;
+}
+
+.flexmenu {
+    flex: 0 0 250px;
+    transition: all ease .1s;
+    white-space: nowrap;
+    overflow-x: hidden;
+    background-color: #254b7d;
+    box-shadow: 0px 0px 15px 2px rgba(158,158,158,1);
+}
+
+    .flexmenu.collapsed {
+        flex: 0 0 48px;
+    }
+
+        .flexmenu.collapsed .expandedonly {
+            display: none;
+        }
+
+.flexcontent {
+    flex: 1 1 auto;
+    overflow: auto;
+}
+
+ul.navigation, ul.hamburger {
+    margin: 0;
+    padding: 0;
+    text-transform: uppercase;
+}
+
+    ul.navigation li, ul.hamburger li {
+        list-style: none;
+        font-size: 16px;
+    }
+
+        ul.navigation li a, ul.hamburger li a {
+            display: block;
+            text-decoration: none;
+            color: #fff;
+            padding: 9px 0 9px 15px;
+            margin: 0;
+            white-space: nowrap;
+        }
+
+            ul.navigation li a span {
+                padding-left: 5px;
+            }
+
+ul.hamburger {
+    border-bottom: 1px solid #fff;
+    height: 48px;
+}
+
+    ul.hamburger li a {
+        padding-top: 11px;
+    }
+
+ul.navigation li.ident {
+    padding-left: 15px;
+    font-size: 0.8rem;
+}
+
+.flexmenu.collapsed ul.navigation li.ident {
+    padding-left: 5px;
+    background-color: #2E4666;
+}
+
+.flexmenu.collapsed ul.navigation li.identshadow {
+    box-shadow: inset 0px 2px 5px 0px #1f3046;
+}
+
+/* Highlighting rules for nav menu items */
+ul.navigation li:hover, ul.navigation li.link-active, .flexmenu.collapsed ul.navigation li.ident:hover, .flexmenu.collapsed ul.navigation li.ident.link-active {
+    background-color: #57A7CC;
+}
+
+ul.navigation li a:hover,
+ul.navigation li a:focus {
+    color: #fff;
+    text-decoration: none;
+    border-right: 4px solid #fff;
+}
+
+ul.navigation li.link-active a {
+    border-right: 4px solid #fff;
+}
+
+ul .offset {
+    margin-top: 12px;
+    background-color: #23457a;
+}
+
+.home {
+    margin: 0;
+    padding: 0 0 1px 0;
+    text-align: center;
+    border-bottom: 1px solid #fff;
+}
+
+    .home a {
+        display: block;
+        height: 46px;
+        color: #fff;
+        font-size: 25px;
+        line-height: 46px;
+    }
+
+.titlebar {
+    background-color: #2B415E;
+    color: #fff;
+    height: 47px;
+    margin: 0 -15px 20px -15px;
+    padding: 0 15px 0 15px;
+}
+
+    .titlebar h1 {
+        color: #fff;
+        padding-top: 10px;
+        font-size: 24px;
+        margin-top: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .titlebar form, .titlebar button {
+        font-size: 24px;
+        display: inline-block;
+    }
+
+.maincontent {
+    font-size: 0.875rem;
+    line-height: 1.25;
+    padding-bottom: 25px;
+}
+
+.successmessage, .warningmessage, .errormessage {
+    color: #fff;
+    text-align: center;
+    position: fixed;
+    padding: 15px;
+    left: 50%;
+    max-width: 500px;
+    transform: translate(-50%, -100%);
+    z-index: 5000;
+    animation: fromtop 4s;
+}
+
+.successmessage {
+    background-color: #31af4e;
+}
+
+.warningmessage {
+    background-color: #eca536;
+}
+
+.errormessage {
+    background-color: #e0192c;
+}
+
+@keyframes fromtop {
+    0% {
+        transform: translate(-50%, -100%);
+    }
+
+    13% {
+        transform: translate(-50%, 0%);
+    }
+
+    87% {
+        transform: translate(-50%, 0%);
+    }
+
+    100% {
+        transform: translate(-50%, -100%);
+    }
+}

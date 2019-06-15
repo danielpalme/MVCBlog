@@ -1,0 +1,64 @@
+﻿@model MVCBlog.Web.Models.Administration.IndexViewModel
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer
+@{
+    ViewData["Title"] = Localizer["Blog entries"];
+    ViewData["SelectedMenuItem"] = "BlogEntries";
+}
+
+<a asp-controller="Administration" asp-action="EditBlogEntry" class="btn btn-primary d-print-none"><i class="fa fa-file" aria-hidden="true"></i> @Localizer["New blog entry"]</a>
+<br class="d-print-none" /><br class="d-print-none" />
+<form class="form-inline d-print-none" method="get">
+    <div class="input-group input-group-sm mb-2 mr-sm-2">
+        <div class="input-group-prepend">
+            <div class="input-group-text"><i class="fa fa-search"></i></div>
+        </div>
+        <input asp-for="SearchTerm" class="form-control" placeholder="@Localizer["Search"]" />
+    </div>
+    <input type="hidden" name="@nameof(Model.BlogEntries.Paging.Top)" value="@Model.BlogEntries.Paging.Top" />
+    <button type="submit" class="btn btn-primary btn-sm mb-2 mr-2">@Localizer["Filter"]</button>
+    <button type="submit" name="Download" value="True" class="btn btn-success btn-sm mb-2"><i class="fa fa-file-excel" aria-hidden="true"></i> @Localizer["Download"]</button>
+</form>
+@if (Model.BlogEntries.TotalNumberOfItems > 0)
+{
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover table-striped table-sm">
+            <colgroup>
+                <col />
+                <col style="width: 170px;" />
+                <col style="width: 170px;" />
+                <col style="width: 100px;" />
+                <col style="width: 70px;" />
+            </colgroup>
+            <thead>
+                <tr>
+                    <th paged-result="this.Model.BlogEntries" sort-column="@nameof(BlogEntry.Header)">@Html.DisplayNameFor(m => m.BlogEntries.First().Header)</th>
+                    <th paged-result="this.Model.BlogEntries" sort-column="@nameof(BlogEntry.PublishDate)">@Html.DisplayNameFor(m => m.BlogEntries.First().PublishDate)</th>
+                    <th paged-result="this.Model.BlogEntries" sort-column="@nameof(BlogEntry.UpdateDate)">@Html.DisplayNameFor(m => m.BlogEntries.First().UpdateDate)</th>
+                    <th paged-result="this.Model.BlogEntries" sort-column="@nameof(BlogEntry.Visits)" class="text-right">@Html.DisplayNameFor(m => m.BlogEntries.First().Visits)</th>
+                    <th class="d-print-none"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var blogEntry in Model.BlogEntries)
+                {
+                    <tr>
+                        <td><a href="~/Blog/@blogEntry.Url/Edit">@blogEntry.Header</a></td>
+                        <td class="text-right">@blogEntry.PublishDate.DateTime.ToShortDateString() @blogEntry.PublishDate.DateTime.ToShortTimeString()</td>
+                        <td class="text-right">@blogEntry.UpdateDate.DateTime.ToShortDateString() @blogEntry.UpdateDate.DateTime.ToShortTimeString()</td>
+                        <td class="text-right">@blogEntry.Visits</td>
+                        <td class="text-right d-print-none">
+                            <a href="~/Blog/@blogEntry.Url" title="Edit"><i class="fa fa-globe"></i></a>
+                            <a href="~/Blog/@blogEntry.Url/Edit" title="Edit"><i class="fa fa-edit"></i></a>
+                            <a asp-controller="Administration" asp-action="DeleteBlogEntry" asp-route-id="@blogEntry.Id" title="Delete" onclick="return confirm('Really delete blog entry?');"><i class="fa fa-trash text-danger"></i></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <pager paged-result="this.Model.BlogEntries"></pager>
+}
+else
+{
+    <p>@Localizer["No blog entries found"]</p>
+}

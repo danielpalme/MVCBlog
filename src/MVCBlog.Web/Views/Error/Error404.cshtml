@@ -1,0 +1,7 @@
+﻿@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer
+@{
+    ViewData["Title"] = Localizer["Not found"];
+}
+
+<h1 class="text-danger">@Localizer["Error 404"]</h1>
+<h2 class="text-danger">@Localizer["The requested page is not available"]</h2>

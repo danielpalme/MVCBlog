@@ -1,0 +1,249 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Author" xml:space="preserve">
+    <value>Author</value>
+  </data>
+  <data name="Comment" xml:space="preserve">
+    <value>Comment</value>
+  </data>
+  <data name="Content" xml:space="preserve">
+    <value>Content</value>
+  </data>
+  <data name="CreatedOn" xml:space="preserve">
+    <value>Created on</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>Email (optional, used for Gravatar)</value>
+  </data>
+  <data name="Header" xml:space="preserve">
+    <value>Header</value>
+  </data>
+  <data name="Homepage" xml:space="preserve">
+    <value>Website</value>
+  </data>
+  <data name="Id" xml:space="preserve">
+    <value>Id</value>
+  </data>
+  <data name="IdentityErrorConcurrencyFailure" xml:space="preserve">
+    <value>Optimistic concurrency failure, object has been modified.</value>
+  </data>
+  <data name="IdentityErrorDefaultError" xml:space="preserve">
+    <value>An unknown failure has occurred.</value>
+  </data>
+  <data name="IdentityErrorDuplicateEmail" xml:space="preserve">
+    <value>Email '{0}' is already taken.</value>
+  </data>
+  <data name="IdentityErrorDuplicateRoleName" xml:space="preserve">
+    <value>Role name '{0}' is already taken.</value>
+  </data>
+  <data name="IdentityErrorDuplicateUserName" xml:space="preserve">
+    <value>Username '{0}' is already taken.</value>
+  </data>
+  <data name="IdentityErrorInvalidEmail" xml:space="preserve">
+    <value>Email '{0}' is invalid.</value>
+  </data>
+  <data name="IdentityErrorInvalidRoleName" xml:space="preserve">
+    <value>Role name '{0}' is invalid.</value>
+  </data>
+  <data name="IdentityErrorInvalidToken" xml:space="preserve">
+    <value>Invalid token.</value>
+  </data>
+  <data name="IdentityErrorInvalidUserName" xml:space="preserve">
+    <value>User name '{0}' is invalid, can only contain letters or digits.</value>
+  </data>
+  <data name="IdentityErrorLoginAlreadyAssociated" xml:space="preserve">
+    <value>A user with this login already exists.</value>
+  </data>
+  <data name="IdentityErrorPasswordMismatch" xml:space="preserve">
+    <value>Incorrect password.</value>
+  </data>
+  <data name="IdentityErrorPasswordRequiresDigit" xml:space="preserve">
+    <value>Passwords must have at least one digit ('0'-'9').</value>
+  </data>
+  <data name="IdentityErrorPasswordRequiresLower" xml:space="preserve">
+    <value>Passwords must have at least one lowercase ('a'-'z').</value>
+  </data>
+  <data name="IdentityErrorPasswordRequiresNonAlphanumeric" xml:space="preserve">
+    <value>Passwords must have at least one non alphanumeric character.</value>
+  </data>
+  <data name="IdentityErrorPasswordRequiresUpper" xml:space="preserve">
+    <value>Passwords must have at least one uppercase ('A'-'Z').</value>
+  </data>
+  <data name="IdentityErrorPasswordTooShort" xml:space="preserve">
+    <value>Passwords must be at least {0} characters.</value>
+  </data>
+  <data name="IdentityErrorUserAlreadyHasPassword" xml:space="preserve">
+    <value>User already has a password set.</value>
+  </data>
+  <data name="IdentityErrorUserAlreadyInRole" xml:space="preserve">
+    <value>User already in role '{0}'.</value>
+  </data>
+  <data name="IdentityErrorUserLockoutNotEnabled" xml:space="preserve">
+    <value>Lockout is not enabled for this user.</value>
+  </data>
+  <data name="IdentityErrorUserNotInRole" xml:space="preserve">
+    <value>User is not in role '{0}'.</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="PublishDate" xml:space="preserve">
+    <value>Publish date</value>
+  </data>
+  <data name="ShortContent" xml:space="preserve">
+    <value>Short content (shown on startpage)</value>
+  </data>
+  <data name="Validation_MaxLength" xml:space="preserve">
+    <value>'{0}' has a maximum length of {1}.</value>
+  </data>
+  <data name="Validation_MaxMinLength" xml:space="preserve">
+    <value>The '{0}' must be at least {2} and at max {1} characters long.</value>
+  </data>
+  <data name="Validation_Required" xml:space="preserve">
+    <value>'{0}' is required.</value>
+  </data>
+  <data name="Visible" xml:space="preserve">
+    <value>Publicly visible</value>
+  </data>
+  <data name="LastName" xml:space="preserve">
+    <value>Last name</value>
+  </data>
+  <data name="FirstName" xml:space="preserve">
+    <value>First name</value>
+  </data>
+  <data name="Visits" xml:space="preserve">
+    <value>Visits</value>
+  </data>
+  <data name="Counter" xml:space="preserve">
+    <value>Downloads</value>
+  </data>
+  <data name="UpdateDate" xml:space="preserve">
+    <value>Last updated</value>
+  </data>
+  <data name="SavedSuccessfully" xml:space="preserve">
+    <value>Saved successfully</value>
+  </data>
+  <data name="DeletedSuccessfully" xml:space="preserve">
+    <value>Deleted successfully</value>
+  </data>
+  <data name="PermalinkInUse" xml:space="preserve">
+    <value>Permalink '{0}' already in use</value>
+  </data>
+</root>

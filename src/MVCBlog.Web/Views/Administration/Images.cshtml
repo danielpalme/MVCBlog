@@ -1,0 +1,40 @@
+﻿@model MVCBlog.Web.Models.Administration.ImagesViewModel
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer
+@{
+    ViewData["Title"] = Localizer["Images"];
+    ViewData["SelectedMenuItem"] = "Images";
+}
+
+<form asp-controller="Administration" asp-action="Images" enctype="multipart/form-data" class="form-inline d-print-none">
+    <div class="form-group input-group-sm">
+        <input asp-for="Image" class="form-control" />
+        <button type="submit" class="btn btn-info btn-sm ml-2">@Localizer["Add"]</button>
+    </div>
+</form>
+<br class="d-print-none" /><br class="d-print-none" />
+<form class="form-inline d-print-none" method="get">
+    <div class="input-group input-group-sm mb-2 mr-sm-2">
+        <div class="input-group-prepend">
+            <div class="input-group-text"><i class="fa fa-search"></i></div>
+        </div>
+        <input asp-for="SearchTerm" class="form-control" placeholder="@Localizer["Search"]" />
+    </div>
+    <input type="hidden" name="@nameof(Model.Images.Paging.Top)" value="@Model.Images.Paging.Top" />
+    <button type="submit" class="btn btn-primary btn-sm mb-2 mr-2">@Localizer["Filter"]</button>
+</form>
+@if (Model.Images.TotalNumberOfItems > 0)
+{
+    foreach (var image in Model.Images)
+    {
+        <figure class="figure mr-3 mb-3">
+            <a href="~/blogimages/@image.Path"><img src="~/blogimages/@image.Path" alt="@image.Name" class="img-thumbnail" style="max-width:250px; max-height:250px" /></a>
+            <figcaption class="figure-caption mt-1">@image.Name <a asp-controller="Administration" asp-action="DeleteImage" asp-route-id="@image.Id" class="float-right d-print-none" title="Delete" onclick="return confirm('Really delete image?');"><i class="fa fa-trash text-danger"></i></a></figcaption>
+        </figure>
+    }
+
+    <pager paged-result="this.Model.Images"></pager>
+}
+else
+{
+    <p>@Localizer["No images found"]</p>
+}

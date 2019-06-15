@@ -1,0 +1,41 @@
+﻿@model MVCBlog.Data.BlogEntry
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer
+<span class="text-muted">
+    <i class="fas fa-calendar-alt"></i> @Model.PublishDate.DateTime.ToShortDateString()<br class="d-md-none" />
+    @if (Model.Author != null)
+    {
+        <i class="fas fa-user ml-md-4"></i> @Model.Author.ToString()<br class="d-md-none" />
+    }
+    @if (Model.Tags.Count > 0)
+    {
+        int counter = -1;
+        <i class="fas fa-tags ml-md-4"></i>
+        @foreach (var tag in Model.Tags.Select(t => t.Tag.Name).OrderBy(t => t))
+        {
+            counter++;
+            string split = counter < Model.Tags.Count - 1 ? ", " : string.Empty;
+            <a asp-controller="Blog" asp-action="Index" asp-route-tag="@tag">@tag</a>@split
+
+            split = "|";
+        }
+    }
+    <br class="d-md-none" />
+
+    <i class="fas fa-comments ml-md-4"></i>
+    <a href="~/Blog/@Model.Url#Comments">@Model.BlogEntryComments.Count @Localizer["Comments"]</a>
+    <br class="d-md-none" />
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        <i class="fa fa-chart-line ml-md-4"></i>
+        @Model.Visits<text> @Localizer["Visits"]</text>
+        <br class="d-md-none" />
+
+        <span class="float-lg-right d-print-none">
+            <a href="~/Blog/@Model.Url/Edit"><i class="fas fa-edit"></i></a>
+            <a href="~/Blog/@Model.Url/Edit">@Localizer["Edit"]</a>
+        </span>
+    }
+</span>
+<hr class="mt-1" />
+<markdown Markdown="@Model.ShortContent"></markdown>

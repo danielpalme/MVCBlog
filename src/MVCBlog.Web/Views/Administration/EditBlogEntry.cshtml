@@ -1,0 +1,164 @@
+﻿@model MVCBlog.Web.Models.Administration.EditBlogEntryViewModel
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer
+@{
+    var requestCulture = Context.Features.Get<Microsoft.AspNetCore.Localization.IRequestCultureFeature>();
+    string language = requestCulture?.RequestCulture.Culture.TwoLetterISOLanguageName == "de" ? "de" : "en";
+
+    bool existingEntry = Model.BlogEntry.Header != null;
+
+    ViewData["Title"] = Model.BlogEntry.Header ?? Localizer["New blog entry"].Value;
+    ViewData["SelectedMenuItem"] = "BlogEntries";
+}
+
+@if (existingEntry)
+{
+    <div class="row d-print-none">
+        <div class="col-md-8 col-sm-12">
+            <a href="~/Blog/@Model.BlogEntry.Url" title="Edit" class="btn btn-outline-primary"><i class="fa fa-globe"></i> @Localizer["Show blog entry"]</a>
+            <br /><br />
+        </div>
+    </div>
+}
+<div class="row">
+    <div class="col-md-8 col-sm-12">
+        <h2>@Localizer["Content"]</h2>
+        <form method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label asp-for="BlogEntry.Header"></label>
+                <input asp-for="BlogEntry.Header" class="form-control" />
+                <span asp-validation-for="BlogEntry.Header" class="text-danger"></span>
+            </div>
+            @if (existingEntry)
+            {
+                <div class="form-group">
+                    <label asp-for="BlogEntry.Permalink"></label>
+                    <input asp-for="BlogEntry.Permalink" class="form-control" />
+                    <span asp-validation-for="BlogEntry.Permalink" class="text-danger"></span>
+                </div>
+            }
+            <div class="form-group">
+                <label asp-for="BlogEntry.ShortContent"></label> (<a href="https://de.wikipedia.org/wiki/Markdown" target="_blank">Markdown</a>)
+                <textarea asp-for="BlogEntry.ShortContent" class="form-control" rows="5"></textarea>
+                <span asp-validation-for="BlogEntry.ShortContent" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BlogEntry.Content"></label> (<a href="https://de.wikipedia.org/wiki/Markdown" target="_blank">Markdown</a>)
+                <partial name="_InsertImage" />
+                <textarea asp-for="BlogEntry.Content" class="form-control" rows="10"></textarea>
+                <span asp-validation-for="BlogEntry.Content" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BlogEntry.AuthorId"></label>
+                <select asp-for="BlogEntry.AuthorId" asp-items="Model.Authors.Select(a => new SelectListItem() { Value = a.Id, Text = a.ToString() })" class="form-control">
+                    <option value="">-</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="BlogEntry.Tags"></label>
+                <select asp-for="SelectedTagNames" class="select2" multiple style="width: 100%">
+                    @foreach (var tag in Model.AllTags)
+                    {
+                        if (Model.SelectedTagNames.Any(t => t == tag.Name))
+                        {
+                            <option value="@tag.Name" selected>@tag.Name</option>
+                        }
+                        else
+                        {
+                            <option value="@tag.Name">@tag.Name</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="form-group form-check">
+                <input asp-for="BlogEntry.Visible" type="checkbox" class="form-check-input">
+                <label asp-for="BlogEntry.Visible" class="form-check-label"></label>
+            </div>
+            <div class="form-group">
+                <label asp-for="BlogEntry.PublishDate"></label>
+                <input asp-for="BlogEntry.PublishDate" class="form-control form-control-sm gijgodatetimepicker" type="text" value="@Model.BlogEntry.PublishDate.ToString("dd.MM.yyyy HH:mm")" />
+                <span asp-validation-for="BlogEntry.PublishDate" class="text-danger"></span>
+            </div>
+            <div class="form-group d-print-none">
+                <input asp-for="BlogEntry.CreatedOn" type="hidden" />
+                <input asp-for="BlogEntry.Id" type="hidden" />
+                <button type="submit" class="btn btn-primary">@Localizer["Save"]</button>
+            </div>
+        </form>
+    </div>
+    <div class="col-lg-4 col-sm-12">
+        @if (existingEntry)
+        {
+            var blogEntryFileViewModel = new MVCBlog.Web.Models.Administration.AddBlogEntryFileViewModel()
+            {
+                BlogEntryId = Model.BlogEntry.Id
+            };
+
+            <h2>@Localizer["Files"]</h2>
+            <partial name="_AddBlogEntryFile" model="@blogEntryFileViewModel" />
+            <br />
+
+            if (Model.BlogEntry.BlogEntryFiles.Count > 0)
+            {
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover table-striped table-sm">
+                        <colgroup>
+                            <col />
+                            <col style="width: 100px;" />
+                            <col style="width: 50px;" />
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>@Html.DisplayNameFor(m => m.BlogEntry.BlogEntryFiles.First().Name)</th>
+                                <th class="text-right">@Html.DisplayNameFor(m => m.BlogEntry.BlogEntryFiles.First().Counter)</th>
+                                <th class="d-print-none"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var blogEntryFile in Model.BlogEntry.BlogEntryFiles)
+                            {
+                                <tr>
+                                    <td><a href="~/Blog/Download/@blogEntryFile.Id">@blogEntryFile.Name</a></td>
+                                    <td class="text-right">@blogEntryFile.Counter</td>
+                                    <td class="text-right d-print-none">
+                                        <a asp-controller="Administration" asp-action="DeleteBlogEntryFile" asp-route-id="@blogEntryFile.Id" title="Delete" onclick="return confirm('Really delete file?');"><i class="fa fa-trash text-danger"></i></a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('.select2').select2({
+                minimumInputLength: 2,
+                theme: "bootstrap4",
+                language: "@language",
+                allowClear: true,
+                tags: true
+            });
+        });
+
+        $('#imageModal').on('show.bs.modal', function () {
+            $.ajax({
+                url: '@Url.Action("ImagesSelection")'
+            }).done(function (result) {
+                $('#imagesSelection').html(result);
+            });
+        });
+
+        $(document).ready(function () {
+            $('#imagesSelection').on('click', '.selectImage', function () {
+                var target = $('#BlogEntry_Content');
+                target.val(target.val() + '\n' + $(this).data('markdown'));
+
+                return false;
+            });
+        });
+    </script>
+}

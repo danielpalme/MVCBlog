@@ -1,0 +1,131 @@
+﻿@model MVCBlog.Web.Models.Blog.EntryViewModel
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer
+@{
+    ViewData["Title"] = Model.BlogEntry.Header;
+}
+
+@if (User.Identity.IsAuthenticated)
+{
+    bool notVisible = !Model.BlogEntry.Visible;
+    bool notYetVisible = Model.BlogEntry.Visible && Model.BlogEntry.PublishDate > DateTimeOffset.Now;
+
+    if (notVisible || notYetVisible)
+    {
+        <div class="alert alert-danger mt-5 mb-5" role="alert">
+            @if (notVisible)
+            {
+                <text>@Localizer["Blog entry is not publicly visible."]</text>
+            }
+            else if (notYetVisible)
+            {
+                <text>@Localizer["Blog entry will be become publicly visible on:"] @Model.BlogEntry.PublishDate.DateTime.ToShortDateString() @Model.BlogEntry.PublishDate.DateTime.ToShortTimeString()</text>
+            }
+        </div>
+    }
+}
+
+
+<article class="mb-4">
+    <h1>@Model.BlogEntry.Header</h1>
+    <partial name="_Header" model="@Model.BlogEntry" />
+    <markdown Markdown="@Model.BlogEntry.Content"></markdown>
+
+    @if (Model.BlogEntry.BlogEntryFiles.Count > 0)
+    {
+        <h2>@Localizer["Downloads"]</h2>
+
+        <ul class="list-unstyled">
+            @foreach (var file in Model.BlogEntry.BlogEntryFiles)
+            {
+                <li>
+                    <a href="~/Blog/Download/@file.Id">@file.Name</a>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <text> (@file.Counter @Localizer["Downloads"])</text>
+                    }
+                </li>
+            }
+        </ul>
+    }
+</article>
+
+<hr class="mb-4" />
+
+@if (Model.RelatedBlogEntries.Count > 0)
+{
+    <h2>@Localizer["Related posts"]</h2>
+    <ul class="list-unstyled">
+        @foreach (var entry in Model.RelatedBlogEntries)
+        {
+            <li><a href="~/Blog/@entry.Url">@entry.Header</a></li>
+        }
+    </ul>
+
+    <hr class="mb-4" />
+}
+
+<h2 id="Comments">@Localizer["Comments"]</h2>
+<form method="post" class="d-print-none">
+    <div class="form-group">
+        <label asp-for="Comment.Name"></label>
+        <input class="form-control" asp-for="Comment.Name">
+        <span asp-validation-for="Comment.Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Comment.Email"></label>
+        <input class="form-control" asp-for="Comment.Email">
+        <span asp-validation-for="Comment.Email" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Comment.Homepage"></label>
+        <input class="form-control" asp-for="Comment.Homepage">
+        <span asp-validation-for="Comment.Homepage" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Comment.Comment"></label>
+        <textarea class="form-control" asp-for="Comment.Comment" rows="7"></textarea>
+        <span asp-validation-for="Comment.Comment" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">@Localizer["Submit"]</button>
+</form>
+
+@foreach (var comment in Model.BlogEntry.BlogEntryComments.OrderByDescending(b => b.CreatedOn))
+{
+    string adminPostClass = comment.AdminPost ? "text-danger" : string.Empty;
+    <div class="clearfix">
+        <hr class="mb-4" />
+        <h3 class="@adminPostClass">@comment.Name</h3>
+        <span class="text-muted">
+            <i class="fas fa-calendar-alt"></i> @comment.CreatedOn.DateTime.ToShortDateString()
+            @if (comment.Homepage != null)
+            {
+                <br class="d-md-none" />
+                <i class="fas fa-link ml-md-4"></i>
+                @comment.Homepage
+            }
+            @if (User.Identity.IsAuthenticated)
+            {
+                <br class="d-md-none" />
+
+                <span class="float-lg-right d-print-none">
+                    <a asp-controller="Blog" asp-action="DeleteComment" asp-route-id="@comment.Id" class="text-danger" onclick="return confirm('@Localizer["Really delete comment?"]');"><i class="fas fa-trash"></i></a>
+                    <a asp-controller="Blog" asp-action="DeleteComment" asp-route-id="@comment.Id" class="text-danger" onclick="return confirm('@Localizer["Really delete comment?"]');">@Localizer["Delete"]</a>
+                </span>
+            }
+        </span>
+        <div class="mt-2">
+            @if (!string.IsNullOrEmpty(comment.Email))
+            {
+                string emailHash = comment.Email.ToLowerInvariant().EncryptMD5().ToLowerInvariant();
+                string avatarUrl = $"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.PathBase}/avatar.png";
+                <img class="float-left mr-2 mb-2" alt="@comment.Name" src="https://www.gravatar.com/avatar/@emailHash?d=@System.Uri.EscapeDataString(avatarUrl)" width="64" height="64" />
+            }
+            else
+            {
+                <img class="float-left mr-2 mb-2" alt="@comment.Name" src="~/avatar.png" width="64" height="64" />
+            }
+
+            <p class="float-left" style="white-space:pre-wrap">@comment.Comment</p>
+        </div>
+    </div>
+}

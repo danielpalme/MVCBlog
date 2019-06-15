@@ -1,0 +1,86 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer
+@inject SignInManager<MVCBlog.Data.User> SignInManager
+@inject Microsoft.Extensions.Options.IOptionsMonitor<MVCBlog.Business.BlogSettings> BlogSettings
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - @BlogSettings.CurrentValue.BlogName</title>
+    <link rel="stylesheet" href="~/dist/combined.min.css" asp-append-version="true" />
+    <link rel="shortcut icon" href="~/favicon.ico" type="image/x-icon" />
+    <link rel="apple-touch-icon" href="~/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" href="~/apple-touch-icon_192.png" sizes="192x192" />
+    <meta name="theme-color" content="#2F5890">
+    <meta name="msapplication-navbutton-color" content="#2F5890">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#2F5890">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="~/" class="banner d-print-none"></a>
+            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom shadow-sm mb-3">
+                <a class="navbar-brand" href="~/">Blog</a>
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <a asp-area="" asp-controller="Administration" asp-action="Index" class="nav-link text-dark"><i class="fas fa-tools"></i></a>
+                }
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex">
+
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Blog" asp-action="Feed"><i class="fas fa-rss"></i></a>
+                        </li>
+                    </ul>
+                    <form class="form-inline" action="~/" method="get">
+                        <input class="form-control mr-sm-2" type="search" name="search" placeholder="@Localizer["Search"]" aria-label="Search">
+                        <button class="btn btn-outline-dark my-2 my-sm-0" type="submit">@Localizer["Search"]</button>
+                    </form>
+                </div>
+            </nav>
+        </header>
+        <partial name="_CookieConsentPartial" />
+
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+    <footer class="border-top footer text-muted text-center d-print-none">
+        <div class="container">
+            <a asp-area="" asp-controller="Privacy" asp-action="Index"><i class="fas fa-user-shield"></i></a>
+            <a asp-area="" asp-controller="Privacy" asp-action="Index">@Localizer["Privacy"]</a>
+            @if (!SignInManager.IsSignedIn(User))
+            {
+                if (BlogSettings.CurrentValue.NewUsersCanRegister)
+                {
+                    <text>|</text>
+                    <a asp-area="Identity" asp-page="/Account/Register"><i class="fas fa-user-plus"></i></a>
+                    <a asp-area="Identity" asp-page="/Account/Register">@Localizer["Register"]</a>
+                }
+                <text>|</text>
+                <a asp-area="Identity" asp-page="/Account/Login"><i class="fas fa-sign-in-alt"></i></a>
+                <a asp-area="Identity" asp-page="/Account/Login">@Localizer["Login"]</a>
+            }
+            else
+            {
+                <text>|</text>
+                <a asp-area="Identity" asp-page="/Account/Manage/Index"><i class="fas fa-user-cog"></i></a>
+                <a asp-area="Identity" asp-page="/Account/Manage/Index">@Localizer["Settings"]</a>
+                <text>|</text>
+                <form style="display: inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Blog", new { area = "" })">
+                    <button type="submit" class="btn btn-link" style="padding-left: 0;"><i class="fas fa-sign-out-alt"></i> @Localizer["Logout"]</button>
+                </form>
+            }
+        </div>
+    </footer>
+
+    <script src="~/dist/combined.min.js" asp-append-version="true"></script>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
