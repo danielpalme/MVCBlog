@@ -175,7 +175,7 @@ namespace MVCBlog.Web.Controllers
 
             this.SetSuccessMessage(Resources.DeletedSuccessfully);
 
-            return this.Redirect(this.Request.Headers["Referer"].ToString());
+            return this.Redirect(this.Request.Headers["Referer"]);
         }
 
         [HttpPost]
@@ -184,7 +184,7 @@ namespace MVCBlog.Web.Controllers
         {
             if (!this.ModelState.IsValid)
             {
-                return this.Redirect(this.Request.Headers["Referer"].ToString());
+                return this.Redirect(this.Request.Headers["Referer"]);
             }
 
             using (var memoryStream = new MemoryStream())
@@ -202,7 +202,7 @@ namespace MVCBlog.Web.Controllers
 
             this.SetSuccessMessage(Resources.SavedSuccessfully);
 
-            return this.Redirect(this.Request.Headers["Referer"].ToString());
+            return this.Redirect(this.Request.Headers["Referer"]);
         }
 
         public async Task<ActionResult> DeleteBlogEntryFile(Guid? id)
@@ -217,7 +217,7 @@ namespace MVCBlog.Web.Controllers
                 Id = id.Value
             });
 
-            return this.Redirect(this.Request.Headers["Referer"].ToString());
+            return this.Redirect(this.Request.Headers["Referer"]);
         }
 
         public async Task<ActionResult> ImagesSelection()

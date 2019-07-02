@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using Markdig;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -178,7 +179,8 @@ namespace MVCBlog.Web.Controllers
 
             await this.addBlogEntryCommentCommandHandler.HandleAsync(new AddBlogEntryCommentCommand()
             {
-                Entity = blogEntryComment
+                Entity = blogEntryComment,
+                Referer = this.Request.GetTypedHeaders().Referer?.ToString()
             });
 
             return this.RedirectToAction(nameof(this.Entry), new { Id = id });

@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using Microsoft.Extensions.Options;
 using MVCBlog.Business.Email;
 using MVCBlog.Data;
@@ -35,14 +36,16 @@ namespace MVCBlog.Business.Commands
             }
 
             var body = new StringBuilder();
-            body.Append("Name: ");
-            body.AppendLine(command.Entity.Name);
+            body.Append("Referer: ");
+            body.AppendLine(HttpUtility.HtmlEncode(command.Referer));
+            body.Append("<br /><br />Name: ");
+            body.AppendLine(HttpUtility.HtmlEncode(command.Entity.Name));
             body.Append("<br />Email: ");
-            body.AppendLine(command.Entity.Email);
+            body.AppendLine(HttpUtility.HtmlEncode(command.Entity.Email));
             body.Append("<br />Homepage: ");
-            body.AppendLine(command.Entity.Homepage);
+            body.AppendLine(HttpUtility.HtmlEncode(command.Entity.Homepage));
             body.Append("<br /><br />Comment:<br />");
-            body.AppendLine(command.Entity.Comment);
+            body.AppendLine(HttpUtility.HtmlEncode(command.Entity.Comment).Replace("\r\n", "\n").Replace("\n", "<br />"));
 
             var message = new Message(
                 new Recipient(this.blogSettings.NotifyOnNewCommentsEmail),
