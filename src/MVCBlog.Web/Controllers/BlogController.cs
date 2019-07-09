@@ -17,6 +17,7 @@ using MVCBlog.Business;
 using MVCBlog.Business.Commands;
 using MVCBlog.Business.IO;
 using MVCBlog.Data;
+using MVCBlog.Web.Infrastructure.Mvc;
 using MVCBlog.Web.Infrastructure.Paging;
 using MVCBlog.Web.Models.Blog;
 
@@ -149,6 +150,7 @@ namespace MVCBlog.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [SpamProtection]
         [Route("[controller]/{year:int}/{month:int}/{day:int}/{id}")]
         public async Task<ActionResult> Entry(string id, EntryViewModel model)
         {
@@ -205,46 +207,55 @@ namespace MVCBlog.Web.Controllers
             string baseUrl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
 
             using (var sw = new StringWriterWithEncoding(Encoding.UTF8))
-            using (XmlWriter xmlWriter = XmlWriter.Create(sw, new XmlWriterSettings() { Async = true, Indent = true }))
             {
-                var writer = new RssFeedWriter(xmlWriter);
-                await writer.WriteTitle(this.blogSettings.BlogName);
-                await writer.WriteDescription(this.blogSettings.BlogDescription);
-                await writer.Write(new SyndicationLink(new Uri($"{baseUrl}/Blog/{nameof(this.Feed)}")));
-
-                if (entries.Count > 0)
+                using (XmlWriter xmlWriter = XmlWriter.Create(sw, new XmlWriterSettings() { Async = true, Indent = true }))
                 {
-                    await writer.WritePubDate(entries[0].PublishDate);
-                }
-
-                var pipeline = new MarkdownPipelineBuilder()
-                    .UseAdvancedExtensions()
-                    .Build();
-
-                foreach (var blogEntry in entries)
-                {
-                    var syndicationItem = new SyndicationItem()
+                    var writer = new RssFeedWriter(xmlWriter);
+                    await writer.WriteTitle(this.blogSettings.BlogName);
+                    await writer.WriteDescription(this.blogSettings.BlogDescription);
+                    await writer.Write(new SyndicationLink(new Uri(baseUrl)));
+                    await writer.WriteRaw($"<atom:link href=\"{baseUrl}/Blog/{nameof(this.Feed)}\" rel=\"self\" type=\"application/rss+xml\" xmlns:atom=\"http://www.w3.org/2005/Atom\" />");
+                    await writer.Write(new SyndicationImage(new Uri($"{baseUrl}/apple-touch-icon_192.png"))
                     {
-                        Id = blogEntry.Id.ToString(),
-                        Title = blogEntry.Header,
-                        Published = blogEntry.PublishDate,
-                        LastUpdated = blogEntry.PublishDate > blogEntry.UpdateDate ? blogEntry.PublishDate : blogEntry.UpdateDate,
-                        Description = $"{Markdown.ToHtml(blogEntry.ShortContent, pipeline)}{Markdown.ToHtml(blogEntry.Content, pipeline)}"
-                    };
+                        Title = this.blogSettings.BlogName,
+                        Description = this.blogSettings.BlogDescription,
+                        Link = new SyndicationLink(new Uri(baseUrl))
+                    });
 
-                    syndicationItem.AddLink(new SyndicationLink(new Uri($"{baseUrl}/Blog/{blogEntry.Url}")));
-
-                    syndicationItem.AddContributor(new SyndicationPerson(blogEntry.Author.UserName, blogEntry.Author.Email));
-
-                    foreach (var tag in blogEntry.Tags)
+                    if (entries.Count > 0)
                     {
-                        syndicationItem.AddCategory(new SyndicationCategory(tag.Tag.Name));
+                        await writer.WritePubDate(entries[0].PublishDate);
                     }
 
-                    await writer.Write(syndicationItem);
-                }
+                    var pipeline = new MarkdownPipelineBuilder()
+                        .UseAdvancedExtensions()
+                        .Build();
 
-                xmlWriter.Flush();
+                    foreach (var blogEntry in entries)
+                    {
+                        var syndicationItem = new SyndicationItem()
+                        {
+                            Id = blogEntry.Id.ToString(),
+                            Title = blogEntry.Header,
+                            Published = blogEntry.PublishDate,
+                            LastUpdated = blogEntry.PublishDate > blogEntry.UpdateDate ? blogEntry.PublishDate : blogEntry.UpdateDate,
+                            Description = $"{Markdown.ToHtml(blogEntry.ShortContent, pipeline)}{Markdown.ToHtml(blogEntry.Content, pipeline)}"
+                        };
+
+                        syndicationItem.AddLink(new SyndicationLink(new Uri($"{baseUrl}/Blog/{blogEntry.Url}")));
+
+                        syndicationItem.AddContributor(new SyndicationPerson(blogEntry.Author.UserName, blogEntry.Author.Email));
+
+                        foreach (var tag in blogEntry.Tags)
+                        {
+                            syndicationItem.AddCategory(new SyndicationCategory(tag.Tag.Name));
+                        }
+
+                        await writer.Write(syndicationItem);
+                    }
+
+                    xmlWriter.Flush();
+                }
 
                 return this.Content(sw.ToString(), "application/rss+xml");
             }

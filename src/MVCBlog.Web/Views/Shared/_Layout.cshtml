@@ -73,7 +73,7 @@
                 <a asp-area="Identity" asp-page="/Account/Manage/Index"><i class="fas fa-user-cog"></i></a>
                 <a asp-area="Identity" asp-page="/Account/Manage/Index">@Localizer["Settings"]</a>
                 <text>|</text>
-                <form style="display: inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Blog", new { area = "" })">
+                <form style="display: inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="/">
                     <button type="submit" class="btn btn-link" style="padding-left: 0;"><i class="fas fa-sign-out-alt"></i> @Localizer["Logout"]</button>
                 </form>
             }

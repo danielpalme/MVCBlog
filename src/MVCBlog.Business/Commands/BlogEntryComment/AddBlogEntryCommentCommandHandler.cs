@@ -37,7 +37,7 @@ namespace MVCBlog.Business.Commands
 
             var body = new StringBuilder();
             body.Append("Referer: ");
-            body.AppendLine(HttpUtility.HtmlEncode(command.Referer));
+            body.AppendLine($"<a href=\"{HttpUtility.HtmlEncode(command.Referer)}#Comments\">{HttpUtility.HtmlEncode(command.Referer)}</a>");
             body.Append("<br /><br />Name: ");
             body.AppendLine(HttpUtility.HtmlEncode(command.Entity.Name));
             body.Append("<br />Email: ");
@@ -51,6 +51,11 @@ namespace MVCBlog.Business.Commands
                 new Recipient(this.blogSettings.NotifyOnNewCommentsEmail),
                 this.blogSettings.NotifyOnNewCommentsSubject,
                 body.ToString());
+
+            if (!string.IsNullOrWhiteSpace(command.Entity.Email))
+            {
+                message.WithReplyTo(new Recipient(command.Entity.Email));
+            }
 
             await this.notificationService.SendNotificationAsync(message);
         }

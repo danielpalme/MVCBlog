@@ -6,7 +6,7 @@
     foreach (var image in Model.Images)
     {
         <figure class="figure mr-3 mb-3">
-            <a href="~/blogimages/@image.Path" class="selectImage" data-markdown="![@image.Name](@Url.Content("~/")blogimages/@image.Path)">
+            <a href="~/blogimages/@image.Path" class="selectImage" data-markdown="![@image.Name](@this.Context.Request.Scheme://@this.Context.Request.Host@this.Context.Request.PathBase/blogimages/@image.Path)">
                 <img src="~/blogimages/@image.Path" alt="@image.Name" class="img-thumbnail" style="max-width:150px; max-height:150px" />
             </a>
             <figcaption class="figure-caption mt-1">@image.Name</figcaption>

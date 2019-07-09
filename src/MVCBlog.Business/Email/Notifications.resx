@@ -120,7 +120,7 @@
   <data name="MailTemplate" xml:space="preserve">
     <value>&lt;div style="font-family: 'Calibri', 'Arial', Sans-Serif;"&gt;
     &lt;div style="background-color: #0C509E; padding:5px;"&gt;
-        &amp;nbsp&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;a href="{0}" style="color:#fff; font-size:30px;text-decoration: none;"&gt;&lt;strong&gt;{1}&lt;/strong&gt;&lt;/a&gt;
+        &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;a href="{0}" style="color:#fff; font-size:30px;text-decoration: none;"&gt;&lt;strong&gt;{1}&lt;/strong&gt;&lt;/a&gt;
     &lt;/div&gt;
     &lt;div style="margin: 40px 15px 0 15px;"&gt;
         &lt;h2&gt;{2}&lt;/h2&gt;
