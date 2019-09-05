@@ -23,5 +23,25 @@ namespace MVCBlog.Business.Email
         {
             return this.Address;
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            if (string.Equals(this.Address, ((Recipient)obj).Address, StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return this.Address.ToLowerInvariant().GetHashCode();
+        }
     }
 }
