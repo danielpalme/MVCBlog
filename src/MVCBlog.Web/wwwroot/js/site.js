@@ -25,9 +25,8 @@ $('.togglemenu').on('click', function (e) {
     $('.flexmenu').toggleClass('collapsed');
 });
 
-
-/* Date picker */
 $(document).ready(function () {
+    // Date picker
     $.each($('.gijgodatepicker'), function (index, element) {
         element = $(element);
 
@@ -39,9 +38,7 @@ $(document).ready(function () {
             weekStartDay: 1
         });
     });
-});
 
-$(document).ready(function () {
     $.each($('.gijgodatetimepicker'), function (index, element) {
         element = $(element);
 
@@ -54,5 +51,34 @@ $(document).ready(function () {
             locale: 'de-de',
             format: 'dd.mm.yyyy HH:MM'
         });
+    });
+
+    // Delete confirmation
+    $('.confirmdelete').on('click', function () {
+        return confirm($(this).data('confirmmessage'));
+    });
+
+    // EditBlogEntry
+    $('.select2').select2({
+        minimumInputLength: 2,
+        theme: "bootstrap4",
+        language: "@language",
+        allowClear: true,
+        tags: true
+    });
+
+    $('#imageModal').on('show.bs.modal', function () {
+        $.ajax({
+            url: '/Administration/ImagesSelection'
+        }).done(function (result) {
+            $('#imagesSelection').html(result);
+        });
+    });
+
+    $('#imagesSelection').on('click', '.selectImage', function () {
+        var target = $('#BlogEntry_Content');
+        target.val(target.val() + '\n' + $(this).data('markdown'));
+
+        return false;
     });
 });

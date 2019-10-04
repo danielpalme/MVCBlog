@@ -6,7 +6,8 @@
 }
 
 <a asp-controller="Administration" asp-action="EditBlogEntry" class="btn btn-primary d-print-none"><i class="fa fa-file" aria-hidden="true"></i> @Localizer["New blog entry"]</a>
-<br class="d-print-none" /><br class="d-print-none" />
+<br class="d-print-none" />
+<br class="d-print-none" />
 <form class="form-inline d-print-none" method="get">
     <div class="input-group input-group-sm mb-2 mr-sm-2">
         <div class="input-group-prepend">
@@ -49,7 +50,7 @@
                         <td class="text-right d-print-none">
                             <a href="~/Blog/@blogEntry.Url" title="Edit"><i class="fa fa-globe"></i></a>
                             <a href="~/Blog/@blogEntry.Url/Edit" title="Edit"><i class="fa fa-edit"></i></a>
-                            <a asp-controller="Administration" asp-action="DeleteBlogEntry" asp-route-id="@blogEntry.Id" title="Delete" onclick="return confirm('Really delete blog entry?');"><i class="fa fa-trash text-danger"></i></a>
+                            <a asp-controller="Administration" asp-action="DeleteBlogEntry" asp-route-id="@blogEntry.Id" title="@Localizer["Delete"]" class="confirmdelete" data-confirmmessage="@Localizer["Really delete blog entry?"]"><i class="fa fa-trash text-danger"></i></a>
                         </td>
                     </tr>
                 }

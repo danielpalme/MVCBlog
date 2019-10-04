@@ -120,7 +120,7 @@
                                     <td><a href="~/Blog/Download/@blogEntryFile.Id">@blogEntryFile.Name</a></td>
                                     <td class="text-right">@blogEntryFile.Counter</td>
                                     <td class="text-right d-print-none">
-                                        <a asp-controller="Administration" asp-action="DeleteBlogEntryFile" asp-route-id="@blogEntryFile.Id" title="Delete" onclick="return confirm('Really delete file?');"><i class="fa fa-trash text-danger"></i></a>
+                                        <a asp-controller="Administration" asp-action="DeleteBlogEntryFile" asp-route-id="@blogEntryFile.Id" title="@Localizer["Delete"]" class="confirmdelete" data-confirmmessage="@Localizer["Really delete file?"]"><i class="fa fa-trash text-danger"></i></a>
                                     </td>
                                 </tr>
                             }
@@ -131,34 +131,3 @@
         }
     </div>
 </div>
-
-@section Scripts {
-    <script>
-        $(document).ready(function () {
-            $('.select2').select2({
-                minimumInputLength: 2,
-                theme: "bootstrap4",
-                language: "@language",
-                allowClear: true,
-                tags: true
-            });
-        });
-
-        $('#imageModal').on('show.bs.modal', function () {
-            $.ajax({
-                url: '@Url.Action("ImagesSelection")'
-            }).done(function (result) {
-                $('#imagesSelection').html(result);
-            });
-        });
-
-        $(document).ready(function () {
-            $('#imagesSelection').on('click', '.selectImage', function () {
-                var target = $('#BlogEntry_Content');
-                target.val(target.val() + '\n' + $(this).data('markdown'));
-
-                return false;
-            });
-        });
-    </script>
-}

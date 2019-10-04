@@ -108,8 +108,8 @@
                 <br class="d-md-none" />
 
                 <span class="float-lg-right d-print-none">
-                    <a asp-controller="Blog" asp-action="DeleteComment" asp-route-id="@comment.Id" class="text-danger" onclick="return confirm('@Localizer["Really delete comment?"]');"><i class="fas fa-trash"></i></a>
-                    <a asp-controller="Blog" asp-action="DeleteComment" asp-route-id="@comment.Id" class="text-danger" onclick="return confirm('@Localizer["Really delete comment?"]');">@Localizer["Delete"]</a>
+                    <a asp-controller="Blog" asp-action="DeleteComment" asp-route-id="@comment.Id" class="text-danger confirmdelete" data-confirmmessage="@Localizer["Really delete comment?"]"><i class="fas fa-trash"></i></a>
+                    <a asp-controller="Blog" asp-action="DeleteComment" asp-route-id="@comment.Id" class="text-danger confirmdelete" data-confirmmessage="@Localizer["Really delete comment?"]">@Localizer["Delete"]</a>
                 </span>
             }
         </span>

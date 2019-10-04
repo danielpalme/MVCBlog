@@ -25,6 +25,7 @@ using MVCBlog.Data;
 using MVCBlog.Web.Infrastructure;
 using MVCBlog.Web.Infrastructure.Mvc;
 using MVCBlog.Web.Infrastructure.Mvc.Health;
+using MVCBlog.Web.Infrastructure.Mvc.SecurityHeaders;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -144,6 +145,35 @@ namespace MVCBlog.Web
             });
 
             app.UseHttpsRedirection();
+
+            app.UseSecurityHeaders(builder =>
+            {
+                builder.FeaturePolicySettings.Camera.AllowNone();
+
+                builder.CspSettings.Defaults.AllowNone();
+                builder.CspSettings.Connect.AllowSelf();
+                builder.CspSettings.Objects.AllowNone();
+                builder.CspSettings.Frame.AllowNone();
+                builder.CspSettings.Scripts.AllowSelf();
+
+                builder.CspSettings.Styles
+                    .AllowSelf()
+                    .AllowUnsafeInline();
+
+                builder.CspSettings.Fonts.AllowSelf();
+
+                builder.CspSettings.Images
+                    .AllowSelf()
+                    .Allow("https://i2.wp.com")
+                    .Allow("https://www.gravatar.com");
+
+                builder.CspSettings.BaseUri.AllowNone();
+                builder.CspSettings.FormAction.AllowSelf();
+                builder.CspSettings.FrameAncestors.AllowNone();
+
+                builder.ReferrerPolicy = ReferrerPolicies.NoReferrerWhenDowngrade;
+            });
+
             app.UseStaticFiles(new StaticFileOptions
             {
                 OnPrepareResponse = ctx =>

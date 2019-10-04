@@ -11,7 +11,8 @@
         <button type="submit" class="btn btn-info btn-sm ml-2">@Localizer["Add"]</button>
     </div>
 </form>
-<br class="d-print-none" /><br class="d-print-none" />
+<br class="d-print-none" />
+<br class="d-print-none" />
 <form class="form-inline d-print-none" method="get">
     <div class="input-group input-group-sm mb-2 mr-sm-2">
         <div class="input-group-prepend">
@@ -28,7 +29,7 @@
     {
         <figure class="figure mr-3 mb-3">
             <a href="~/blogimages/@image.Path"><img src="~/blogimages/@image.Path" alt="@image.Name" class="img-thumbnail" style="max-width:250px; max-height:250px" /></a>
-            <figcaption class="figure-caption mt-1">@image.Name <a asp-controller="Administration" asp-action="DeleteImage" asp-route-id="@image.Id" class="float-right d-print-none" title="Delete" onclick="return confirm('Really delete image?');"><i class="fa fa-trash text-danger"></i></a></figcaption>
+            <figcaption class="figure-caption mt-1">@image.Name <a asp-controller="Administration" asp-action="DeleteImage" asp-route-id="@image.Id" class="float-right d-print-none confirmdelete" title="@Localizer["Delete"]" data-confirmmessage="@Localizer["Really delete image?"]"><i class="fa fa-trash text-danger"></i></a></figcaption>
         </figure>
     }
 

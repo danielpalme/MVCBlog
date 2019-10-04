@@ -120,11 +120,17 @@
   <data name="Content" xml:space="preserve">
     <value>Inhalt</value>
   </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Löschen</value>
+  </data>
   <data name="Files" xml:space="preserve">
     <value>Dateien</value>
   </data>
   <data name="New blog entry" xml:space="preserve">
     <value>Neuer Blogeintrag</value>
+  </data>
+  <data name="Really delete file?" xml:space="preserve">
+    <value>Datei wirklich löschen?</value>
   </data>
   <data name="Save" xml:space="preserve">
     <value>Speichern</value>

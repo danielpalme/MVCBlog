@@ -120,6 +120,9 @@
   <data name="Add" xml:space="preserve">
     <value>Hinzufügen</value>
   </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Löschen</value>
+  </data>
   <data name="Filter" xml:space="preserve">
     <value>Filtern</value>
   </data>
@@ -128,6 +131,9 @@
   </data>
   <data name="No images found" xml:space="preserve">
     <value>Keine Bilder gefunden</value>
+  </data>
+  <data name="Really delete image?" xml:space="preserve">
+    <value>Bild wirklich löschen?</value>
   </data>
   <data name="Search" xml:space="preserve">
     <value>Suche</value>
