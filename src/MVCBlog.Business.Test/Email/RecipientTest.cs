@@ -1,3 +1,4 @@
+using MVCBlog.Business.Email;
 using Xunit;
 
 namespace MVCBlog.Business.Test.Email

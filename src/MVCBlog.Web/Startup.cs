@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.IO;
-using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
@@ -9,14 +9,13 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Localization;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Net.Http.Headers;
 using MVCBlog.Business;
 using MVCBlog.Business.Email;
@@ -26,8 +25,6 @@ using MVCBlog.Web.Infrastructure;
 using MVCBlog.Web.Infrastructure.Mvc;
 using MVCBlog.Web.Infrastructure.Mvc.Health;
 using MVCBlog.Web.Infrastructure.Mvc.SecurityHeaders;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace MVCBlog.Web
 {
@@ -70,14 +67,13 @@ namespace MVCBlog.Web
                     // TOOD: Enable if desired: config.SignIn.RequireConfirmedEmail = true;
                     config.User.RequireUniqueEmail = true;
                 })
-                .AddDefaultUI(UIFramework.Bootstrap4)
+                .AddDefaultUI()
                 .AddEntityFrameworkStores<EFUnitOfWork>()
                 .AddErrorDescriber<Infrastructure.LocalizedIdentityErrorDescriber>();
 
             services.AddLocalization();
 
-            services.AddMvc()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+            services.AddControllersWithViews()
                 .AddViewLocalization(options => options.ResourcesPath = "Resources");
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -116,7 +112,7 @@ namespace MVCBlog.Web
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -184,15 +180,19 @@ namespace MVCBlog.Web
             });
             app.UseCookiePolicy();
 
+            app.UseRouting();
+
             app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseStatusCodePagesWithReExecute("/Error/{0}");
 
-            app.UseMvc(routes =>
+            app.UseEndpoints(endpoints =>
             {
-                routes.MapRoute(
+                endpoints.MapControllerRoute(
                     name: "default",
-                    template: "{controller=Blog}/{action=Index}/{id?}");
+                    pattern: "{controller=Blog}/{action=Index}/{id?}");
+                endpoints.MapRazorPages();
             });
 
             app.UseHealthChecks("/health", new HealthCheckOptions()
@@ -209,18 +209,13 @@ namespace MVCBlog.Web
 
         private static Task WriteResponse(HttpContext httpContext, HealthReport result)
         {
-            httpContext.Response.ContentType = "application/json";
+            string jsonResult = JsonSerializer.Serialize(result, new JsonSerializerOptions
+            {
+                WriteIndented = true
+            });
 
-            var json = new JObject(
-                new JProperty("status", result.Status.ToString()),
-                new JProperty("results", new JObject(result.Entries.Select(pair =>
-                    new JProperty(pair.Key, new JObject(
-                        new JProperty("status", pair.Value.Status.ToString()),
-                        new JProperty("description", pair.Value.Description),
-                        new JProperty("data", new JObject(pair.Value.Data.Select(
-                            p => new JProperty(p.Key, p.Value))))))))));
-            return httpContext.Response.WriteAsync(
-                json.ToString(Formatting.Indented));
+            httpContext.Response.ContentType = "application/json";
+            return httpContext.Response.WriteAsync(jsonResult);
         }
     }
 }

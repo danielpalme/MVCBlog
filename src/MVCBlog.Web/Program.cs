@@ -1,26 +1,27 @@
 ﻿using System;
 using System.IO;
-using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Core;
+
 
 namespace MVCBlog.Web
 {
     public class Program
     {
-        public static int Main(string[] args) => LogAndRun(CreateWebHostBuilder(args).Build());
+        public static int Main(string[] args) => LogAndRun(CreateHostBuilder(args).Build());
 
-        public static int LogAndRun(IWebHost webHost)
+        public static int LogAndRun(IHost host)
         {
-            Log.Logger = BuildLogger(webHost);
+            Log.Logger = BuildLogger(host);
 
             try
             {
                 Log.Information("Starting application");
-                webHost.Run();
+                host.Run();
                 Log.Information("Stopped application");
                 return 0;
             }
@@ -35,8 +36,8 @@ namespace MVCBlog.Web
             }
         }
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .ConfigureAppConfiguration((hostingContext, config) =>
                 {
@@ -52,9 +53,12 @@ namespace MVCBlog.Web
                     logging.AddDebug();
                     logging.AddSerilog(dispose: true);
                 })
-                .UseStartup<Startup>();
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                });
 
-        private static Logger BuildLogger(IWebHost webHost) =>
+        private static Logger BuildLogger(IHost host) =>
             new LoggerConfiguration()
                .MinimumLevel.Debug()
                .MinimumLevel.Override("Microsoft", Serilog.Events.LogEventLevel.Warning)

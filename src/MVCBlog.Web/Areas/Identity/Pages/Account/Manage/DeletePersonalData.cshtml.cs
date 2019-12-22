@@ -62,7 +62,7 @@ namespace MVCBlog.Web.Areas.Identity.Pages.Account.Manage
             {
                 if (!await _userManager.CheckPasswordAsync(user, Input.Password))
                 {
-                    ModelState.AddModelError(string.Empty, "Password not correct.");
+                    ModelState.AddModelError(string.Empty, "Incorrect password.");
                     return Page();
                 }
             }
@@ -71,7 +71,7 @@ namespace MVCBlog.Web.Areas.Identity.Pages.Account.Manage
             var userId = await _userManager.GetUserIdAsync(user);
             if (!result.Succeeded)
             {
-                throw new InvalidOperationException($"Unexpected error occurred deleteing user with ID '{userId}'.");
+                throw new InvalidOperationException($"Unexpected error occurred deleting user with ID '{userId}'.");
             }
 
             await _signInManager.SignOutAsync();

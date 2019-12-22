@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.Extensions.Hosting;
 
 namespace MVCBlog.Business.IO
 {
@@ -6,8 +6,8 @@ namespace MVCBlog.Business.IO
     {
         private const string ImagesBaseDirectory = "wwwroot/blogimages";
 
-        public ImageFileProvider(IHostingEnvironment hostingEnvironment)
-            : base(hostingEnvironment, ImagesBaseDirectory)
+        public ImageFileProvider(IHostEnvironment hostEnvironment)
+            : base(hostEnvironment, ImagesBaseDirectory)
         {
         }
     }

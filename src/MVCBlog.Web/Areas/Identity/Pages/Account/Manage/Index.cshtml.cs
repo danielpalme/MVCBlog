@@ -1,13 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text.Encodings.Web;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MVCBlog.Data;
-using MVCBlog.Localization;
 
 namespace MVCBlog.Web.Areas.Identity.Pages.Account.Manage
 {
@@ -15,21 +14,16 @@ namespace MVCBlog.Web.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
-        private readonly IEmailSender _emailSender;
 
         public IndexModel(
             UserManager<User> userManager,
-            SignInManager<User> signInManager,
-            IEmailSender emailSender)
+            SignInManager<User> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _emailSender = emailSender;
         }
 
         public string Username { get; set; }
-
-        public bool IsEmailConfirmed { get; set; }
 
         [TempData]
         public string StatusMessage { get; set; }
@@ -39,23 +33,22 @@ namespace MVCBlog.Web.Areas.Identity.Pages.Account.Manage
 
         public class InputModel
         {
-            [StringLength(100, ErrorMessageResourceName = "Validation_MaxLength", ErrorMessageResourceType = typeof(Resources))]
-            [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-            [Display(Name = "FirstName", ResourceType = typeof(Resources))]
-            public string FirstName { get; set; }
-
-            [StringLength(100, ErrorMessageResourceName = "Validation_MaxLength", ErrorMessageResourceType = typeof(Resources))]
-            [Required(ErrorMessageResourceName = "Validation_Required", ErrorMessageResourceType = typeof(Resources))]
-            [Display(Name = "LastName", ResourceType = typeof(Resources))]
-            public string LastName { get; set; }
-
-            [Required]
-            [EmailAddress]
-            public string Email { get; set; }
-
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
+        }
+
+        private async Task LoadAsync(User user)
+        {
+            var userName = await _userManager.GetUserNameAsync(user);
+            var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
+
+            Username = userName;
+
+            Input = new InputModel
+            {
+                PhoneNumber = phoneNumber
+            };
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -66,53 +59,22 @@ namespace MVCBlog.Web.Areas.Identity.Pages.Account.Manage
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            var userName = await _userManager.GetUserNameAsync(user);
-            var email = await _userManager.GetEmailAsync(user);
-            var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-
-            Username = userName;
-
-            Input = new InputModel
-            {
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Email = email,
-                PhoneNumber = phoneNumber
-            };
-
-            IsEmailConfirmed = await _userManager.IsEmailConfirmedAsync(user);
-
+            await LoadAsync(user);
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
-
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            var email = await _userManager.GetEmailAsync(user);
-
-            user.FirstName = Input.FirstName;
-            user.LastName = Input.LastName;
-
-            await _userManager.UpdateAsync(user);
-
-            if (Input.Email != email)
+            if (!ModelState.IsValid)
             {
-                var setEmailResult = await _userManager.SetEmailAsync(user, Input.Email);
-                if (!setEmailResult.Succeeded)
-                {
-                    var userId = await _userManager.GetUserIdAsync(user);
-                    throw new InvalidOperationException($"Unexpected error occurred setting email for user with ID '{userId}'.");
-                }
+                await LoadAsync(user);
+                return Page();
             }
 
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
@@ -128,37 +90,6 @@ namespace MVCBlog.Web.Areas.Identity.Pages.Account.Manage
 
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your profile has been updated";
-            return RedirectToPage();
-        }
-
-        public async Task<IActionResult> OnPostSendVerificationEmailAsync()
-        {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
-
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            }
-
-
-            var userId = await _userManager.GetUserIdAsync(user);
-            var email = await _userManager.GetEmailAsync(user);
-            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            var callbackUrl = Url.Page(
-                "/Account/ConfirmEmail",
-                pageHandler: null,
-                values: new { userId = userId, code = code },
-                protocol: Request.Scheme);
-            await _emailSender.SendEmailAsync(
-                email,
-                "Confirm your email",
-                $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
-            StatusMessage = "Verification email sent. Please check your email.";
             return RedirectToPage();
         }
     }

@@ -1,5 +1,4 @@
-﻿using System.Data.SqlClient;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using MVCBlog.Data;
 
@@ -17,9 +16,8 @@ namespace MVCBlog.Business.Commands
 
         public async Task HandleAsync(IncrementBlogEntryVisitsCommand command)
         {
-            await this.unitOfWork.Database.ExecuteSqlCommandAsync(
-                "UPDATE [BlogEntries] SET [Visits] = [Visits] + 1 WHERE [Id] = @Id",
-                new SqlParameter("@Id", command.Id));
+            await this.unitOfWork.Database.ExecuteSqlInterpolatedAsync(
+                $"UPDATE [BlogEntries] SET [Visits] = [Visits] + 1 WHERE [Id] = {command.Id}");
         }
     }
 }

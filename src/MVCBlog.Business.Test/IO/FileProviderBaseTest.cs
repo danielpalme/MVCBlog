@@ -1,7 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
+using Microsoft.VisualStudio.TestPlatform.PlatformAbstractions.Interfaces;
 using Moq;
 using MVCBlog.Business.IO;
 using Xunit;
@@ -56,13 +57,13 @@ namespace MVCBlog.Business.Test.IO
             private const string FilesBaseDirectory = "test";
 
             public SampleFileProvider()
-                : base(GetHostingEnvironment(), FilesBaseDirectory)
+                : base(GetHostEnvironment(), FilesBaseDirectory)
             {
             }
 
-            private static IHostingEnvironment GetHostingEnvironment()
+            private static IHostEnvironment GetHostEnvironment()
             {
-                var mock = new Mock<IHostingEnvironment>();
+                var mock = new Mock<IHostEnvironment>();
                 mock.Setup(m => m.ContentRootPath).Returns(Path.GetTempPath());
 
                 return mock.Object;

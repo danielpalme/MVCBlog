@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.Extensions.Hosting;
 
 namespace MVCBlog.Business.IO
 {
@@ -6,8 +6,8 @@ namespace MVCBlog.Business.IO
     {
         private const string FilesBaseDirectory = "wwwroot/blogfiles";
 
-        public BlogEntryFileFileProvider(IHostingEnvironment hostingEnvironment)
-            : base(hostingEnvironment, FilesBaseDirectory)
+        public BlogEntryFileFileProvider(IHostEnvironment hostEnvironment)
+            : base(hostEnvironment, FilesBaseDirectory)
         {
         }
     }

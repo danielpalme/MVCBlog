@@ -1,18 +1,18 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 
 namespace MVCBlog.Business.IO
 {
     public abstract class FileProviderBase : IFileProvider
     {
-        private readonly IHostingEnvironment hostingEnvironment;
+        private readonly IHostEnvironment hostEnvironment;
 
         private readonly string baseDirectory;
 
-        public FileProviderBase(IHostingEnvironment hostingEnvironment, string baseDirectory)
+        public FileProviderBase(IHostEnvironment hostEnvironment, string baseDirectory)
         {
-            this.hostingEnvironment = hostingEnvironment;
+            this.hostEnvironment = hostEnvironment;
             this.baseDirectory = baseDirectory;
         }
 
@@ -59,7 +59,7 @@ namespace MVCBlog.Business.IO
         private string GetDirectory()
         {
             return Path.Combine(
-                this.hostingEnvironment.ContentRootPath,
+                this.hostEnvironment.ContentRootPath,
                 this.baseDirectory);
         }
 

@@ -1,11 +1,8 @@
-﻿using System;
-using System.Linq;
+﻿using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using MVCBlog.Business;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace MVCBlog.Web.Infrastructure
 {
@@ -33,53 +30,9 @@ namespace MVCBlog.Web.Infrastructure
                 "Executing command '{0}' (User: '{1}', Data: '{2}')",
                 command.GetType().Name,
                 this.httpContextAccessor.HttpContext.User?.Identity?.Name,
-                JsonConvert.SerializeObject(command, new ObscureJsonConverter()));
+                JsonSerializer.Serialize(command));
 
             await this.handler.HandleAsync(command);
-        }
-
-        private class ObscureJsonConverter : JsonConverter
-        {
-            private static readonly string[] PropertiesToObscure = new string[] { "Password" };
-
-            public override bool CanRead
-            {
-                get { return false; }
-            }
-
-            public override bool CanConvert(Type objectType)
-            {
-                return true;
-            }
-
-            public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-            {
-                var t = JToken.FromObject(value);
-
-                if (t.Type == JTokenType.Object)
-                {
-                    var o = (JObject)t;
-
-                    foreach (var property in o.Properties())
-                    {
-                        if (PropertiesToObscure.Any(p => p == property.Name))
-                        {
-                            property.Value = "---";
-                        }
-                    }
-
-                    o.WriteTo(writer);
-                }
-                else
-                {
-                    t.WriteTo(writer);
-                }
-            }
-
-            public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-            {
-                throw new NotImplementedException();
-            }
         }
     }
 }
