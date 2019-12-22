@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.IO;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
@@ -209,13 +210,43 @@ namespace MVCBlog.Web
 
         private static Task WriteResponse(HttpContext httpContext, HealthReport result)
         {
-            string jsonResult = JsonSerializer.Serialize(result, new JsonSerializerOptions
+            var writerOptions = new JsonWriterOptions
             {
-                WriteIndented = true
-            });
+                Indented = true
+            };
 
-            httpContext.Response.ContentType = "application/json";
-            return httpContext.Response.WriteAsync(jsonResult);
+            using (var ms = new MemoryStream())
+            {
+                using (var writer = new Utf8JsonWriter(ms, options: writerOptions))
+                {
+                    writer.WriteStartObject();
+                    writer.WriteString("status", result.Status.ToString());
+                    writer.WriteStartObject("results");
+
+                    foreach (var kv in result.Entries)
+                    {
+                        writer.WriteStartObject(kv.Key);
+                        writer.WriteString("status", kv.Value.Status.ToString());
+                        writer.WriteString("description", kv.Value.Description);
+
+                        writer.WriteStartObject("data");
+                        foreach (var item in kv.Value.Data)
+                        {
+                            writer.WriteString(item.Key, item.Value?.ToString());
+                        }
+
+                        writer.WriteEndObject();
+
+                        writer.WriteEndObject();
+                    }
+
+                    writer.WriteEndObject();
+                    writer.WriteEndObject();
+                }
+
+                httpContext.Response.ContentType = "application/json";
+                return httpContext.Response.WriteAsync(Encoding.UTF8.GetString(ms.ToArray()));
+            }
         }
     }
 }
