@@ -1,16 +1,16 @@
 ﻿using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Hosting;
 
 namespace MVCBlog.Web.Infrastructure.Mvc.Health
 {
     public class LogfileHealthCheck : IHealthCheck
     {
-        private readonly IHostingEnvironment environment;
+        private readonly IHostEnvironment environment;
 
-        public LogfileHealthCheck(IHostingEnvironment environment)
+        public LogfileHealthCheck(IHostEnvironment environment)
         {
             this.environment = environment;
         }
