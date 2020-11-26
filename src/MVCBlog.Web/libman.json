@@ -1,0 +1,43 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "twitter-bootstrap@4.5.3",
+      "destination": "wwwroot/lib/bootstrap/"
+    },
+    {
+      "library": "font-awesome@5.15.1",
+      "destination": "wwwroot/lib/fontawesome/"
+    },
+    {
+      "library": "jquery@3.5.1",
+      "destination": "wwwroot/lib/jquery/"
+    },
+    {
+      "library": "jquery-validation-unobtrusive@3.2.11",
+      "destination": "wwwroot/lib/jquery-validation-unobtrusive/"
+    },
+    {
+      "library": "jquery-validate@1.19.2",
+      "destination": "wwwroot/lib/jquery-validate/"
+    },
+    {
+      "library": "gijgo@1.9.13",
+      "destination": "wwwroot/lib/gijgo/"
+    },
+    {
+      "library": "select2@4.0.13",
+      "destination": "wwwroot/lib/select2/",
+      "files": [
+        "js/select2.min.js",
+        "css/select2.css",
+        "css/select2.min.css",
+        "js/select2.full.js",
+        "js/select2.full.min.js",
+        "js/select2.js",
+        "js/i18n/de.js"
+      ]
+    }
+  ]
+}

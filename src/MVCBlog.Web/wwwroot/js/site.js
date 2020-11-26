@@ -1,4 +1,14 @@
-﻿/* Menu */
+﻿/* Cookie consent */
+(function () {
+    var button = document.querySelector("#cookieConsent button[data-cookie-string]");
+    if (button) {
+        button.addEventListener("click", function (event) {
+            document.cookie = button.dataset.cookieString;
+        }, false);
+    }
+})();
+
+/* Menu */
 var localStorage = null;
 if (typeof Storage !== "undefined") {
     localStorage = window.localStorage;

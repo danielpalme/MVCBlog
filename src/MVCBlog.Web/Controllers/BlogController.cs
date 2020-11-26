@@ -85,7 +85,7 @@ namespace MVCBlog.Web.Controllers
 
             if (!string.IsNullOrEmpty(tag))
             {
-                query = query.Where(e => e.Tags.Any(t => t.Tag.Name.Equals(tag, StringComparison.OrdinalIgnoreCase)));
+                query = query.Where(e => e.Tags.Any(t => t.Tag.Name == tag));
             }
 
             if (!string.IsNullOrEmpty(search))
