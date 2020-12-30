@@ -57,6 +57,7 @@ namespace MVCBlog.Web
             services.AddDbContext<EFUnitOfWork>(options =>
                 options.UseSqlServer(
                     this.Configuration.GetConnectionString("EFUnitOfWork")));
+            services.AddDatabaseDeveloperPageExceptionFilter();
 
             services.AddDefaultIdentity<User>(config =>
                 {
@@ -118,7 +119,7 @@ namespace MVCBlog.Web
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
+                app.UseMigrationsEndPoint();
             }
             else
             {
@@ -199,12 +200,6 @@ namespace MVCBlog.Web
             {
                 ResponseWriter = WriteResponse
             });
-
-            using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
-            {
-                var context = serviceScope.ServiceProvider.GetService<EFUnitOfWork>();
-                context.Database.Migrate();
-            }
         }
 
         private static Task WriteResponse(HttpContext httpContext, HealthReport result)

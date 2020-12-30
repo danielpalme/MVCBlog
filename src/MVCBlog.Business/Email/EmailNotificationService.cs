@@ -106,7 +106,7 @@ namespace MVCBlog.Business.Email
         {
             var mailboxAdress = recipient.Name != null ?
                     new MailboxAddress(recipient.Name, recipient.Address)
-                    : new MailboxAddress(recipient.Address);
+                    : MailboxAddress.Parse(recipient.Address);
 
             return mailboxAdress;
         }
