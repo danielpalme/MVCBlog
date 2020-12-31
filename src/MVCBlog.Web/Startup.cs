@@ -119,7 +119,6 @@ namespace MVCBlog.Web
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseMigrationsEndPoint();
             }
             else
             {
@@ -200,6 +199,12 @@ namespace MVCBlog.Web
             {
                 ResponseWriter = WriteResponse
             });
+
+            using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                var context = serviceScope.ServiceProvider.GetService<EFUnitOfWork>();
+                context.Database.Migrate();
+            }
         }
 
         private static Task WriteResponse(HttpContext httpContext, HealthReport result)
