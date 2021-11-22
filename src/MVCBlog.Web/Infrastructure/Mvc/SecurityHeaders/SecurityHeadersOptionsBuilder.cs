@@ -10,7 +10,7 @@ namespace MVCBlog.Web.Infrastructure.Mvc.SecurityHeaders
         {
         }
 
-        public FeaturePolicySettings FeaturePolicySettings { get; } = new FeaturePolicySettings();
+        public PermissionsPolicySettings PermissionsPolicySettings { get; } = new PermissionsPolicySettings();
 
         public CspSettings CspSettings { get; } = new CspSettings();
 
@@ -18,7 +18,7 @@ namespace MVCBlog.Web.Infrastructure.Mvc.SecurityHeaders
 
         internal SecurityHeaderOptions Build()
         {
-            this.options.FeaturePolicyHeader = this.GetFeaturePolicyHeaderValue();
+            this.options.PermissionsPolicyHeader = this.GetPermissionsPolicyHeaderValue();
             this.options.CspHeader = this.GetCspHeaderValue();
             this.options.XFrameOptionsHeader = this.GetXFrameOptionsHeaderValue();
             this.options.ReferrerPolicyHeader = this.GetReferrerPolicyHeader();
@@ -26,32 +26,32 @@ namespace MVCBlog.Web.Infrastructure.Mvc.SecurityHeaders
             return this.options;
         }
 
-        private string GetFeaturePolicyHeaderValue()
+        private string GetPermissionsPolicyHeaderValue()
         {
             var value = string.Empty;
-            value += this.GetDirective("accelerometer", this.FeaturePolicySettings.Accelerometer.Sources);
-            value += this.GetDirective("ambient-light-sensor", this.FeaturePolicySettings.AmbientLightSensor.Sources);
-            value += this.GetDirective("autoplay", this.FeaturePolicySettings.Autoplay.Sources);
-            value += this.GetDirective("camera", this.FeaturePolicySettings.Camera.Sources);
-            value += this.GetDirective("display-capture", this.FeaturePolicySettings.DisplayCapture.Sources);
-            value += this.GetDirective("document-domain", this.FeaturePolicySettings.DocumentDomain.Sources);
-            value += this.GetDirective("encrypted-media", this.FeaturePolicySettings.EncryptedMedia.Sources);
-            value += this.GetDirective("execution-while-not-rendered", this.FeaturePolicySettings.ExecutionWhileNotRendered.Sources);
-            value += this.GetDirective("execution-while-out-of-viewport", this.FeaturePolicySettings.ExecutionWhileOutOfViewport.Sources);
-            value += this.GetDirective("fullscreen", this.FeaturePolicySettings.Fullscreen.Sources);
-            value += this.GetDirective("geolocation", this.FeaturePolicySettings.Geolocation.Sources);
-            value += this.GetDirective("gyroscope", this.FeaturePolicySettings.Gyroscope.Sources);
-            value += this.GetDirective("magnetometer", this.FeaturePolicySettings.Magnetometer.Sources);
-            value += this.GetDirective("microphone", this.FeaturePolicySettings.Microphone.Sources);
-            value += this.GetDirective("midi", this.FeaturePolicySettings.Midi.Sources);
-            value += this.GetDirective("payment", this.FeaturePolicySettings.Payment.Sources);
-            value += this.GetDirective("picture-in-picture", this.FeaturePolicySettings.PictureInPicture.Sources);
-            value += this.GetDirective("publickey-credentials", this.FeaturePolicySettings.PublickeyCredentials.Sources);
-            value += this.GetDirective("speaker", this.FeaturePolicySettings.Speaker.Sources);
-            value += this.GetDirective("sync-xhr", this.FeaturePolicySettings.SyncXhr.Sources);
-            value += this.GetDirective("usb", this.FeaturePolicySettings.Usb.Sources);
-            value += this.GetDirective("wake-lock", this.FeaturePolicySettings.WakeLock.Sources);
-            value += this.GetDirective("xr", this.FeaturePolicySettings.XR.Sources);
+            value += this.GetPermissionsDirective("accelerometer", this.PermissionsPolicySettings.Accelerometer.Sources);
+            value += this.GetPermissionsDirective("ambient-light-sensor", this.PermissionsPolicySettings.AmbientLightSensor.Sources);
+            value += this.GetPermissionsDirective("autoplay", this.PermissionsPolicySettings.Autoplay.Sources);
+            value += this.GetPermissionsDirective("camera", this.PermissionsPolicySettings.Camera.Sources);
+            value += this.GetPermissionsDirective("display-capture", this.PermissionsPolicySettings.DisplayCapture.Sources);
+            value += this.GetPermissionsDirective("document-domain", this.PermissionsPolicySettings.DocumentDomain.Sources);
+            value += this.GetPermissionsDirective("encrypted-media", this.PermissionsPolicySettings.EncryptedMedia.Sources);
+            value += this.GetPermissionsDirective("execution-while-not-rendered", this.PermissionsPolicySettings.ExecutionWhileNotRendered.Sources);
+            value += this.GetPermissionsDirective("execution-while-out-of-viewport", this.PermissionsPolicySettings.ExecutionWhileOutOfViewport.Sources);
+            value += this.GetPermissionsDirective("fullscreen", this.PermissionsPolicySettings.Fullscreen.Sources);
+            value += this.GetPermissionsDirective("geolocation", this.PermissionsPolicySettings.Geolocation.Sources);
+            value += this.GetPermissionsDirective("gyroscope", this.PermissionsPolicySettings.Gyroscope.Sources);
+            value += this.GetPermissionsDirective("magnetometer", this.PermissionsPolicySettings.Magnetometer.Sources);
+            value += this.GetPermissionsDirective("microphone", this.PermissionsPolicySettings.Microphone.Sources);
+            value += this.GetPermissionsDirective("midi", this.PermissionsPolicySettings.Midi.Sources);
+            value += this.GetPermissionsDirective("payment", this.PermissionsPolicySettings.Payment.Sources);
+            value += this.GetPermissionsDirective("picture-in-picture", this.PermissionsPolicySettings.PictureInPicture.Sources);
+            value += this.GetPermissionsDirective("publickey-credentials", this.PermissionsPolicySettings.PublickeyCredentials.Sources);
+            value += this.GetPermissionsDirective("speaker", this.PermissionsPolicySettings.Speaker.Sources);
+            value += this.GetPermissionsDirective("sync-xhr", this.PermissionsPolicySettings.SyncXhr.Sources);
+            value += this.GetPermissionsDirective("usb", this.PermissionsPolicySettings.Usb.Sources);
+            value += this.GetPermissionsDirective("wake-lock", this.PermissionsPolicySettings.WakeLock.Sources);
+            value += this.GetPermissionsDirective("xr", this.PermissionsPolicySettings.XR.Sources);
             return value;
         }
 
@@ -59,6 +59,7 @@ namespace MVCBlog.Web.Infrastructure.Mvc.SecurityHeaders
         {
             var value = string.Empty;
             value += this.GetDirective("default-src", this.CspSettings.Defaults.Sources);
+            value += this.GetDirective("manifest-src", this.CspSettings.Manifest.Sources);
             value += this.GetDirective("connect-src", this.CspSettings.Connect.Sources);
             value += this.GetDirective("object-src", this.CspSettings.Objects.Sources);
             value += this.GetDirective("frame-src", this.CspSettings.Frame.Sources);
@@ -72,6 +73,9 @@ namespace MVCBlog.Web.Infrastructure.Mvc.SecurityHeaders
             value += this.GetDirective("frame-ancestors", this.CspSettings.FrameAncestors.Sources);
             return value;
         }
+
+        private string GetPermissionsDirective(string directive, List<string> sources)
+            => sources.Count > 0 ? $"{directive}=({string.Join(" ", sources)}), " : string.Empty;
 
         private string GetDirective(string directive, List<string> sources)
             => sources.Count > 0 ? $"{directive} {string.Join(" ", sources)}; " : string.Empty;

@@ -5,7 +5,7 @@ namespace MVCBlog.Web.Infrastructure.Mvc.SecurityHeaders
 {
     public sealed class SecurityHeadersMiddleware
     {
-        private const string FEATUREPOLICYHEADER = "Feature-Policy";
+        private const string PERMISSIONSPOLICYHEADER = "Permissions-Policy";
 
         private const string CSPHEADER = "Content-Security-Policy";
 
@@ -29,9 +29,9 @@ namespace MVCBlog.Web.Infrastructure.Mvc.SecurityHeaders
 
         public async Task Invoke(HttpContext context)
         {
-            if (!string.IsNullOrEmpty(this.options.FeaturePolicyHeader))
+            if (!string.IsNullOrEmpty(this.options.PermissionsPolicyHeader))
             {
-                context.Response.Headers.Add(FEATUREPOLICYHEADER, this.options.FeaturePolicyHeader);
+                context.Response.Headers.Add(PERMISSIONSPOLICYHEADER, this.options.PermissionsPolicyHeader);
             }
 
             if (!string.IsNullOrEmpty(this.options.CspHeader))

@@ -4,6 +4,8 @@
     {
         public CspDirectiveBuilder Defaults { get; } = new CspDirectiveBuilder();
 
+        public CspDirectiveBuilder Manifest { get; } = new CspDirectiveBuilder();
+
         public CspDirectiveBuilder Connect { get; } = new CspDirectiveBuilder();
 
         public CspDirectiveBuilder Objects { get; } = new CspDirectiveBuilder();

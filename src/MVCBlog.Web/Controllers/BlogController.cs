@@ -77,7 +77,6 @@ namespace MVCBlog.Web.Controllers
 
             var query = this.unitOfWork.BlogEntries
                             .Include(b => b.Author)
-                            .Include(b => b.BlogEntryComments)
                             .Include(b => b.Tags)
                             .ThenInclude(b => b.Tag)
                             .AsNoTracking()
@@ -112,6 +111,21 @@ namespace MVCBlog.Web.Controllers
                 Tag = tag,
                 Search = search
             };
+
+            if (model.Entries.TotalNumberOfItems > 0)
+            {
+                var ids = model.Entries.Select(e => e.Id).ToList();
+
+                var blogEntryComments = await this.unitOfWork.BlogEntryComments
+                    .AsNoTracking()
+                    .Where(b => ids.Contains(b.BlogEntryId.Value))
+                    .ToListAsync();
+
+                foreach (var entry in model.Entries)
+                {
+                    entry.BlogEntryComments = blogEntryComments.Where(b => b.BlogEntryId == entry.Id).ToList();
+                }
+            }
 
             return this.View(model);
         }
@@ -334,14 +348,21 @@ namespace MVCBlog.Web.Controllers
         private async Task<BlogEntry> GetByPermalink(string header)
         {
             var entry = await this.unitOfWork.BlogEntries
-                .Include(b => b.Author)
+                .AsNoTracking()
                 .Include(b => b.Tags)
                 .ThenInclude(b => b.Tag)
-                .Include(b => b.BlogEntryComments)
                 .Include(b => b.BlogEntryFiles)
-                .AsNoTracking()
                 .Where(e => (e.Visible && e.PublishDate <= DateTimeOffset.UtcNow) || this.User.Identity.IsAuthenticated)
                 .SingleOrDefaultAsync(e => e.Permalink.Equals(header));
+
+            if (entry != null)
+            {
+                entry.BlogEntryComments = await this.unitOfWork.BlogEntryComments
+                    .AsNoTracking()
+                    .Where(b => b.BlogEntryId == entry.Id)
+                    .OrderByDescending(b => b.CreatedOn)
+                    .ToListAsync();
+            }
 
             return entry;
         }

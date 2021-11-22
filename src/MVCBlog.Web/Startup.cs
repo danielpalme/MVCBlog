@@ -145,10 +145,11 @@ namespace MVCBlog.Web
 
             app.UseSecurityHeaders(builder =>
             {
-                builder.FeaturePolicySettings.Camera.AllowNone();
+                builder.PermissionsPolicySettings.Camera.AllowNone();
 
                 builder.CspSettings.Defaults.AllowNone();
                 builder.CspSettings.Connect.AllowSelf();
+                builder.CspSettings.Manifest.AllowSelf();
                 builder.CspSettings.Objects.AllowNone();
                 builder.CspSettings.Frame.AllowNone();
                 builder.CspSettings.Scripts.AllowSelf();

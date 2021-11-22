@@ -2,7 +2,7 @@
 {
     public sealed class SecurityHeaderOptions
     {
-        public string FeaturePolicyHeader { get; set; }
+        public string PermissionsPolicyHeader { get; set; }
 
         public string CspHeader { get; set; }
 
