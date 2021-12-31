@@ -10,9 +10,9 @@ namespace MVCBlog.Web.Infrastructure.Mvc.SecurityHeaders
 
         internal List<string> Sources { get; set; } = new List<string>();
 
-        public PermissionsPolicyDirectiveBuilder AllowSelf() => this.Allow("'self'");
+        public PermissionsPolicyDirectiveBuilder AllowSelf() => this.Allow("self");
 
-        public PermissionsPolicyDirectiveBuilder AllowNone() => this.Allow("'none'");
+        public PermissionsPolicyDirectiveBuilder AllowNone() => this.Allow(string.Empty);
 
         public PermissionsPolicyDirectiveBuilder AllowAny() => this.Allow("*");
 

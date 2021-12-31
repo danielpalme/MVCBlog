@@ -52,6 +52,12 @@ namespace MVCBlog.Web.Infrastructure.Mvc.SecurityHeaders
             value += this.GetPermissionsDirective("usb", this.PermissionsPolicySettings.Usb.Sources);
             value += this.GetPermissionsDirective("wake-lock", this.PermissionsPolicySettings.WakeLock.Sources);
             value += this.GetPermissionsDirective("xr", this.PermissionsPolicySettings.XR.Sources);
+
+            if (value.EndsWith(", "))
+            {
+                value = value.Substring(0, value.Length - 2);
+            }
+
             return value;
         }
 
