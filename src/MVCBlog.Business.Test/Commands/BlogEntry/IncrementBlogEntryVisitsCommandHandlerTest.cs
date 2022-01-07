@@ -4,40 +4,32 @@ using MVCBlog.Business.Commands;
 using MVCBlog.Data;
 using Xunit;
 
-namespace MVCBlog.Business.Test.Commands
+namespace MVCBlog.Business.Test.Commands;
+
+public class IncrementBlogEntryVisitsCommandHandlerTest
 {
-    public class IncrementBlogEntryVisitsCommandHandlerTest
+    private readonly EFUnitOfWork unitOfWork;
+
+    private readonly BlogEntry blogEntry;
+
+    public IncrementBlogEntryVisitsCommandHandlerTest()
     {
-        private readonly EFUnitOfWork unitOfWork;
+        this.unitOfWork = new InMemoryDatabaseFactory().CreateContext();
 
-        private readonly BlogEntry blogEntry;
+        this.blogEntry = new BlogEntry("Test", "test", "Test");
 
-        public IncrementBlogEntryVisitsCommandHandlerTest()
-        {
-            this.unitOfWork = new InMemoryDatabaseFactory().CreateContext();
+        this.unitOfWork.BlogEntries.Add(this.blogEntry);
+        this.unitOfWork.SaveChanges();
 
-            this.blogEntry = new BlogEntry()
-            {
-                ShortContent = "Test",
-                Header = "Test"
-            };
+        Assert.Single(this.unitOfWork.BlogEntries);
+    }
 
-            this.unitOfWork.BlogEntries.Add(this.blogEntry);
-            this.unitOfWork.SaveChanges();
+    [Fact]
+    public async Task IncrementBlogEntryFileCounter()
+    {
+        var sut = new IncrementBlogEntryVisitsCommandHandler(this.unitOfWork);
 
-            Assert.Single(this.unitOfWork.BlogEntries);
-        }
-
-        [Fact]
-        public async Task IncrementBlogEntryFileCounter()
-        {
-            var sut = new IncrementBlogEntryVisitsCommandHandler(this.unitOfWork);
-
-            await Assert.ThrowsAsync<InvalidOperationException>(() =>
-             sut.HandleAsync(new IncrementBlogEntryVisitsCommand()
-             {
-                 Id = this.blogEntry.Id
-             }));
-        }
+        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            sut.HandleAsync(new IncrementBlogEntryVisitsCommand(this.blogEntry.Id)));
     }
 }

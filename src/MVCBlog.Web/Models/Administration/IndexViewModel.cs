@@ -1,12 +1,11 @@
 ﻿using MVCBlog.Data;
 using MVCBlog.Web.Infrastructure.Paging;
 
-namespace MVCBlog.Web.Models.Administration
-{
-    public class IndexViewModel
-    {
-        public string SearchTerm { get; set; }
+namespace MVCBlog.Web.Models.Administration;
 
-        public PagedResult<BlogEntry> BlogEntries { get; set; }
-    }
+public class IndexViewModel
+{
+    public string? SearchTerm { get; set; }
+
+    public PagedResult<BlogEntry>? BlogEntries { get; set; }
 }

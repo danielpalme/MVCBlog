@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.329
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MVCBlog.Web", "MVCBlog.Web\MVCBlog.Web.csproj", "{591F0A38-5843-40A8-9A83-380F67750D70}"
 EndProject
@@ -11,7 +11,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MVCBlog.Business", "MVCBlog
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MVCBlog.Localization", "MVCBlog.Localization\MVCBlog.Localization.csproj", "{AC21889E-1831-4BA0-9F24-2912AA6395DA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MVCBlog.Business.Test", "MVCBlog.Business.Test\MVCBlog.Business.Test.csproj", "{C8E361FC-8D8B-42DA-9A4A-280082EEE12A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MVCBlog.Business.Test", "MVCBlog.Business.Test\MVCBlog.Business.Test.csproj", "{C8E361FC-8D8B-42DA-9A4A-280082EEE12A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DCD70966-21FC-4CC5-8838-3329CE8BEA11}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		stylecop.ruleset = stylecop.ruleset
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

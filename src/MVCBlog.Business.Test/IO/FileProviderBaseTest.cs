@@ -2,72 +2,70 @@
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
-using Microsoft.VisualStudio.TestPlatform.PlatformAbstractions.Interfaces;
 using Moq;
 using MVCBlog.Business.IO;
 using Xunit;
 
-namespace MVCBlog.Business.Test.IO
+namespace MVCBlog.Business.Test.IO;
+
+public class FileProviderBaseTest : IDisposable
 {
-    public class FileProviderBaseTest : IDisposable
+    private readonly FileProviderBase fileProvider;
+
+    public FileProviderBaseTest()
     {
-        private readonly FileProviderBase fileProvider;
+        this.fileProvider = new SampleFileProvider();
+    }
 
-        public FileProviderBaseTest()
+    public void Dispose()
+    {
+        string directory = Path.Combine(Path.GetTempPath(), "test");
+        if (Directory.Exists(directory))
         {
-            this.fileProvider = new SampleFileProvider();
+            Directory.Delete(directory, true);
+        }
+    }
+
+    [Fact]
+    public async Task GetFileAsync_DoesNotExist_FileNotFoundException()
+    {
+        await Assert.ThrowsAsync<FileNotFoundException>(() => this.fileProvider.GetFileAsync("test.txt"));
+    }
+
+    [Fact]
+    public async Task GetFileAsync_Exists()
+    {
+        await this.fileProvider.AddFileAsync("test.txt", new byte[] { 0x00 });
+
+        var data = await this.fileProvider.GetFileAsync("test.txt");
+        Assert.True(data.Length > 0);
+    }
+
+    [Fact]
+    public async Task DeleteFileAsync()
+    {
+        await this.fileProvider.AddFileAsync("test.txt", new byte[] { 0x00 });
+
+        await this.fileProvider.DeleteFileAsync("test.txt");
+
+        await Assert.ThrowsAsync<FileNotFoundException>(() => this.fileProvider.GetFileAsync("test.txt"));
+    }
+
+    private class SampleFileProvider : FileProviderBase
+    {
+        private const string FilesBaseDirectory = "test";
+
+        public SampleFileProvider()
+            : base(GetHostEnvironment(), FilesBaseDirectory)
+        {
         }
 
-        public void Dispose()
+        private static IHostEnvironment GetHostEnvironment()
         {
-            string directory = Path.Combine(Path.GetTempPath(), "test");
-            if (Directory.Exists(directory))
-            {
-                Directory.Delete(directory, true);
-            }
-        }
+            var mock = new Mock<IHostEnvironment>();
+            mock.Setup(m => m.ContentRootPath).Returns(Path.GetTempPath());
 
-        [Fact]
-        public async Task GetFileAsync_DoesNotExist_FileNotFoundException()
-        {
-            await Assert.ThrowsAsync<FileNotFoundException>(() => this.fileProvider.GetFileAsync("test.txt"));
-        }
-
-        [Fact]
-        public async Task GetFileAsync_Exists()
-        {
-            await this.fileProvider.AddFileAsync("test.txt", new byte[] { 0x00 });
-
-            var data = await this.fileProvider.GetFileAsync("test.txt");
-            Assert.True(data.Length > 0);
-        }
-
-        [Fact]
-        public async Task DeleteFileAsync()
-        {
-            await this.fileProvider.AddFileAsync("test.txt", new byte[] { 0x00 });
-
-            await this.fileProvider.DeleteFileAsync("test.txt");
-
-            await Assert.ThrowsAsync<FileNotFoundException>(() => this.fileProvider.GetFileAsync("test.txt"));
-        }
-
-        private class SampleFileProvider : FileProviderBase
-        {
-            private const string FilesBaseDirectory = "test";
-
-            public SampleFileProvider()
-                : base(GetHostEnvironment(), FilesBaseDirectory)
-            {
-            }
-
-            private static IHostEnvironment GetHostEnvironment()
-            {
-                var mock = new Mock<IHostEnvironment>();
-                mock.Setup(m => m.ContentRootPath).Returns(Path.GetTempPath());
-
-                return mock.Object;
-            }
+            return mock.Object;
         }
     }
 }

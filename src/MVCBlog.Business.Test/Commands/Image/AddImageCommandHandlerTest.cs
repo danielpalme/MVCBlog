@@ -6,36 +6,31 @@ using MVCBlog.Business.IO;
 using MVCBlog.Data;
 using Xunit;
 
-namespace MVCBlog.Business.Test.Commands
+namespace MVCBlog.Business.Test.Commands;
+
+public class AddImageCommandHandlerTest
 {
-    public class AddImageCommandHandlerTest
+    private readonly EFUnitOfWork unitOfWork;
+
+    private readonly Mock<IImageFileProvider> imageFileProviderMock;
+
+    public AddImageCommandHandlerTest()
     {
-        private readonly EFUnitOfWork unitOfWork;
+        this.unitOfWork = new InMemoryDatabaseFactory().CreateContext();
+        this.imageFileProviderMock = new Mock<IImageFileProvider>();
+    }
 
-        private readonly Mock<IImageFileProvider> imageFileProviderMock;
+    [Fact]
+    public async Task AddImage()
+    {
+        var sut = new AddImageCommandHandler(this.unitOfWork, this.imageFileProviderMock.Object);
+        await sut.HandleAsync(new AddImageCommand("path\\test.png", new byte[0]));
 
-        public AddImageCommandHandlerTest()
-        {
-            this.unitOfWork = new InMemoryDatabaseFactory().CreateContext();
-            this.imageFileProviderMock = new Mock<IImageFileProvider>();
-        }
+        var images = this.unitOfWork.Images.Where(i => i.Name == "test.png").ToList();
 
-        [Fact]
-        public async Task AddImage()
-        {
-            var sut = new AddImageCommandHandler(this.unitOfWork, this.imageFileProviderMock.Object);
-            await sut.HandleAsync(new AddImageCommand()
-            {
-                Data = new byte[0],
-                FileName = "path\\test.png"
-            });
+        Assert.Single(images);
+        Assert.Equal($"{images[0].Id}.png", images[0].Path);
 
-            var images = this.unitOfWork.Images.Where(i => i.Name == "test.png").ToList();
-
-            Assert.Single(images);
-            Assert.Equal($"{images[0].Id}.png", images[0].Path);
-
-            this.imageFileProviderMock.Verify(i => i.AddFileAsync($"{images[0].Id}.png", It.IsAny<byte[]>()), Times.Once);
-        }
+        this.imageFileProviderMock.Verify(i => i.AddFileAsync($"{images[0].Id}.png", It.IsAny<byte[]>()), Times.Once);
     }
 }

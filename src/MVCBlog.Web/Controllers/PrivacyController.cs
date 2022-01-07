@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace MVCBlog.Web.Controllers
+namespace MVCBlog.Web.Controllers;
+
+public class PrivacyController : Controller
 {
-    public class PrivacyController : Controller
+    public IActionResult Index()
     {
-        public IActionResult Index()
-        {
-            return this.View();
-        }
+        return this.View();
     }
 }

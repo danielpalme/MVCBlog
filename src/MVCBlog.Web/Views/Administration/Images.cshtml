@@ -20,7 +20,7 @@
         </div>
         <input asp-for="SearchTerm" class="form-control" placeholder="@Localizer["Search"]" />
     </div>
-    <input type="hidden" name="@nameof(Model.Images.Paging.Top)" value="@Model.Images.Paging.Top" />
+    <input type="hidden" name="@nameof(Model.Images.Paging.Top)" value="@Model!.Images!.Paging.Top" />
     <button type="submit" class="btn btn-primary btn-sm mb-2 mr-2">@Localizer["Filter"]</button>
 </form>
 @if (Model.Images.TotalNumberOfItems > 0)

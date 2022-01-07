@@ -1,10 +1,10 @@
 ﻿@model MVCBlog.Web.Models.Blog.EntryViewModel
 @inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer
 @{
-    ViewData["Title"] = Model.BlogEntry.Header;
+    ViewData["Title"] = Model!.BlogEntry.Header;
 }
 
-@if (User.Identity.IsAuthenticated)
+@if (User.Identity != null && User.Identity.IsAuthenticated)
 {
     bool notVisible = !Model.BlogEntry.Visible;
     bool notYetVisible = Model.BlogEntry.Visible && Model.BlogEntry.PublishDate > DateTimeOffset.Now;
@@ -24,13 +24,12 @@
     }
 }
 
-
 <article class="mb-4">
     <h1>@Model.BlogEntry.Header</h1>
     <partial name="_Header" model="@Model.BlogEntry" />
     <markdown Markdown="@Model.BlogEntry.Content"></markdown>
 
-    @if (Model.BlogEntry.BlogEntryFiles.Count > 0)
+    @if (Model.BlogEntry.BlogEntryFiles!.Count > 0)
     {
         <h2>@Localizer["Downloads"]</h2>
 
@@ -39,7 +38,7 @@
             {
                 <li>
                     <a href="~/Blog/Download/@file.Id">@file.Name</a>
-                    @if (User.Identity.IsAuthenticated)
+                    @if (User.Identity != null && User.Identity.IsAuthenticated)
                     {
                         <text> (@file.Counter @Localizer["Downloads"])</text>
                     }
@@ -89,7 +88,7 @@
     <button type="submit" class="btn btn-primary">@Localizer["Submit"]</button>
 </form>
 
-@foreach (var comment in Model.BlogEntry.BlogEntryComments.OrderByDescending(b => b.CreatedOn))
+@foreach (var comment in Model.BlogEntry.BlogEntryComments!.OrderByDescending(b => b.CreatedOn))
 {
     string adminPostClass = comment.AdminPost ? "text-danger" : string.Empty;
     <div class="clearfix">
@@ -103,7 +102,7 @@
                 <i class="fas fa-link ml-md-4"></i>
                 @comment.Homepage
             }
-            @if (User.Identity.IsAuthenticated)
+            @if (User.Identity != null && User.Identity.IsAuthenticated)
             {
                 <br class="d-md-none" />
 

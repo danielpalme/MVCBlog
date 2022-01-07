@@ -1,9 +1,11 @@
-﻿using System;
+﻿namespace MVCBlog.Business.Commands;
 
-namespace MVCBlog.Business.Commands
+public class DeleteImageCommand
 {
-    public class DeleteImageCommand
+    public DeleteImageCommand(Guid id)
     {
-        public Guid Id { get; set; }
+        this.Id = id;
     }
+
+    public Guid Id { get; set; }
 }

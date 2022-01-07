@@ -6,7 +6,7 @@
 }
 <h1>@ViewData["Title"]</h1>
 
-@if (!string.IsNullOrEmpty(this.Model.Tag) || !string.IsNullOrEmpty(this.Model.Search))
+@if (!string.IsNullOrEmpty(this.Model!.Tag) || !string.IsNullOrEmpty(this.Model.Search))
 {
     <div class="card mt-3 mb-3">
         <div class="card-body">

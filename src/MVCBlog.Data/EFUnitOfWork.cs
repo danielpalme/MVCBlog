@@ -1,102 +1,97 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using MVCBlog.Data.Validation;
 
-namespace MVCBlog.Data
+namespace MVCBlog.Data;
+
+public class EFUnitOfWork : IdentityDbContext<User>
 {
-    public class EFUnitOfWork : IdentityDbContext<User>
+    public EFUnitOfWork(DbContextOptions<EFUnitOfWork> options)
+        : base(options)
     {
-        public EFUnitOfWork(DbContextOptions<EFUnitOfWork> options)
-            : base(options)
+    }
+
+    public DbSet<BlogEntry> BlogEntries { get; set; } = null!;
+
+    public DbSet<BlogEntryComment> BlogEntryComments { get; set; } = null!;
+
+    public DbSet<BlogEntryFile> BlogEntryFiles { get; set; } = null!;
+
+    public DbSet<Image> Images { get; set; } = null!;
+
+    public DbSet<Tag> Tags { get; set; } = null!;
+
+    public DbSet<BlogEntryTag> BlogEntryTags { get; set; } = null!;
+
+    public override int SaveChanges()
+    {
+        this.ValidateEntitíes();
+
+        return base.SaveChanges();
+    }
+
+    public override int SaveChanges(bool acceptAllChangesOnSuccess)
+    {
+        this.ValidateEntitíes();
+
+        return base.SaveChanges(acceptAllChangesOnSuccess);
+    }
+
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
+    {
+        this.ValidateEntitíes();
+
+        return base.SaveChangesAsync(cancellationToken);
+    }
+
+    public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default(CancellationToken))
+    {
+        this.ValidateEntitíes();
+
+        return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+    }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
         {
+            relationship.DeleteBehavior = DeleteBehavior.Cascade;
         }
 
-        public DbSet<BlogEntry> BlogEntries { get; set; }
+        modelBuilder.Entity<BlogEntryTag>()
+            .HasKey(m => new { m.BlogEntryId, m.TagId });
 
-        public DbSet<BlogEntryComment> BlogEntryComments { get; set; }
+        modelBuilder.Entity<BlogEntry>()
+            .HasIndex(m => new { m.Permalink })
+            .IsUnique(true);
 
-        public DbSet<BlogEntryFile> BlogEntryFiles { get; set; }
+        modelBuilder.Entity<Tag>()
+            .HasIndex(m => new { m.Name })
+            .IsUnique(true);
 
-        public DbSet<Image> Images { get; set; }
+        base.OnModelCreating(modelBuilder);
+    }
 
-        public DbSet<Tag> Tags { get; set; }
+    private void ValidateEntitíes()
+    {
+        var addedOrModifiedEntities = this.ChangeTracker.Entries()
+            .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified);
 
-        public DbSet<BlogEntryTag> BlogEntryTags { get; set; }
-
-        public override int SaveChanges()
+        var errors = new List<EntityValidationResult>();
+        var validationResults = new List<ValidationResult>();
+        foreach (var entity in addedOrModifiedEntities)
         {
-            this.ValidateEntitíes();
-
-            return base.SaveChanges();
-        }
-
-        public override int SaveChanges(bool acceptAllChangesOnSuccess)
-        {
-            this.ValidateEntitíes();
-
-            return base.SaveChanges(acceptAllChangesOnSuccess);
-        }
-
-        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
-        {
-            this.ValidateEntitíes();
-
-            return base.SaveChangesAsync(cancellationToken);
-        }
-
-        public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            this.ValidateEntitíes();
-
-            return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
-        }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
+            if (!Validator.TryValidateObject(entity.Entity, new ValidationContext(entity.Entity), validationResults))
             {
-                relationship.DeleteBehavior = DeleteBehavior.Cascade;
+                errors.Add(new EntityValidationResult(entity.Entity, validationResults));
+                validationResults = new List<ValidationResult>();
             }
-
-            modelBuilder.Entity<BlogEntryTag>()
-                .HasKey(m => new { m.BlogEntryId, m.TagId });
-
-            modelBuilder.Entity<BlogEntry>()
-                .HasIndex(m => new { m.Permalink })
-                .IsUnique(true);
-
-            modelBuilder.Entity<Tag>()
-                .HasIndex(m => new { m.Name })
-                .IsUnique(true);
-
-            base.OnModelCreating(modelBuilder);
         }
 
-        private void ValidateEntitíes()
+        if (errors.Count > 0)
         {
-            var addedOrModifiedEntities = this.ChangeTracker.Entries()
-                .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified);
-
-            var errors = new List<EntityValidationResult>();
-            var validationResults = new List<ValidationResult>();
-            foreach (var entity in addedOrModifiedEntities)
-            {
-                if (!Validator.TryValidateObject(entity.Entity, new ValidationContext(entity.Entity), validationResults))
-                {
-                    errors.Add(new EntityValidationResult(entity.Entity, validationResults));
-                    validationResults = new List<ValidationResult>();
-                }
-            }
-
-            if (errors.Count > 0)
-            {
-                throw new Validation.ValidationException(errors);
-            }
+            throw new Validation.ValidationException(errors);
         }
     }
 }

@@ -12,7 +12,7 @@
         </div>
         <input asp-for="SearchTerm" class="form-control" placeholder="@Localizer["Search"]" />
     </div>
-    <input type="hidden" name="@nameof(Model.Users.Paging.Top)" value="@Model.Users.Paging.Top" />
+    <input type="hidden" name="@nameof(Model.Users.Paging.Top)" value="@Model!.Users!.Paging.Top" />
     <button type="submit" class="btn btn-primary btn-sm mb-2 mr-2">@Localizer["Filter"]</button>
 </form>
 @if (Model.Users.TotalNumberOfItems > 0)
@@ -21,9 +21,9 @@
         <table class="table table-bordered table-hover table-striped table-sm">
             <thead>
                 <tr>
-                    <th paged-result="this.Model.Users" sort-column="@nameof(MVCBlog.Data.User.LastName)">@Html.DisplayNameFor(m => m.Users.First().LastName)</th>
-                    <th paged-result="this.Model.Users" sort-column="@nameof(MVCBlog.Data.User.FirstName)">@Html.DisplayNameFor(m => m.Users.First().FirstName)</th>
-                    <th paged-result="this.Model.Users" sort-column="@nameof(MVCBlog.Data.User.Email)">@Html.DisplayNameFor(m => m.Users.First().Email)</th>
+                    <th paged-result="this.Model.Users" sort-column="@nameof(MVCBlog.Data.User.LastName)">@Html.DisplayNameFor(m => m.Users!.First().LastName)</th>
+                    <th paged-result="this.Model.Users" sort-column="@nameof(MVCBlog.Data.User.FirstName)">@Html.DisplayNameFor(m => m.Users!.First().FirstName)</th>
+                    <th paged-result="this.Model.Users" sort-column="@nameof(MVCBlog.Data.User.Email)">@Html.DisplayNameFor(m => m.Users!.First().Email)</th>
                 </tr>
             </thead>
             <tbody>

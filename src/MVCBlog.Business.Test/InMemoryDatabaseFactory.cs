@@ -2,29 +2,28 @@
 using Microsoft.EntityFrameworkCore;
 using MVCBlog.Data;
 
-namespace MVCBlog.Business.Test
+namespace MVCBlog.Business.Test;
+
+public class InMemoryDatabaseFactory
 {
-    public class InMemoryDatabaseFactory
+    private readonly string databaseName;
+
+    public InMemoryDatabaseFactory()
     {
-        private readonly string databaseName;
+        this.databaseName = Guid.NewGuid().ToString();
+    }
 
-        public InMemoryDatabaseFactory()
-        {
-            this.databaseName = Guid.NewGuid().ToString();
-        }
+    public InMemoryDatabaseFactory(string databaseName)
+    {
+        this.databaseName = databaseName;
+    }
 
-        public InMemoryDatabaseFactory(string databaseName)
-        {
-            this.databaseName = databaseName;
-        }
+    public EFUnitOfWork CreateContext()
+    {
+        var options = new DbContextOptionsBuilder<EFUnitOfWork>()
+            .UseInMemoryDatabase(databaseName: this.databaseName)
+            .Options;
 
-        public EFUnitOfWork CreateContext()
-        {
-            var options = new DbContextOptionsBuilder<EFUnitOfWork>()
-                .UseInMemoryDatabase(databaseName: this.databaseName)
-                .Options;
-
-            return new EFUnitOfWork(options);
-        }
+        return new EFUnitOfWork(options);
     }
 }

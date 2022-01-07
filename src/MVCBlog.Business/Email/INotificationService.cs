@@ -1,9 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿namespace MVCBlog.Business.Email;
 
-namespace MVCBlog.Business.Email
+public interface INotificationService
 {
-    public interface INotificationService
-    {
-        Task SendNotificationAsync(Message message);
-    }
+    Task SendNotificationAsync(Message message);
 }

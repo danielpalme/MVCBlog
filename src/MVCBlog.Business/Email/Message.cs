@@ -1,95 +1,91 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace MVCBlog.Business.Email;
 
-namespace MVCBlog.Business.Email
+public class Message
 {
-    public class Message
+    private readonly List<Recipient> bccRecipients = new List<Recipient>();
+
+    private readonly List<Attachment> attachments = new List<Attachment>();
+
+    private readonly List<EmbeddedImage> embeddedImages = new List<EmbeddedImage>();
+
+    public Message(Recipient bccRecipient, string subject, string bodyAsHtml)
     {
-        private readonly List<Recipient> bccRecipients = new List<Recipient>();
+        this.bccRecipients.Add(bccRecipient ?? throw new ArgumentNullException(nameof(bccRecipient)));
+        this.Subject = subject ?? throw new ArgumentNullException(nameof(subject));
+        this.BodyAsHtml = bodyAsHtml ?? throw new ArgumentNullException(nameof(bodyAsHtml));
+    }
 
-        private readonly List<Attachment> attachments = new List<Attachment>();
+    public Message(IEnumerable<Recipient> bccRecipients, string subject, string bodyAsHtml)
+    {
+        this.bccRecipients.AddRange(bccRecipients ?? throw new ArgumentNullException(nameof(bccRecipients)));
+        this.Subject = subject ?? throw new ArgumentNullException(nameof(subject));
+        this.BodyAsHtml = bodyAsHtml ?? throw new ArgumentNullException(nameof(bodyAsHtml));
+    }
 
-        private readonly List<EmbeddedImage> embeddedImages = new List<EmbeddedImage>();
+    public Recipient? Sender { get; private set; }
 
-        public Message(Recipient bccRecipient, string subject, string bodyAsHtml)
+    public Recipient? ReplyTo { get; private set; }
+
+    public IReadOnlyCollection<Recipient> BccRecipients
+    {
+        get
         {
-            this.bccRecipients.Add(bccRecipient ?? throw new ArgumentNullException(nameof(bccRecipient)));
-            this.Subject = subject ?? throw new ArgumentNullException(nameof(subject));
-            this.BodyAsHtml = bodyAsHtml ?? throw new ArgumentNullException(nameof(bodyAsHtml));
+            return this.bccRecipients;
         }
+    }
 
-        public Message(IEnumerable<Recipient> bccRecipients, string subject, string bodyAsHtml)
+    public string Subject { get; }
+
+    public string BodyAsHtml { get; }
+
+    public IReadOnlyCollection<Attachment> Attachments
+    {
+        get
         {
-            this.bccRecipients.AddRange(bccRecipients ?? throw new ArgumentNullException(nameof(bccRecipients)));
-            this.Subject = subject ?? throw new ArgumentNullException(nameof(subject));
-            this.BodyAsHtml = bodyAsHtml ?? throw new ArgumentNullException(nameof(bodyAsHtml));
+            return this.attachments;
         }
+    }
 
-        public Recipient Sender { get; private set; }
-
-        public Recipient ReplyTo { get; private set; }
-
-        public IReadOnlyCollection<Recipient> BccRecipients
+    public IReadOnlyCollection<EmbeddedImage> EmbeddedImages
+    {
+        get
         {
-            get
-            {
-                return this.bccRecipients;
-            }
+            return this.embeddedImages;
         }
+    }
 
-        public string Subject { get; }
+    public Message WithSender(Recipient sender)
+    {
+        this.Sender = sender ?? throw new ArgumentNullException(nameof(sender));
 
-        public string BodyAsHtml { get; }
+        return this;
+    }
 
-        public IReadOnlyCollection<Attachment> Attachments
-        {
-            get
-            {
-                return this.attachments;
-            }
-        }
+    public Message WithReplyTo(Recipient replyTo)
+    {
+        this.ReplyTo = replyTo ?? throw new ArgumentNullException(nameof(replyTo));
 
-        public IReadOnlyCollection<EmbeddedImage> EmbeddedImages
-        {
-            get
-            {
-                return this.embeddedImages;
-            }
-        }
+        return this;
+    }
 
-        public Message WithSender(Recipient sender)
-        {
-            this.Sender = sender ?? throw new ArgumentNullException(nameof(sender));
+    public Message AddRecipient(Recipient recipient)
+    {
+        this.bccRecipients.Add(recipient ?? throw new ArgumentNullException(nameof(recipient)));
 
-            return this;
-        }
+        return this;
+    }
 
-        public Message WithReplyTo(Recipient replyTo)
-        {
-            this.ReplyTo = replyTo ?? throw new ArgumentNullException(nameof(replyTo));
+    public Message AddAttachment(Attachment attachment)
+    {
+        this.attachments.Add(attachment ?? throw new ArgumentNullException(nameof(attachment)));
 
-            return this;
-        }
+        return this;
+    }
 
-        public Message AddRecipient(Recipient recipient)
-        {
-            this.bccRecipients.Add(recipient ?? throw new ArgumentNullException(nameof(recipient)));
+    public Message AddEmbeddedImage(EmbeddedImage embeddedImage)
+    {
+        this.embeddedImages.Add(embeddedImage ?? throw new ArgumentNullException(nameof(embeddedImage)));
 
-            return this;
-        }
-
-        public Message AddAttachment(Attachment attachment)
-        {
-            this.attachments.Add(attachment ?? throw new ArgumentNullException(nameof(attachment)));
-
-            return this;
-        }
-
-        public Message AddEmbeddedImage(EmbeddedImage embeddedImage)
-        {
-            this.embeddedImages.Add(embeddedImage ?? throw new ArgumentNullException(nameof(embeddedImage)));
-
-            return this;
-        }
+        return this;
     }
 }

@@ -1,35 +1,33 @@
-﻿using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using MVCBlog.Business.IO;
 using MVCBlog.Data;
 
-namespace MVCBlog.Business.Commands
+namespace MVCBlog.Business.Commands;
+
+public class DeleteBlogEntryFileCommandHandler : ICommandHandler<DeleteBlogEntryFileCommand>
 {
-    public class DeleteBlogEntryFileCommandHandler : ICommandHandler<DeleteBlogEntryFileCommand>
+    private readonly EFUnitOfWork unitOfWork;
+
+    private readonly IBlogEntryFileFileProvider fileProvider;
+
+    public DeleteBlogEntryFileCommandHandler(EFUnitOfWork unitOfWork, IBlogEntryFileFileProvider fileProvider)
     {
-        private readonly EFUnitOfWork unitOfWork;
+        this.unitOfWork = unitOfWork;
+        this.fileProvider = fileProvider;
+    }
 
-        private readonly IBlogEntryFileFileProvider fileProvider;
+    public async Task HandleAsync(DeleteBlogEntryFileCommand command)
+    {
+        var entity = await this.unitOfWork.BlogEntryFiles.SingleOrDefaultAsync(e => e.Id == command.Id);
 
-        public DeleteBlogEntryFileCommandHandler(EFUnitOfWork unitOfWork, IBlogEntryFileFileProvider fileProvider)
+        if (entity != null)
         {
-            this.unitOfWork = unitOfWork;
-            this.fileProvider = fileProvider;
-        }
+            this.unitOfWork.BlogEntryFiles.Remove(entity);
 
-        public async Task HandleAsync(DeleteBlogEntryFileCommand command)
-        {
-            var entity = await this.unitOfWork.BlogEntryFiles.SingleOrDefaultAsync(e => e.Id == command.Id);
+            await this.unitOfWork.SaveChangesAsync();
 
-            if (entity != null)
-            {
-                this.unitOfWork.BlogEntryFiles.Remove(entity);
-
-                await this.unitOfWork.SaveChangesAsync();
-
-                string extension = entity.Name.Substring(entity.Name.LastIndexOf('.') + 1);
-                await this.fileProvider.DeleteFileAsync($"{entity.Id}.{extension}");
-            }
+            string extension = entity.Name.Substring(entity.Name.LastIndexOf('.') + 1);
+            await this.fileProvider.DeleteFileAsync($"{entity.Id}.{extension}");
         }
     }
 }

@@ -1,7 +1,6 @@
-﻿namespace MVCBlog.Business
+﻿namespace MVCBlog.Business;
+
+public interface ICommandHandler<TCommand>
 {
-    public interface ICommandHandler<TCommand>
-    {
-        System.Threading.Tasks.Task HandleAsync(TCommand command);
-    }
+    System.Threading.Tasks.Task HandleAsync(TCommand command);
 }

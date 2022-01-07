@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MVCBlog.Web.Views
+namespace MVCBlog.Web.Views;
+
+public class Blog
 {
-    public class Blog
-    {
-    }
 }

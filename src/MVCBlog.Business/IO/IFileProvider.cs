@@ -1,21 +1,18 @@
-﻿using System.Threading.Tasks;
+﻿namespace MVCBlog.Business.IO;
 
-namespace MVCBlog.Business.IO
+public interface IFileProvider
 {
-    public interface IFileProvider
-    {
-        Task<byte[]> GetFileAsync(string fileName);
+    Task<byte[]> GetFileAsync(string fileName);
 
-        Task AddFileAsync(string fileName, byte[] file);
+    Task AddFileAsync(string fileName, byte[] file);
 
-        Task DeleteFileAsync(string fileName);
-    }
+    Task DeleteFileAsync(string fileName);
+}
 
-    public interface IImageFileProvider : IFileProvider
-    {
-    }
+public interface IImageFileProvider : IFileProvider
+{
+}
 
-    public interface IBlogEntryFileFileProvider : IFileProvider
-    {
-    }
+public interface IBlogEntryFileFileProvider : IFileProvider
+{
 }

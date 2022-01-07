@@ -1,38 +1,33 @@
-﻿using System.Threading.Tasks;
-using MVCBlog.Business.IO;
+﻿using MVCBlog.Business.IO;
 using MVCBlog.Data;
 
-namespace MVCBlog.Business.Commands
+namespace MVCBlog.Business.Commands;
+
+public class AddImageCommandHandler : ICommandHandler<AddImageCommand>
 {
-    public class AddImageCommandHandler : ICommandHandler<AddImageCommand>
+    private readonly EFUnitOfWork unitOfWork;
+
+    private readonly IImageFileProvider fileProvider;
+
+    public AddImageCommandHandler(EFUnitOfWork unitOfWork, IImageFileProvider fileProvider)
     {
-        private readonly EFUnitOfWork unitOfWork;
+        this.unitOfWork = unitOfWork;
+        this.fileProvider = fileProvider;
+    }
 
-        private readonly IImageFileProvider fileProvider;
+    public async Task HandleAsync(AddImageCommand command)
+    {
+        string fileName = command.FileName.Replace('/', '\\');
+        fileName = fileName.Substring(fileName.IndexOf('\\') + 1);
 
-        public AddImageCommandHandler(EFUnitOfWork unitOfWork, IImageFileProvider fileProvider)
-        {
-            this.unitOfWork = unitOfWork;
-            this.fileProvider = fileProvider;
-        }
+        string extension = fileName.Substring(fileName.LastIndexOf('.') + 1);
 
-        public async Task HandleAsync(AddImageCommand command)
-        {
-            string fileName = command.FileName.Replace('/', '\\');
-            fileName = fileName.Substring(fileName.IndexOf('\\') + 1);
+        var image = new Image(fileName);
 
-            string extension = fileName.Substring(fileName.LastIndexOf('.') + 1);
+        this.unitOfWork.Images.Add(image);
 
-            var image = new Image()
-            {
-                Name = fileName
-            };
+        await this.fileProvider.AddFileAsync($"{image.Id}.{extension}", command.Data);
 
-            this.unitOfWork.Images.Add(image);
-
-            await this.fileProvider.AddFileAsync($"{image.Id}.{extension}", command.Data);
-
-            await this.unitOfWork.SaveChangesAsync();
-        }
+        await this.unitOfWork.SaveChangesAsync();
     }
 }

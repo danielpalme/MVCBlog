@@ -47,22 +47,22 @@
                 </li>
             </ul>
             <ul class="navigation">
-                <li title="@Localizer["Blog entries"]" class="@((string)ViewData["SelectedMenuItem"] == "BlogEntries" ? "link-active" : "")">
+                <li title="@Localizer["Blog entries"]" class="@(ViewData["SelectedMenuItem"] as string == "BlogEntries" ? "link-active" : "")">
                     <a asp-action="Index" asp-controller="Administration">
                         <i class="fas fa-th" aria-hidden="true"></i><span class="expandedonly"> @Localizer["Blog entries"]</span>
                     </a>
                 </li>
-                <li title="@Localizer["Downloads"]" class="ident identshadow @((string)ViewData["SelectedMenuItem"] == "Downloads" ? "link-active" : "")">
+                <li title="@Localizer["Downloads"]" class="ident identshadow @(ViewData["SelectedMenuItem"] as string == "Downloads" ? "link-active" : "")">
                     <a asp-action="Downloads" asp-controller="Administration">
                         <i class="fa fa-chart-line" aria-hidden="true"></i><span class="expandedonly"> @Localizer["Downloads"]</span>
                     </a>
                 </li>
-                <li title="@Localizer["Images"]" class="@((string)ViewData["SelectedMenuItem"] == "Images" ? "link-active" : "")">
+                <li title="@Localizer["Images"]" class="@(ViewData["SelectedMenuItem"] as string == "Images" ? "link-active" : "")">
                     <a asp-action="Images" asp-controller="Administration">
                         <i class="fas fa-images" aria-hidden="true"></i><span class="expandedonly"> @Localizer["Images"]</span>
                     </a>
                 </li>
-                <li title="@Localizer["Users"]" class="@((string)ViewData["SelectedMenuItem"] == "Users" ? "link-active" : "")">
+                <li title="@Localizer["Users"]" class="@(ViewData["SelectedMenuItem"] as string == "Users" ? "link-active" : "")">
                     <a asp-action="Users" asp-controller="Administration">
                         <i class="fas fa-users" aria-hidden="true"></i><span class="expandedonly"> @Localizer["Users"]</span>
                     </a>

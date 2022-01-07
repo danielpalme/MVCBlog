@@ -1,25 +1,24 @@
-﻿namespace MVCBlog.Web.Infrastructure.Mvc.SecurityHeaders
+﻿namespace MVCBlog.Web.Infrastructure.Mvc.SecurityHeaders;
+
+public enum ReferrerPolicies
 {
-    public enum ReferrerPolicies
-    {
-        None,
+    None,
 
-        Empty,
+    Empty,
 
-        NoReferrer,
+    NoReferrer,
 
-        NoReferrerWhenDowngrade,
+    NoReferrerWhenDowngrade,
 
-        SameOrigin,
+    SameOrigin,
 
-        Origin,
+    Origin,
 
-        StrictOrigin,
+    StrictOrigin,
 
-        OriginWhenCrossOrigin,
+    OriginWhenCrossOrigin,
 
-        StrictOriginWhenCrossOrigin,
+    StrictOriginWhenCrossOrigin,
 
-        UnsafeUrl
-    }
+    UnsafeUrl
 }

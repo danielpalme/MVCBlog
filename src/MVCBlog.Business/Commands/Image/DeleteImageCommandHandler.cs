@@ -3,32 +3,31 @@ using Microsoft.EntityFrameworkCore;
 using MVCBlog.Business.IO;
 using MVCBlog.Data;
 
-namespace MVCBlog.Business.Commands
+namespace MVCBlog.Business.Commands;
+
+public class DeleteImageCommandHandler : ICommandHandler<DeleteImageCommand>
 {
-    public class DeleteImageCommandHandler : ICommandHandler<DeleteImageCommand>
+    private readonly EFUnitOfWork unitOfWork;
+
+    private readonly IImageFileProvider fileProvider;
+
+    public DeleteImageCommandHandler(EFUnitOfWork unitOfWork, IImageFileProvider fileProvider)
     {
-        private readonly EFUnitOfWork unitOfWork;
+        this.unitOfWork = unitOfWork;
+        this.fileProvider = fileProvider;
+    }
 
-        private readonly IImageFileProvider fileProvider;
+    public async Task HandleAsync(DeleteImageCommand command)
+    {
+        var entity = await this.unitOfWork.Images.SingleOrDefaultAsync(e => e.Id == command.Id);
 
-        public DeleteImageCommandHandler(EFUnitOfWork unitOfWork, IImageFileProvider fileProvider)
+        if (entity != null)
         {
-            this.unitOfWork = unitOfWork;
-            this.fileProvider = fileProvider;
-        }
+            this.unitOfWork.Images.Remove(entity);
 
-        public async Task HandleAsync(DeleteImageCommand command)
-        {
-            var entity = await this.unitOfWork.Images.SingleOrDefaultAsync(e => e.Id == command.Id);
+            await this.unitOfWork.SaveChangesAsync();
 
-            if (entity != null)
-            {
-                this.unitOfWork.Images.Remove(entity);
-
-                await this.unitOfWork.SaveChangesAsync();
-
-                await this.fileProvider.DeleteFileAsync(entity.Path);
-            }
+            await this.fileProvider.DeleteFileAsync(entity.Path);
         }
     }
 }

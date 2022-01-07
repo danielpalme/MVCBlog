@@ -6,56 +6,46 @@ using MVCBlog.Business.Email;
 using MVCBlog.Data;
 using Xunit;
 
-namespace MVCBlog.Business.Test.Commands
+namespace MVCBlog.Business.Test.Commands;
+
+public class AddBlogEntryCommentCommandHandlerTest
 {
-    public class AddBlogEntryCommentCommandHandlerTest
+    private readonly EFUnitOfWork unitOfWork;
+
+    private readonly Mock<INotificationService> notificationsServiceMock;
+
+    private readonly BlogEntry blogEntry;
+
+    public AddBlogEntryCommentCommandHandlerTest()
     {
-        private readonly EFUnitOfWork unitOfWork;
+        this.unitOfWork = new InMemoryDatabaseFactory().CreateContext();
+        this.notificationsServiceMock = new Mock<INotificationService>();
 
-        private readonly Mock<INotificationService> notificationsServiceMock;
+        this.blogEntry = new BlogEntry("Test", "test", "Test");
 
-        private readonly BlogEntry blogEntry;
+        this.unitOfWork.BlogEntries.Add(this.blogEntry);
+        this.unitOfWork.SaveChanges();
+    }
 
-        public AddBlogEntryCommentCommandHandlerTest()
-        {
-            this.unitOfWork = new InMemoryDatabaseFactory().CreateContext();
-            this.notificationsServiceMock = new Mock<INotificationService>();
-
-            this.blogEntry = new BlogEntry()
+    [Fact]
+    public async Task AddBlogEntryComment()
+    {
+        var sut = new AddBlogEntryCommentCommandHandler(
+            this.unitOfWork,
+            this.notificationsServiceMock.Object,
+            Options.Create(new BlogSettings()
             {
-                ShortContent = "Test",
-                Header = "Test"
-            };
+                NotifyOnNewComments = true,
+                NotifyOnNewCommentsEmail = "test@test.de"
+            }));
 
-            this.unitOfWork.BlogEntries.Add(this.blogEntry);
-            this.unitOfWork.SaveChanges();
-        }
-
-        [Fact]
-        public async Task AddBlogEntryComment()
+        await sut.HandleAsync(new AddBlogEntryCommentCommand(new BlogEntryComment("Test", "Test")
         {
-            var sut = new AddBlogEntryCommentCommandHandler(
-                this.unitOfWork,
-                this.notificationsServiceMock.Object,
-                Options.Create(new BlogSettings()
-                {
-                    NotifyOnNewComments = true,
-                    NotifyOnNewCommentsEmail = "test@test.de"
-                }));
+            BlogEntryId = this.blogEntry.Id
+        }));
 
-            await sut.HandleAsync(new AddBlogEntryCommentCommand()
-            {
-                Entity = new BlogEntryComment()
-                {
-                    Name = "Test",
-                    Comment = "Test",
-                    BlogEntryId = this.blogEntry.Id
-                }
-            });
+        Assert.Single(this.unitOfWork.BlogEntryComments);
 
-            Assert.Single(this.unitOfWork.BlogEntryComments);
-
-            this.notificationsServiceMock.Verify(i => i.SendNotificationAsync(It.IsAny<Message>()), Times.Once);
-        }
+        this.notificationsServiceMock.Verify(i => i.SendNotificationAsync(It.IsAny<Message>()), Times.Once);
     }
 }

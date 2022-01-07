@@ -1,39 +1,37 @@
-﻿using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using MVCBlog.Business.IO;
 using MVCBlog.Data;
 
-namespace MVCBlog.Business.Commands
+namespace MVCBlog.Business.Commands;
+
+public class DeleteBlogEntryCommandHandler : ICommandHandler<DeleteBlogEntryCommand>
 {
-    public class DeleteBlogEntryCommandHandler : ICommandHandler<DeleteBlogEntryCommand>
+    private readonly EFUnitOfWork unitOfWork;
+
+    private readonly IBlogEntryFileFileProvider fileProvider;
+
+    public DeleteBlogEntryCommandHandler(EFUnitOfWork unitOfWork, IBlogEntryFileFileProvider fileProvider)
     {
-        private readonly EFUnitOfWork unitOfWork;
+        this.unitOfWork = unitOfWork;
+        this.fileProvider = fileProvider;
+    }
 
-        private readonly IBlogEntryFileFileProvider fileProvider;
+    public async Task HandleAsync(DeleteBlogEntryCommand command)
+    {
+        var entity = await this.unitOfWork.BlogEntries
+            .Include(b => b.BlogEntryFiles)
+            .SingleOrDefaultAsync(e => e.Id == command.Id);
 
-        public DeleteBlogEntryCommandHandler(EFUnitOfWork unitOfWork, IBlogEntryFileFileProvider fileProvider)
+        if (entity != null)
         {
-            this.unitOfWork = unitOfWork;
-            this.fileProvider = fileProvider;
-        }
+            this.unitOfWork.BlogEntries.Remove(entity);
 
-        public async Task HandleAsync(DeleteBlogEntryCommand command)
-        {
-            var entity = await this.unitOfWork.BlogEntries
-                .Include(b => b.BlogEntryFiles)
-                .SingleOrDefaultAsync(e => e.Id == command.Id);
+            await this.unitOfWork.SaveChangesAsync();
 
-            if (entity != null)
+            foreach (var file in entity.BlogEntryFiles!)
             {
-                this.unitOfWork.BlogEntries.Remove(entity);
-
-                await this.unitOfWork.SaveChangesAsync();
-
-                foreach (var file in entity.BlogEntryFiles)
-                {
-                    string extension = file.Name.Substring(file.Name.LastIndexOf('.') + 1);
-                    await this.fileProvider.DeleteFileAsync($"{file.Id}.{extension}");
-                }
+                string extension = file.Name.Substring(file.Name.LastIndexOf('.') + 1);
+                await this.fileProvider.DeleteFileAsync($"{file.Id}.{extension}");
             }
         }
     }

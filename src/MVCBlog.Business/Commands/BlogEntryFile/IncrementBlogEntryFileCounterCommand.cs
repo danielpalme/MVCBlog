@@ -1,9 +1,11 @@
-﻿using System;
+﻿namespace MVCBlog.Business.Commands;
 
-namespace MVCBlog.Business.Commands
+public class IncrementBlogEntryFileCounterCommand
 {
-    public class IncrementBlogEntryFileCounterCommand
+    public IncrementBlogEntryFileCounterCommand(Guid id)
     {
-        public Guid Id { get; set; }
+        this.Id = id;
     }
+
+    public Guid Id { get; set; }
 }

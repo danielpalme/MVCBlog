@@ -4,46 +4,37 @@ using MVCBlog.Business.Commands;
 using MVCBlog.Data;
 using Xunit;
 
-namespace MVCBlog.Business.Test.Commands
+namespace MVCBlog.Business.Test.Commands;
+
+public class IncrementBlogEntryFileCounterCommandHandlerTest
 {
-    public class IncrementBlogEntryFileCounterCommandHandlerTest
+    private readonly EFUnitOfWork unitOfWork;
+
+    private readonly BlogEntryFile file;
+
+    public IncrementBlogEntryFileCounterCommandHandlerTest()
     {
-        private readonly EFUnitOfWork unitOfWork;
+        this.unitOfWork = new InMemoryDatabaseFactory().CreateContext();
 
-        private readonly BlogEntryFile file;
+        var blogEntry = new BlogEntry("Test", "test", "Test");
 
-        public IncrementBlogEntryFileCounterCommandHandlerTest()
+        this.file = new BlogEntryFile("test.png")
         {
-            this.unitOfWork = new InMemoryDatabaseFactory().CreateContext();
+            BlogEntryId = blogEntry.Id
+        };
+        this.unitOfWork.BlogEntries.Add(blogEntry);
+        this.unitOfWork.BlogEntryFiles.Add(this.file);
+        this.unitOfWork.SaveChanges();
 
-            var blogEntry = new BlogEntry()
-            {
-                ShortContent = "Test",
-                Header = "Test"
-            };
+        Assert.Single(this.unitOfWork.BlogEntryFiles);
+    }
 
-            this.file = new BlogEntryFile()
-            {
-                Name = "test.png",
-                BlogEntryId = blogEntry.Id
-            };
-            this.unitOfWork.BlogEntries.Add(blogEntry);
-            this.unitOfWork.BlogEntryFiles.Add(this.file);
-            this.unitOfWork.SaveChanges();
+    [Fact]
+    public async Task IncrementBlogEntryFileCounter()
+    {
+        var sut = new IncrementBlogEntryFileCounterCommandHandler(this.unitOfWork);
 
-            Assert.Single(this.unitOfWork.BlogEntryFiles);
-        }
-
-        [Fact]
-        public async Task IncrementBlogEntryFileCounter()
-        {
-            var sut = new IncrementBlogEntryFileCounterCommandHandler(this.unitOfWork);
-
-            await Assert.ThrowsAsync<InvalidOperationException>(() =>
-             sut.HandleAsync(new IncrementBlogEntryFileCounterCommand()
-             {
-                 Id = this.file.Id
-             }));
-        }
+        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+         sut.HandleAsync(new IncrementBlogEntryFileCounterCommand(this.file.Id)));
     }
 }

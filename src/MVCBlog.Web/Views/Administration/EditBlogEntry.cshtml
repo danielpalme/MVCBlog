@@ -4,7 +4,7 @@
     var requestCulture = Context.Features.Get<Microsoft.AspNetCore.Localization.IRequestCultureFeature>();
     string language = requestCulture?.RequestCulture.Culture.TwoLetterISOLanguageName == "de" ? "de" : "en";
 
-    bool existingEntry = Model.BlogEntry.Header != null;
+    bool existingEntry = !string.IsNullOrWhiteSpace(Model!.BlogEntry.Header);
 
     ViewData["Title"] = Model.BlogEntry.Header ?? Localizer["New blog entry"].Value;
     ViewData["SelectedMenuItem"] = "BlogEntries";
@@ -97,7 +97,7 @@
             <partial name="_AddBlogEntryFile" model="@blogEntryFileViewModel" />
             <br />
 
-            if (Model.BlogEntry.BlogEntryFiles.Count > 0)
+            if (Model.BlogEntry.BlogEntryFiles!.Count > 0)
             {
                 <div class="table-responsive">
                     <table class="table table-bordered table-hover table-striped table-sm">
@@ -108,8 +108,8 @@
                         </colgroup>
                         <thead>
                             <tr>
-                                <th>@Html.DisplayNameFor(m => m.BlogEntry.BlogEntryFiles.First().Name)</th>
-                                <th class="text-right">@Html.DisplayNameFor(m => m.BlogEntry.BlogEntryFiles.First().Counter)</th>
+                                <th>@Html.DisplayNameFor(m => m.BlogEntry.BlogEntryFiles!.First().Name)</th>
+                                <th class="text-right">@Html.DisplayNameFor(m => m.BlogEntry.BlogEntryFiles!.First().Counter)</th>
                                 <th class="d-print-none"></th>
                             </tr>
                         </thead>

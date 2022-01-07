@@ -5,51 +5,42 @@ using MVCBlog.Business.IO;
 using MVCBlog.Data;
 using Xunit;
 
-namespace MVCBlog.Business.Test.Commands
+namespace MVCBlog.Business.Test.Commands;
+
+public class DeleteBlogEntryFileCommandHandlerTest
 {
-    public class DeleteBlogEntryFileCommandHandlerTest
+    private readonly EFUnitOfWork unitOfWork;
+
+    private readonly Mock<IBlogEntryFileFileProvider> blogEntryFileFileProvider;
+
+    private readonly BlogEntryFile file;
+
+    public DeleteBlogEntryFileCommandHandlerTest()
     {
-        private readonly EFUnitOfWork unitOfWork;
+        this.unitOfWork = new InMemoryDatabaseFactory().CreateContext();
+        this.blogEntryFileFileProvider = new Mock<IBlogEntryFileFileProvider>();
 
-        private readonly Mock<IBlogEntryFileFileProvider> blogEntryFileFileProvider;
+        var blogEntry = new BlogEntry("Test", "test", "Test");
 
-        private readonly BlogEntryFile file;
-
-        public DeleteBlogEntryFileCommandHandlerTest()
+        this.file = new BlogEntryFile("test.pdf")
         {
-            this.unitOfWork = new InMemoryDatabaseFactory().CreateContext();
-            this.blogEntryFileFileProvider = new Mock<IBlogEntryFileFileProvider>();
+            BlogEntryId = blogEntry.Id
+        };
+        this.unitOfWork.BlogEntries.Add(blogEntry);
+        this.unitOfWork.BlogEntryFiles.Add(this.file);
+        this.unitOfWork.SaveChanges();
 
-            var blogEntry = new BlogEntry()
-            {
-                ShortContent = "Test",
-                Header = "Test"
-            };
+        Assert.Single(this.unitOfWork.BlogEntryFiles);
+    }
 
-            this.file = new BlogEntryFile()
-            {
-                Name = "test.pdf",
-                BlogEntryId = blogEntry.Id
-            };
-            this.unitOfWork.BlogEntries.Add(blogEntry);
-            this.unitOfWork.BlogEntryFiles.Add(this.file);
-            this.unitOfWork.SaveChanges();
+    [Fact]
+    public async Task DeleteBlogEntryFile()
+    {
+        var sut = new DeleteBlogEntryFileCommandHandler(this.unitOfWork, this.blogEntryFileFileProvider.Object);
+        await sut.HandleAsync(new DeleteBlogEntryFileCommand(this.file.Id));
 
-            Assert.Single(this.unitOfWork.BlogEntryFiles);
-        }
+        Assert.Empty(this.unitOfWork.BlogEntryFiles);
 
-        [Fact]
-        public async Task DeleteBlogEntryFile()
-        {
-            var sut = new DeleteBlogEntryFileCommandHandler(this.unitOfWork, this.blogEntryFileFileProvider.Object);
-            await sut.HandleAsync(new DeleteBlogEntryFileCommand()
-            {
-                Id = this.file.Id
-            });
-
-            Assert.Empty(this.unitOfWork.BlogEntryFiles);
-
-            this.blogEntryFileFileProvider.Verify(i => i.DeleteFileAsync($"{this.file.Id}.pdf"), Times.Once);
-        }
+        this.blogEntryFileFileProvider.Verify(i => i.DeleteFileAsync($"{this.file.Id}.pdf"), Times.Once);
     }
 }

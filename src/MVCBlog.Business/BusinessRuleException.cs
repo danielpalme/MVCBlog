@@ -1,17 +1,14 @@
-﻿using System;
+﻿namespace MVCBlog.Business;
 
-namespace MVCBlog.Business
+[Serializable]
+public class BusinessRuleException : Exception
 {
-    [Serializable]
-    public class BusinessRuleException : Exception
+    public BusinessRuleException()
     {
-        public BusinessRuleException()
-        {
-        }
+    }
 
-        public BusinessRuleException(string message)
-            : base(message)
-        {
-        }
+    public BusinessRuleException(string message)
+        : base(message)
+    {
     }
 }

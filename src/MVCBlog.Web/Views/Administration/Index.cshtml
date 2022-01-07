@@ -15,7 +15,7 @@
         </div>
         <input asp-for="SearchTerm" class="form-control" placeholder="@Localizer["Search"]" />
     </div>
-    <input type="hidden" name="@nameof(Model.BlogEntries.Paging.Top)" value="@Model.BlogEntries.Paging.Top" />
+    <input type="hidden" name="@nameof(Model.BlogEntries.Paging.Top)" value="@Model!.BlogEntries!.Paging.Top" />
     <button type="submit" class="btn btn-primary btn-sm mb-2 mr-2">@Localizer["Filter"]</button>
     <button type="submit" name="Download" value="True" class="btn btn-success btn-sm mb-2"><i class="fa fa-file-excel" aria-hidden="true"></i> @Localizer["Download"]</button>
 </form>
@@ -32,10 +32,10 @@
             </colgroup>
             <thead>
                 <tr>
-                    <th paged-result="this.Model.BlogEntries" sort-column="@nameof(BlogEntry.Header)">@Html.DisplayNameFor(m => m.BlogEntries.First().Header)</th>
-                    <th paged-result="this.Model.BlogEntries" sort-column="@nameof(BlogEntry.PublishDate)">@Html.DisplayNameFor(m => m.BlogEntries.First().PublishDate)</th>
-                    <th paged-result="this.Model.BlogEntries" sort-column="@nameof(BlogEntry.UpdateDate)">@Html.DisplayNameFor(m => m.BlogEntries.First().UpdateDate)</th>
-                    <th paged-result="this.Model.BlogEntries" sort-column="@nameof(BlogEntry.Visits)" class="text-right">@Html.DisplayNameFor(m => m.BlogEntries.First().Visits)</th>
+                    <th paged-result="this.Model.BlogEntries" sort-column="@nameof(BlogEntry.Header)">@Html.DisplayNameFor(m => m.BlogEntries!.First().Header)</th>
+                    <th paged-result="this.Model.BlogEntries" sort-column="@nameof(BlogEntry.PublishDate)">@Html.DisplayNameFor(m => m.BlogEntries!.First().PublishDate)</th>
+                    <th paged-result="this.Model.BlogEntries" sort-column="@nameof(BlogEntry.UpdateDate)">@Html.DisplayNameFor(m => m.BlogEntries!.First().UpdateDate)</th>
+                    <th paged-result="this.Model.BlogEntries" sort-column="@nameof(BlogEntry.Visits)" class="text-right">@Html.DisplayNameFor(m => m.BlogEntries!.First().Visits)</th>
                     <th class="d-print-none"></th>
                 </tr>
             </thead>

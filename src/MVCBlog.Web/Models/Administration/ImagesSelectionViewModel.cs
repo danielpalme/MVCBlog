@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
-using MVCBlog.Data;
+﻿using MVCBlog.Data;
 
-namespace MVCBlog.Web.Models.Administration
+namespace MVCBlog.Web.Models.Administration;
+
+public class ImagesSelectionViewModel
 {
-    public class ImagesSelectionViewModel
+    public ImagesSelectionViewModel(List<Image> images)
     {
-        public List<Image> Images { get; set; }
+        this.Images = images;
     }
+
+    public List<Image> Images { get; set; }
 }

@@ -2,6 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>aspnet-MVCBlog.Web-768088B4-28CE-46B4-917F-901BEED46F57</UserSecretsId>
   </PropertyGroup>
 

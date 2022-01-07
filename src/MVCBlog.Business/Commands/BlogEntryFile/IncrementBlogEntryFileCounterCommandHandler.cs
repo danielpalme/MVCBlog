@@ -1,23 +1,21 @@
-﻿using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using MVCBlog.Data;
 
-namespace MVCBlog.Business.Commands
+namespace MVCBlog.Business.Commands;
+
+public class IncrementBlogEntryFileCounterCommandHandler :
+    ICommandHandler<IncrementBlogEntryFileCounterCommand>
 {
-    public class IncrementBlogEntryFileCounterCommandHandler :
-        ICommandHandler<IncrementBlogEntryFileCounterCommand>
+    private readonly EFUnitOfWork unitOfWork;
+
+    public IncrementBlogEntryFileCounterCommandHandler(EFUnitOfWork unitOfWork)
     {
-        private readonly EFUnitOfWork unitOfWork;
+        this.unitOfWork = unitOfWork;
+    }
 
-        public IncrementBlogEntryFileCounterCommandHandler(EFUnitOfWork unitOfWork)
-        {
-            this.unitOfWork = unitOfWork;
-        }
-
-        public async Task HandleAsync(IncrementBlogEntryFileCounterCommand command)
-        {
-            await this.unitOfWork.Database.ExecuteSqlInterpolatedAsync(
-                $"UPDATE [BlogEntryFiles] SET [Counter] = [Counter] + 1 WHERE [Id] = {command.Id}");
-        }
+    public async Task HandleAsync(IncrementBlogEntryFileCounterCommand command)
+    {
+        await this.unitOfWork.Database.ExecuteSqlInterpolatedAsync(
+            $"UPDATE [BlogEntryFiles] SET [Counter] = [Counter] + 1 WHERE [Id] = {command.Id}");
     }
 }

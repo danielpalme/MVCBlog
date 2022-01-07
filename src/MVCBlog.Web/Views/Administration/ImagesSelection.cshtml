@@ -1,7 +1,7 @@
 ﻿@model MVCBlog.Web.Models.Administration.ImagesSelectionViewModel
 @inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer
 
-@if (Model.Images.Count > 0)
+@if (Model!.Images.Count > 0)
 {
     foreach (var image in Model.Images)
     {

@@ -1,18 +1,16 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace MVCBlog.Data.Validation
+namespace MVCBlog.Data.Validation;
+
+public class EntityValidationResult
 {
-    public class EntityValidationResult
+    public EntityValidationResult(object entity, List<ValidationResult> validationResults)
     {
-        public EntityValidationResult(object entity, List<ValidationResult> validationResults)
-        {
-            this.Entity = entity;
-            this.ValidationErrors = validationResults;
-        }
-
-        public object Entity { get; set; }
-
-        public ICollection<ValidationResult> ValidationErrors { get; }
+        this.Entity = entity;
+        this.ValidationErrors = validationResults;
     }
+
+    public object Entity { get; set; }
+
+    public ICollection<ValidationResult> ValidationErrors { get; }
 }
