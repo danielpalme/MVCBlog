@@ -45,7 +45,7 @@ public class PagerTagHelper : TagHelper
                 }
                 else
                 {
-                    string url = this.httpContextAccessor.HttpContext!.Request.QueryString.Value!;
+                    string? url = this.httpContextAccessor.HttpContext?.Request.QueryString.Value;
                     string skip = (pagingIndexes[i] * this.PagedResult.Paging.Top).ToString();
                     url = url.SetParameters(KeyValuePair.Create("skip", skip));
 
