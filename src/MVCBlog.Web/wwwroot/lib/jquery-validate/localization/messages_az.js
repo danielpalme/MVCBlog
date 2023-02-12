@@ -1,3 +1,13 @@
+(function( factory ) {
+	if ( typeof define === "function" && define.amd ) {
+		define( ["jquery", "../jquery.validate"], factory );
+	} else if (typeof module === "object" && module.exports) {
+		module.exports = factory( require( "jquery" ) );
+	} else {
+		factory( jQuery );
+	}
+}(function( $ ) {
+
 /*
  * Translated default messages for the jQuery validation plugin.
  * Locale: Az (Azeri; azərbaycan dili)
@@ -19,5 +29,7 @@ $.extend( $.validator.messages, {
 	rangelength: $.validator.format( "Zəhmət olmasa, {0} - {1} aralığında uzunluğa malik simvol daxil edin." ),
 	range: $.validator.format( "Zəhmət olmasa, {0} - {1} aralığında rəqəm daxil edin." ),
 	max: $.validator.format( "Zəhmət olmasa, {0} və ondan kiçik rəqəm daxil edin." ),
-	min: $.validator.format( "Zəhmət olmasa, {0} və ondan böyük rəqəm daxil edin" )
+	min: $.validator.format( "Zəhmət olmasa, {0} və ondan böyük rəqəm daxil edin." )
 } );
+return $;
+}));

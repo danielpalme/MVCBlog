@@ -1,10 +1,20 @@
+(function( factory ) {
+	if ( typeof define === "function" && define.amd ) {
+		define( ["jquery", "../jquery.validate"], factory );
+	} else if (typeof module === "object" && module.exports) {
+		module.exports = factory( require( "jquery" ) );
+	} else {
+		factory( jQuery );
+	}
+}(function( $ ) {
+
 /**
  * @author  @tatocaster <kutaliatato@gmail.com>
  * Translated default messages for the jQuery validation plugin.
  * Locale: GE (Georgian; ქართული)
  */
 $.extend( $.validator.messages, {
-	required: "ეს ველი სავალდებულოა",
+	required: "ეს ველი სავალდებულოა.",
 	remote: "გთხოვთ შეასწოროთ.",
 	email: "გთხოვთ შეიყვანოთ სწორი ფორმატით.",
 	url: "გთხოვთ შეიყვანოთ სწორი ფორმატით.",
@@ -21,3 +31,5 @@ $.extend( $.validator.messages, {
 	max: $.validator.format( "გთხოვთ შეიყვანოთ მნიშვნელობა ნაკლები ან ტოლი {0} -ს." ),
 	min: $.validator.format( "გთხოვთ შეიყვანოთ მნიშვნელობა მეტი ან ტოლი {0} -ს." )
 } );
+return $;
+}));

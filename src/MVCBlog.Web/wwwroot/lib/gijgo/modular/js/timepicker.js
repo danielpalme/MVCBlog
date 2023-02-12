@@ -1,8 +1,8 @@
 /*
- * Gijgo TimePicker v1.9.13
+ * Gijgo TimePicker v1.9.14
  * http://gijgo.com/timepicker
  *
- * Copyright 2014, 2019 gijgo.com
+ * Copyright 2014, 2022 gijgo.com
  * Released under the MIT license
  */
 /* global window alert jQuery gj */
@@ -65,6 +65,16 @@ gj.timepicker.config = {
             clock: 'gj-picker gj-picker-bootstrap timepicker',
             footer: 'modal-footer',
             button: 'btn btn-default'
+        }
+    },
+
+    bootstrap5: {
+        style: {
+            wrapper: 'gj-timepicker gj-timepicker-bootstrap gj-unselectable input-group',
+            input: 'form-control border',
+            clock: 'gj-picker gj-picker-bootstrap timepicker',
+            footer: 'modal-footer',
+            button: 'btn  btn-outline-secondary'
         }
     }
 };

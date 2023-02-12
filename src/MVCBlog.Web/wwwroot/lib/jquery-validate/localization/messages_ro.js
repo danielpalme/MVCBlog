@@ -1,3 +1,13 @@
+(function( factory ) {
+	if ( typeof define === "function" && define.amd ) {
+		define( ["jquery", "../jquery.validate"], factory );
+	} else if (typeof module === "object" && module.exports) {
+		module.exports = factory( require( "jquery" ) );
+	} else {
+		factory( jQuery );
+	}
+}(function( $ ) {
+
 /*
  * Translated default messages for the jQuery validation plugin.
  * Locale: RO (Romanian, limba română)
@@ -5,7 +15,7 @@
 $.extend( $.validator.messages, {
 	required: "Acest câmp este obligatoriu.",
 	remote: "Te rugăm să completezi acest câmp.",
-	email: "Te rugăm să introduci o adresă de email validă",
+	email: "Te rugăm să introduci o adresă de email validă.",
 	url: "Te rugăm sa introduci o adresă URL validă.",
 	date: "Te rugăm să introduci o dată corectă.",
 	dateISO: "Te rugăm să introduci o dată (ISO) corectă.",
@@ -21,3 +31,5 @@ $.extend( $.validator.messages, {
 	max: $.validator.format( "Te rugăm să introduci o valoare egal sau mai mică decât {0}." ),
 	min: $.validator.format( "Te rugăm să introduci o valoare egal sau mai mare decât {0}." )
 } );
+return $;
+}));

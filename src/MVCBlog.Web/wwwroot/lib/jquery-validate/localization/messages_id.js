@@ -1,3 +1,13 @@
+(function( factory ) {
+	if ( typeof define === "function" && define.amd ) {
+		define( ["jquery", "../jquery.validate"], factory );
+	} else if (typeof module === "object" && module.exports) {
+		module.exports = factory( require( "jquery" ) );
+	} else {
+		factory( jQuery );
+	}
+}(function( $ ) {
+
 /*
  * Translated default messages for the jQuery validation plugin.
  * Locale: ID (Indonesia; Indonesian)
@@ -20,3 +30,5 @@ $.extend( $.validator.messages, {
 	max: $.validator.format( "Harap masukkan nilai lebih kecil atau sama dengan {0}." ),
 	min: $.validator.format( "Harap masukkan nilai lebih besar atau sama dengan {0}." )
 } );
+return $;
+}));

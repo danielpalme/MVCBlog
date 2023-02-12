@@ -1,8 +1,8 @@
 /*
- * Gijgo Tree v1.9.13
+ * Gijgo Tree v1.9.14
  * http://gijgo.com/tree
  *
- * Copyright 2014, 2019 gijgo.com
+ * Copyright 2014, 2022 gijgo.com
  * Released under the MIT license
  */
 /* global window alert jQuery gj */
@@ -84,6 +84,20 @@ gj.tree.config = {
     bootstrap4: {
         style: {
             wrapper: 'gj-unselectable gj-tree-bootstrap-4',
+            list: 'gj-list gj-list-bootstrap',
+            item: 'list-group-item',
+            active: 'active',
+            border: 'gj-tree-bootstrap-border'
+        },
+        icons: {
+            expand: '<i class="gj-icon plus" />',
+            collapse: '<i class="gj-icon minus" />'
+        }
+    },
+
+    bootstrap5: {
+        style: {
+            wrapper: 'gj-unselectable gj-tree-bootstrap-5',
             list: 'gj-list gj-list-bootstrap',
             item: 'list-group-item',
             active: 'active',

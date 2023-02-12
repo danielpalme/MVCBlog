@@ -1,3 +1,13 @@
+(function( factory ) {
+	if ( typeof define === "function" && define.amd ) {
+		define( ["jquery", "../jquery.validate"], factory );
+	} else if (typeof module === "object" && module.exports) {
+		module.exports = factory( require( "jquery" ) );
+	} else {
+		factory( jQuery );
+	}
+}(function( $ ) {
+
 /*
  * Translated default messages for the jQuery validation plugin.
  * Locale: JA (Japanese; 日本語)
@@ -22,3 +32,5 @@ $.extend( $.validator.messages, {
 	max: $.validator.format( "{0} 以下の値を入力してください。" ),
 	min: $.validator.format( "{0} 以上の値を入力してください。" )
 } );
+return $;
+}));

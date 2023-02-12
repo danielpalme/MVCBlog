@@ -1,3 +1,13 @@
+(function( factory ) {
+	if ( typeof define === "function" && define.amd ) {
+		define( ["jquery", "../jquery.validate"], factory );
+	} else if (typeof module === "object" && module.exports) {
+		module.exports = factory( require( "jquery" ) );
+	} else {
+		factory( jQuery );
+	}
+}(function( $ ) {
+
 /*
  * Translated default messages for the jQuery validation plugin.
  * Locale: CA (Catalan; català)
@@ -5,7 +15,7 @@
 $.extend( $.validator.messages, {
 	required: "Aquest camp és obligatori.",
 	remote: "Si us plau, omple aquest camp.",
-	email: "Si us plau, escriu una adreça de correu-e vàlida",
+	email: "Si us plau, escriu una adreça de correu-e vàlida.",
 	url: "Si us plau, escriu una URL vàlida.",
 	date: "Si us plau, escriu una data vàlida.",
 	dateISO: "Si us plau, escriu una data (ISO) vàlida.",
@@ -21,3 +31,5 @@ $.extend( $.validator.messages, {
 	max: $.validator.format( "Si us plau, escriu un valor menor o igual a {0}." ),
 	min: $.validator.format( "Si us plau, escriu un valor major o igual a {0}." )
 } );
+return $;
+}));

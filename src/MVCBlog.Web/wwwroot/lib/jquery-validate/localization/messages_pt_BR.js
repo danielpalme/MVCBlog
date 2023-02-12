@@ -1,3 +1,13 @@
+(function( factory ) {
+	if ( typeof define === "function" && define.amd ) {
+		define( ["jquery", "../jquery.validate"], factory );
+	} else if (typeof module === "object" && module.exports) {
+		module.exports = factory( require( "jquery" ) );
+	} else {
+		factory( jQuery );
+	}
+}(function( $ ) {
+
 /*
  * Translated default messages for the jQuery validation plugin.
  * Locale: PT (Portuguese; português)
@@ -71,9 +81,11 @@ $.extend( $.validator.messages, {
 	url2: "Por favor, forne&ccedil;a uma URL v&aacute;lida.",
 	vinUS: "O n&uacute;mero de identifica&ccedil;&atilde;o de ve&iacute;culo informado (VIN) &eacute; inv&aacute;lido.",
 	zipcodeUS: "Por favor, forne&ccedil;a um c&oacute;digo postal americano v&aacute;lido.",
-	ziprange: "O c&oacute;digo postal deve estar entre 902xx-xxxx e 905xx-xxxx",
+	ziprange: "O c&oacute;digo postal deve estar entre 902xx-xxxx e 905xx-xxxx.",
 	cpfBR: "Por favor, forne&ccedil;a um CPF v&aacute;lido.",
-	nisBR: "Por favor, forne&ccedil;a um NIS/PIS v&aacute;lido",
+	nisBR: "Por favor, forne&ccedil;a um NIS/PIS v&aacute;lido.",
 	cnhBR: "Por favor, forne&ccedil;a um CNH v&aacute;lido.",
 	cnpjBR: "Por favor, forne&ccedil;a um CNPJ v&aacute;lido."
 } );
+return $;
+}));

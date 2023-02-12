@@ -1,8 +1,8 @@
 /*
- * Gijgo DatePicker v1.9.13
+ * Gijgo DatePicker v1.9.14
  * http://gijgo.com/datepicker
  *
- * Copyright 2014, 2019 gijgo.com
+ * Copyright 2014, 2022 gijgo.com
  * Released under the MIT license
  */
 /* global window alert jQuery gj */
@@ -98,6 +98,17 @@ gj.datepicker.config = {
         showOtherMonths: true
     },
 
+    bootstrap5: {
+        style: {
+            wrapper: 'gj-datepicker gj-datepicker-bootstrap gj-unselectable input-group mb-3',
+            input: 'form-control',
+            calendar: 'gj-picker gj-picker-bootstrap datepicker gj-unselectable',
+            footer: 'modal-footer',
+            button: 'btn btn-outline-secondary'
+        },
+        showOtherMonths: true
+    },
+
     fontawesome: {
         icons: {
             rightIcon: '<i class="fa fa-calendar" aria-hidden="true"></i>',
@@ -141,7 +152,7 @@ gj.datepicker.methods = {
 
         data.fontSize && $datepicker.css('font-size', data.fontSize);
         
-        if (data.uiLibrary === 'bootstrap' || data.uiLibrary === 'bootstrap4') {
+        if (data.uiLibrary === 'bootstrap' || data.uiLibrary === 'bootstrap4' || data.uiLibrary === 'bootstrap5') {
             if (data.size === 'small') {
                 $wrapper.addClass('input-group-sm');
                 $datepicker.addClass('form-control-sm');
@@ -162,6 +173,8 @@ gj.datepicker.methods = {
                 $rightIcon = $('<span class="input-group-addon">' + data.icons.rightIcon + '</span>');
             } else if (data.uiLibrary === 'bootstrap4') {
                 $rightIcon = $('<span class="input-group-append"><button class="btn btn-outline-secondary border-left-0" type="button">' + data.icons.rightIcon + '</button></span>');
+            } else if (data.uiLibrary === 'bootstrap5') {
+                $rightIcon = $('<button class="btn btn-outline-secondary border-left-0" type="button">' + data.icons.rightIcon + '</button>');
             } else {
                 $rightIcon = $(data.icons.rightIcon);
             }

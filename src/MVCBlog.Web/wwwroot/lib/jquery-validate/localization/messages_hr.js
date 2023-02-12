@@ -1,3 +1,13 @@
+(function( factory ) {
+	if ( typeof define === "function" && define.amd ) {
+		define( ["jquery", "../jquery.validate"], factory );
+	} else if (typeof module === "object" && module.exports) {
+		module.exports = factory( require( "jquery" ) );
+	} else {
+		factory( jQuery );
+	}
+}(function( $ ) {
+
 /*
  * Translated default messages for the jQuery validation plugin.
  * Locale: HR (Croatia; hrvatski jezik)
@@ -21,3 +31,5 @@ $.extend( $.validator.messages, {
 	max: $.validator.format( "Unesite vrijednost manju ili jednaku {0}." ),
 	min: $.validator.format( "Unesite vrijednost veću ili jednaku {0}." )
 } );
+return $;
+}));
