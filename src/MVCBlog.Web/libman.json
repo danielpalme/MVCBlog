@@ -11,7 +11,7 @@
       "destination": "wwwroot/lib/fontawesome/"
     },
     {
-      "library": "jquery@3.6.3",
+      "library": "jquery@3.7.1",
       "destination": "wwwroot/lib/jquery/"
     },
     {
