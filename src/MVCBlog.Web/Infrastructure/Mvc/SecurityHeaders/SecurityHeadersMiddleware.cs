@@ -1,7 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-
-namespace MVCBlog.Web.Infrastructure.Mvc.SecurityHeaders;
+﻿namespace MVCBlog.Web.Infrastructure.Mvc.SecurityHeaders;
 
 public sealed class SecurityHeadersMiddleware
 {
@@ -31,21 +28,21 @@ public sealed class SecurityHeadersMiddleware
     {
         if (!string.IsNullOrEmpty(this.options.PermissionsPolicyHeader))
         {
-            context.Response.Headers.Add(PERMISSIONSPOLICYHEADER, this.options.PermissionsPolicyHeader);
+            context.Response.Headers.Append(PERMISSIONSPOLICYHEADER, this.options.PermissionsPolicyHeader);
         }
 
         if (!string.IsNullOrEmpty(this.options.CspHeader))
         {
-            context.Response.Headers.Add(CSPHEADER, this.options.CspHeader);
+            context.Response.Headers.Append(CSPHEADER, this.options.CspHeader);
         }
 
-        context.Response.Headers.Add(XFRAMEOPTIONSHEADER, this.options.XFrameOptionsHeader);
-        context.Response.Headers.Add(XXSSPROTECTIONHEADER, "1; mode=block");
-        context.Response.Headers.Add(XCONTENTTYPEOPTIONSHEADER, "nosniff");
+        context.Response.Headers.Append(XFRAMEOPTIONSHEADER, this.options.XFrameOptionsHeader);
+        context.Response.Headers.Append(XXSSPROTECTIONHEADER, "1; mode=block");
+        context.Response.Headers.Append(XCONTENTTYPEOPTIONSHEADER, "nosniff");
 
         if (this.options.ReferrerPolicyHeader != null)
         {
-            context.Response.Headers.Add(REFERRERPOLICYHEADER, this.options.ReferrerPolicyHeader);
+            context.Response.Headers.Append(REFERRERPOLICYHEADER, this.options.ReferrerPolicyHeader);
         }
 
         await this.next(context);

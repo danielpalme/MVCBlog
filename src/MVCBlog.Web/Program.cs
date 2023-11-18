@@ -92,7 +92,7 @@ foreach (var serviceType in typeof(ICommandHandler<>).Assembly.GetTypes())
 builder.Services.Decorate(typeof(ICommandHandler<>), typeof(CommandLoggingDecorator<>));
 
 builder.Services.AddHealthChecks()
-    .AddSqlServer(builder.Configuration["ConnectionStrings:EFUnitOfWork"])
+    .AddSqlServer(builder.Configuration["ConnectionStrings:EFUnitOfWork"]!)
     .AddCheck<LogfileHealthCheck>("Log files");
 
 var app = builder.Build();
@@ -163,13 +163,10 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllerRoute(
-        name: "default",
-        pattern: "{controller=Blog}/{action=Index}/{id?}");
-    endpoints.MapRazorPages();
-});
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Blog}/{action=Index}/{id?}");
+app.MapRazorPages();
 
 app.UseHealthChecks("/health", new HealthCheckOptions()
 {
