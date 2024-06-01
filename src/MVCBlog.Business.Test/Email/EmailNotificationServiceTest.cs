@@ -51,10 +51,10 @@ public class EmailNotificationServiceTest
     }
 
     [Fact]
-    public void SendNotification_MessageNull_ArgumentNullException()
+    public async Task SendNotification_MessageNull_ArgumentNullException()
     {
         var sut = new EmailNotificationService(this.mailSettings);
 
-        Assert.ThrowsAsync<ArgumentNullException>(() => sut.SendNotificationAsync(null!));
+        await Assert.ThrowsAsync<ArgumentNullException>(() => sut.SendNotificationAsync(null!));
     }
 }
