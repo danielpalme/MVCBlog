@@ -15,11 +15,18 @@ public class DeleteBlogEntryCommentCommandHandlerTest
     {
         this.unitOfWork = new InMemoryDatabaseFactory().CreateContext();
 
-        var blogEntry = new BlogEntry("Test", "test", "Test");
-
-        this.comment = new BlogEntryComment("Test", "Test")
+        var blogEntry = new BlogEntry()
         {
-            BlogEntryId = blogEntry.Id
+            Header = "Test",
+            Permalink = "Test",
+            ShortContent = "Test"
+        };
+
+        this.comment = new BlogEntryComment()
+        {
+            BlogEntryId = blogEntry.Id,
+            Name = "Test",
+            Comment = "Test"
         };
         this.unitOfWork.BlogEntries.Add(blogEntry);
         this.unitOfWork.BlogEntryComments.Add(this.comment);

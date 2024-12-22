@@ -22,12 +22,19 @@ public class DeleteBlogEntryCommandHandlerTest
         this.unitOfWork = new InMemoryDatabaseFactory().CreateContext();
         this.blogEntryFileFileProvider = new Mock<IBlogEntryFileFileProvider>();
 
-        this.blogEntry = new BlogEntry("test", "Test", "Test");
-
-        this.file = new BlogEntryFile("test.pdf")
+        this.blogEntry = new BlogEntry()
         {
-            BlogEntryId = this.blogEntry.Id
+            Header = "Test",
+            Permalink = "Test",
+            ShortContent = "Test"
         };
+
+        this.file = new BlogEntryFile()
+        {
+            BlogEntryId = this.blogEntry.Id,
+            Name = "test.pdf"
+        };
+
         this.unitOfWork.BlogEntries.Add(this.blogEntry);
         this.unitOfWork.BlogEntryFiles.Add(this.file);
         this.unitOfWork.SaveChanges();

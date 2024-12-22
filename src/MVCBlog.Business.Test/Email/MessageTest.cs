@@ -16,7 +16,7 @@ public class MessageTest
         Assert.Equal("Test", message.Subject);
         Assert.Equal("<p>Hello</p>", message.BodyAsHtml);
 
-        message = new Message(new[] { new Recipient("test@test.de"), new Recipient("test2@test.de") }, "Test", "<p>Hello</p>");
+        message = new Message([new Recipient("test@test.de"), new Recipient("test2@test.de")], "Test", "<p>Hello</p>");
 
         Assert.Equal(2, message.BccRecipients.Count);
         Assert.Equal("test@test.de", message.BccRecipients.First().Address);
@@ -58,7 +58,7 @@ public class MessageTest
     public void AddAttachment()
     {
         var message = new Message(new Recipient("test@test.de"), "Test", "<p>Hello</p>")
-            .AddAttachment(new Attachment("test.jpg", new byte[0]));
+            .AddAttachment(new Attachment("test.jpg", []));
 
         Assert.Single(message.Attachments);
     }
@@ -67,7 +67,7 @@ public class MessageTest
     public void AddEmbeddedImage()
     {
         var message = new Message(new Recipient("test@test.de"), "Test", "<p>Hello</p>")
-            .AddEmbeddedImage(new EmbeddedImage("test.jpg", new byte[0], "test.jpg"));
+            .AddEmbeddedImage(new EmbeddedImage("test.jpg", [], "test.jpg"));
 
         Assert.Single(message.EmbeddedImages);
     }

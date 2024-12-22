@@ -20,7 +20,10 @@ public class DeleteImageCommandHandlerTest
         this.unitOfWork = new InMemoryDatabaseFactory().CreateContext();
         this.imageFileProviderMock = new Mock<IImageFileProvider>();
 
-        this.image = new Image("path\\test.png");
+        this.image = new Image()
+        {
+            Name = "path\\test.png"
+        };
 
         this.unitOfWork.Images.Add(this.image);
         this.unitOfWork.SaveChanges();

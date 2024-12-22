@@ -1,5 +1,4 @@
-﻿using NPOI.SS.UserModel;
-using NPOI.SS.Util;
+﻿using NPOI.SS.Util;
 using NPOI.XSSF.UserModel;
 
 namespace MVCBlog.Web.Infrastructure.Excel;
@@ -63,7 +62,7 @@ public static class GenericExcelGenerator
         var sheet = workbook.CreateSheet(WorkbookUtil.CreateSafeSheetName(sheetElement.Name));
 
         XSSFFont font = (XSSFFont)workbook.CreateFont();
-        font.Boldweight = (short)FontBoldWeight.Bold;
+        font.IsBold = true;
         var boldStyle = workbook.CreateCellStyle();
         boldStyle.SetFont(font);
 

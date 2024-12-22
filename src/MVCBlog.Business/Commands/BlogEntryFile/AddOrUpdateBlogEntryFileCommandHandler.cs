@@ -28,7 +28,7 @@ public class AddOrUpdateBlogEntryFileCommandHandler : ICommandHandler<AddOrUpdat
 
         if (blogEntryFile == null)
         {
-            blogEntryFile = new BlogEntryFile(fileName)
+            blogEntryFile = new BlogEntryFile()
             {
                 BlogEntryId = command.BlogEntryId,
                 Name = fileName

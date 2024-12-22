@@ -16,11 +16,17 @@ public class IncrementBlogEntryFileCounterCommandHandlerTest
     {
         this.unitOfWork = new InMemoryDatabaseFactory().CreateContext();
 
-        var blogEntry = new BlogEntry("Test", "test", "Test");
-
-        this.file = new BlogEntryFile("test.png")
+        var blogEntry = new BlogEntry()
         {
-            BlogEntryId = blogEntry.Id
+            Header = "Test",
+            Permalink = "Test",
+            ShortContent = "Test"
+        };
+
+        this.file = new BlogEntryFile()
+        {
+            BlogEntryId = blogEntry.Id,
+            Name = "test.png"
         };
         this.unitOfWork.BlogEntries.Add(blogEntry);
         this.unitOfWork.BlogEntryFiles.Add(this.file);

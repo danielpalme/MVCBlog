@@ -1,6 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using MVCBlog.Data.Validation;
 
 namespace MVCBlog.Data;
@@ -52,8 +53,17 @@ public class EFUnitOfWork : IdentityDbContext<User>
         return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
     }
 
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        base.OnConfiguring(optionsBuilder);
+
+        optionsBuilder.ConfigureWarnings(w => w.Ignore(RelationalEventId.PendingModelChangesWarning));
+    }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
         foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
         {
             relationship.DeleteBehavior = DeleteBehavior.Cascade;
@@ -61,16 +71,6 @@ public class EFUnitOfWork : IdentityDbContext<User>
 
         modelBuilder.Entity<BlogEntryTag>()
             .HasKey(m => new { m.BlogEntryId, m.TagId });
-
-        modelBuilder.Entity<BlogEntry>()
-            .HasIndex(m => new { m.Permalink })
-            .IsUnique(true);
-
-        modelBuilder.Entity<Tag>()
-            .HasIndex(m => new { m.Name })
-            .IsUnique(true);
-
-        base.OnModelCreating(modelBuilder);
     }
 
     private void ValidateEntitíes()

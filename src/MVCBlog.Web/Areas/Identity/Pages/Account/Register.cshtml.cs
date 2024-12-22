@@ -95,8 +95,10 @@ namespace MVCBlog.Web.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new User(Input.FirstName, Input.LastName)
+                var user = new User()
                 {
+                    FirstName = Input.FirstName,
+                    LastName = Input.LastName,
                     UserName = Input.Email,
                     Email = Input.Email
                 };

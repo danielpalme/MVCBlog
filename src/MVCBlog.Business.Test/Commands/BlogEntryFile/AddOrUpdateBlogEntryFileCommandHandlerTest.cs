@@ -21,7 +21,12 @@ public class AddOrUpdateBlogEntryFileCommandHandlerTest
         this.unitOfWork = new InMemoryDatabaseFactory().CreateContext();
         this.blogEntryFileFileProvider = new Mock<IBlogEntryFileFileProvider>();
 
-        this.blogEntry = new BlogEntry("Test", "test", "Test");
+        this.blogEntry = new BlogEntry()
+        {
+            Header = "Test",
+            Permalink = "Test",
+            ShortContent = "Test"
+        };
 
         this.unitOfWork.BlogEntries.Add(this.blogEntry);
         this.unitOfWork.SaveChanges();
@@ -31,7 +36,7 @@ public class AddOrUpdateBlogEntryFileCommandHandlerTest
     public async Task AddBlogEntryFile()
     {
         var sut = new AddOrUpdateBlogEntryFileCommandHandler(this.unitOfWork, this.blogEntryFileFileProvider.Object);
-        await sut.HandleAsync(new AddOrUpdateBlogEntryFileCommand("path\\test.pdf", new byte[0], this.blogEntry.Id));
+        await sut.HandleAsync(new AddOrUpdateBlogEntryFileCommand("path\\test.pdf", [], this.blogEntry.Id));
 
         var files = this.unitOfWork.BlogEntryFiles.Where(i => i.Name == "test.pdf").ToList();
 
@@ -45,9 +50,9 @@ public class AddOrUpdateBlogEntryFileCommandHandlerTest
     public async Task UpdateBlogEntryFile()
     {
         var sut = new AddOrUpdateBlogEntryFileCommandHandler(this.unitOfWork, this.blogEntryFileFileProvider.Object);
-        await sut.HandleAsync(new AddOrUpdateBlogEntryFileCommand("path\\test.pdf", new byte[0], this.blogEntry.Id));
+        await sut.HandleAsync(new AddOrUpdateBlogEntryFileCommand("path\\test.pdf", [], this.blogEntry.Id));
 
-        await sut.HandleAsync(new AddOrUpdateBlogEntryFileCommand("path\\test.pdf", new byte[0], this.blogEntry.Id));
+        await sut.HandleAsync(new AddOrUpdateBlogEntryFileCommand("path\\test.pdf", [], this.blogEntry.Id));
 
         var files = this.unitOfWork.BlogEntryFiles.Where(i => i.Name == "test.pdf").ToList();
 

@@ -21,8 +21,13 @@ public class AddOrUpdateBlogEntryCommandHandlerTest
         var sut = new AddOrUpdateBlogEntryCommandHandler(this.unitOfWork);
 
         await sut.HandleAsync(new AddOrUpdateBlogEntryCommand(
-            new BlogEntry("Test", "test", "Test"),
-            new[] { "Tag1" }));
+            new BlogEntry()
+            {
+                Header = "Test",
+                Permalink = "Test",
+                ShortContent = "Test"
+            },
+            ["Tag1"]));
 
         Assert.Single(this.unitOfWork.BlogEntries);
         Assert.Single(this.unitOfWork.Tags);
@@ -34,11 +39,16 @@ public class AddOrUpdateBlogEntryCommandHandlerTest
     {
         var sut = new AddOrUpdateBlogEntryCommandHandler(this.unitOfWork);
 
-        var blogEntry = new BlogEntry("Test - Test", "test", "Test");
+        var blogEntry = new BlogEntry()
+        {
+            Header = "Test",
+            Permalink = "Test",
+            ShortContent = "Test"
+        };
 
         await sut.HandleAsync(new AddOrUpdateBlogEntryCommand(
             blogEntry,
-            new[] { "Tag1", "Tag2" }));
+            ["Tag1", "Tag2"]));
 
         Assert.Single(this.unitOfWork.BlogEntries);
         Assert.Equal(2, this.unitOfWork.Tags.Count());
@@ -46,11 +56,14 @@ public class AddOrUpdateBlogEntryCommandHandlerTest
         Assert.Equal("test-test", this.unitOfWork.BlogEntries.Single().Permalink);
 
         await sut.HandleAsync(new AddOrUpdateBlogEntryCommand(
-            new BlogEntry("Test2", "test2", "Test2")
+            new BlogEntry()
             {
-                Id = blogEntry.Id
+                Id = blogEntry.Id,
+                Header = "Test2",
+                Permalink = "Test2",
+                ShortContent = "Test2"
             },
-            new[] { "Tag2", "Tag3" }));
+            ["Tag2", "Tag3"]));
 
         Assert.Single(this.unitOfWork.BlogEntries);
         Assert.Equal(3, this.unitOfWork.Tags.Count());

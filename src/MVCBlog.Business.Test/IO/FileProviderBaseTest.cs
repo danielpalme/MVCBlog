@@ -35,7 +35,7 @@ public class FileProviderBaseTest : IDisposable
     [Fact]
     public async Task GetFileAsync_Exists()
     {
-        await this.fileProvider.AddFileAsync("test.txt", new byte[] { 0x00 });
+        await this.fileProvider.AddFileAsync("test.txt", [0x00]);
 
         var data = await this.fileProvider.GetFileAsync("test.txt");
         Assert.True(data.Length > 0);
@@ -44,7 +44,7 @@ public class FileProviderBaseTest : IDisposable
     [Fact]
     public async Task DeleteFileAsync()
     {
-        await this.fileProvider.AddFileAsync("test.txt", new byte[] { 0x00 });
+        await this.fileProvider.AddFileAsync("test.txt", [0x00]);
 
         await this.fileProvider.DeleteFileAsync("test.txt");
 

@@ -21,7 +21,12 @@ public class AddBlogEntryCommentCommandHandlerTest
         this.unitOfWork = new InMemoryDatabaseFactory().CreateContext();
         this.notificationsServiceMock = new Mock<INotificationService>();
 
-        this.blogEntry = new BlogEntry("Test", "test", "Test");
+        this.blogEntry = new BlogEntry()
+        {
+            Header = "Test",
+            Permalink = "Test",
+            ShortContent = "Test"
+        };
 
         this.unitOfWork.BlogEntries.Add(this.blogEntry);
         this.unitOfWork.SaveChanges();
@@ -39,9 +44,11 @@ public class AddBlogEntryCommentCommandHandlerTest
                 NotifyOnNewCommentsEmail = "test@test.de"
             }));
 
-        await sut.HandleAsync(new AddBlogEntryCommentCommand(new BlogEntryComment("Test", "Test")
+        await sut.HandleAsync(new AddBlogEntryCommentCommand(new BlogEntryComment()
         {
-            BlogEntryId = this.blogEntry.Id
+            BlogEntryId = this.blogEntry.Id,
+            Name = "Test",
+            Comment = "Test"
         }));
 
         Assert.Single(this.unitOfWork.BlogEntryComments);

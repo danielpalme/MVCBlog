@@ -73,7 +73,7 @@ public static class PagingExtensions
         var command = paging.SortDirection == SortDirection.Descending ? "OrderByDescending" : "OrderBy";
 
         // If sort column is a nested property like 'CreatedBy.FirstName'
-        var parts = paging.SortColumn.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
+        var parts = paging.SortColumn.Split(['.'], StringSplitOptions.RemoveEmptyEntries);
 
         PropertyInfo property = typeof(T).GetProperty(parts[0])!;
         MemberExpression member = Expression.MakeMemberAccess(parameter, property);
@@ -88,7 +88,7 @@ public static class PagingExtensions
         Expression resultExpression = Expression.Call(
             typeof(Queryable),
             command,
-            new Type[] { typeof(T), property.PropertyType },
+            [typeof(T), property.PropertyType],
             query.Expression,
             Expression.Quote(orderByExpression));
 
@@ -100,7 +100,7 @@ public static class PagingExtensions
             parameter = Expression.Parameter(typeof(T), "p");
 
             // If sort column is a nested property like 'CreatedBy.FirstName'
-            parts = sortCriteria.SortColumn.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
+            parts = sortCriteria.SortColumn.Split(['.'], StringSplitOptions.RemoveEmptyEntries);
 
             property = typeof(T).GetProperty(parts[0])!;
             member = Expression.MakeMemberAccess(parameter, property);
@@ -115,7 +115,7 @@ public static class PagingExtensions
             resultExpression = Expression.Call(
                 typeof(Queryable),
                 command,
-                new Type[] { typeof(T), property.PropertyType },
+                [typeof(T), property.PropertyType],
                 resultExpression,
                 Expression.Quote(orderByExpression));
         }

@@ -80,7 +80,7 @@ public class BlogController : Controller
 
         if (!string.IsNullOrEmpty(search))
         {
-            foreach (var item in search.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
+            foreach (var item in search.Split([' '], StringSplitOptions.RemoveEmptyEntries))
             {
                 query = query.Where(e => e.Header.Contains(item));
             }
@@ -176,8 +176,10 @@ public class BlogController : Controller
             return this.View(model);
         }
 
-        var blogEntryComment = new BlogEntryComment(model.Comment.Name, model.Comment.Comment)
+        var blogEntryComment = new BlogEntryComment()
         {
+            Name = model.Comment.Name,
+            Comment = model.Comment.Comment,
             Email = model.Comment.Email,
             Homepage = model.Comment.Homepage,
             AdminPost = this.User.Identity != null && this.User.Identity.IsAuthenticated,
@@ -275,7 +277,7 @@ public class BlogController : Controller
     {
         await this.deleteBlogEntryCommentCommandHander.HandleAsync(new DeleteBlogEntryCommentCommand(id));
 
-        return this.Redirect(this.Request.Headers["Referer"]);
+        return this.Redirect(this.Request.Headers.Referer!);
     }
 
     /// <summary>

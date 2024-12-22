@@ -1,40 +1,26 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 using MVCBlog.Localization;
 
 namespace MVCBlog.Data;
 
+[Index(nameof(Permalink), IsUnique = true)]
 public class BlogEntry : EntityBase
 {
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-    public BlogEntry()
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-    {
-    }
-
-    public BlogEntry(
-        string header,
-        string permalink,
-        string shortContent)
-    {
-        this.Header = header;
-        this.Permalink = permalink;
-        this.ShortContent = shortContent;
-    }
-
     [StringLength(150, ErrorMessageResourceName = nameof(Resources.Validation_MaxLength), ErrorMessageResourceType = typeof(Resources))]
     [Required(ErrorMessageResourceName = nameof(Resources.Validation_Required), ErrorMessageResourceType = typeof(Resources))]
     [Display(Name = nameof(Resources.Header), ResourceType = typeof(Resources))]
-    public string Header { get; set; }
+    public required string Header { get; set; }
 
     [StringLength(160, ErrorMessageResourceName = nameof(Resources.Validation_MaxLength), ErrorMessageResourceType = typeof(Resources))]
     [Required(ErrorMessageResourceName = nameof(Resources.Validation_Required), ErrorMessageResourceType = typeof(Resources))]
-    public string Permalink { get; set; }
+    public required string Permalink { get; set; }
 
     [StringLength(1500, ErrorMessageResourceName = nameof(Resources.Validation_MaxLength), ErrorMessageResourceType = typeof(Resources))]
     [Required(ErrorMessageResourceName = nameof(Resources.Validation_Required), ErrorMessageResourceType = typeof(Resources))]
     [Display(Name = nameof(Resources.ShortContent), ResourceType = typeof(Resources))]
-    public string ShortContent { get; set; }
+    public required string ShortContent { get; set; }
 
     [Display(Name = nameof(Resources.Content), ResourceType = typeof(Resources))]
     public string? Content { get; set; }

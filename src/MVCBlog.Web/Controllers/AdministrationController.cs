@@ -95,8 +95,11 @@ public class AdministrationController : Controller
 
         if (id == null)
         {
-            entry = new BlogEntry(string.Empty, string.Empty, string.Empty)
+            entry = new BlogEntry()
             {
+                Header = string.Empty,
+                Permalink = string.Empty,
+                ShortContent = string.Empty,
                 AuthorId = this.userManager.GetUserId(this.User),
                 PublishDate = DateTimeOffset.UtcNow,
                 Tags = new Collection<BlogEntryTag>()
@@ -170,7 +173,7 @@ public class AdministrationController : Controller
 
         this.SetSuccessMessage(Resources.DeletedSuccessfully);
 
-        return this.Redirect(this.Request.Headers["Referer"]);
+        return this.Redirect(this.Request.Headers.Referer!);
     }
 
     [HttpPost]
@@ -179,7 +182,7 @@ public class AdministrationController : Controller
     {
         if (!this.ModelState.IsValid)
         {
-            return this.Redirect(this.Request.Headers["Referer"]);
+            return this.Redirect(this.Request.Headers.Referer!);
         }
 
         using (var memoryStream = new MemoryStream())
@@ -195,7 +198,7 @@ public class AdministrationController : Controller
 
         this.SetSuccessMessage(Resources.SavedSuccessfully);
 
-        return this.Redirect(this.Request.Headers["Referer"]);
+        return this.Redirect(this.Request.Headers.Referer!);
     }
 
     public async Task<ActionResult> DeleteBlogEntryFile(Guid? id)
@@ -207,7 +210,7 @@ public class AdministrationController : Controller
 
         await this.deleteBlogEntryFileCommandHandler.HandleAsync(new DeleteBlogEntryFileCommand(id.Value));
 
-        return this.Redirect(this.Request.Headers["Referer"]);
+        return this.Redirect(this.Request.Headers.Referer!);
     }
 
     public async Task<ActionResult> ImagesSelection()

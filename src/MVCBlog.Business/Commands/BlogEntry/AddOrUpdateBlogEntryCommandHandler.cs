@@ -86,7 +86,10 @@ public class AddOrUpdateBlogEntryCommandHandler :
 
             if (existingTag == null)
             {
-                existingTag = new Tag(tag);
+                existingTag = new Tag()
+                {
+                    Name = tag
+                };
                 existingTags.Add(existingTag);
 
                 this.unitOfWork.Tags.Add(existingTag);

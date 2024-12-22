@@ -54,7 +54,7 @@
             <h3>@Localizer["Tags"]</h3>
             @foreach (var tag in Model.Tags)
             {
-                <i class="fas fa-tag"></i> <a asp-controller="Blog" asp-action="Index" asp-route-tag="@tag.Name" class="text-nowrap">@tag.Name</a>
+                <span class="mr-2" style="white-space: nowrap"><i class="fas fa-tag text-secondary"></i> <a asp-controller="Blog" asp-action="Index" asp-route-tag="@tag.Name" class="text-nowrap">@tag.Name</a></span>
             }
         }
 

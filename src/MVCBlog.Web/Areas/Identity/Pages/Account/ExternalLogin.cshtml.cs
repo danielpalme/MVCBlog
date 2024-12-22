@@ -117,8 +117,10 @@ namespace MVCBlog.Web.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                var user = new User("-", "-")
+                var user = new User()
                 {
+                    FirstName = "-",
+                    LastName = "-",
                     UserName = Input.Email,
                     Email = Input.Email
                 };

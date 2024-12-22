@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using MVCBlog.Localization;
 
 namespace MVCBlog.Data;

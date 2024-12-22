@@ -22,7 +22,10 @@ public class AddImageCommandHandler : ICommandHandler<AddImageCommand>
 
         string extension = fileName.Substring(fileName.LastIndexOf('.') + 1);
 
-        var image = new Image(fileName);
+        var image = new Image()
+        {
+            Name = fileName
+        };
 
         this.unitOfWork.Images.Add(image);
 

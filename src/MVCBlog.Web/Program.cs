@@ -185,7 +185,7 @@ Log.Logger = new LoggerConfiguration()
 using (var serviceScope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
 {
     var context = serviceScope.ServiceProvider.GetService<EFUnitOfWork>();
-    context!.Database.Migrate();
+    await context!.Database.MigrateAsync();
 }
 
 try

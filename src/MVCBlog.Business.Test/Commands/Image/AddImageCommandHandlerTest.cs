@@ -24,7 +24,7 @@ public class AddImageCommandHandlerTest
     public async Task AddImage()
     {
         var sut = new AddImageCommandHandler(this.unitOfWork, this.imageFileProviderMock.Object);
-        await sut.HandleAsync(new AddImageCommand("path\\test.png", new byte[0]));
+        await sut.HandleAsync(new AddImageCommand("path\\test.png", []));
 
         var images = this.unitOfWork.Images.Where(i => i.Name == "test.png").ToList();
 

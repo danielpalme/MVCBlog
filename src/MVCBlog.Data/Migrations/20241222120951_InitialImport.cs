@@ -1,21 +1,24 @@
 ﻿using System;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
+
+#nullable disable
 
 namespace MVCBlog.Data.Migrations
 {
+    /// <inheritdoc />
     public partial class InitialImport : Migration
     {
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
                 {
-                    Id = table.Column<string>(nullable: false),
-                    Name = table.Column<string>(maxLength: 256, nullable: true),
-                    NormalizedName = table.Column<string>(maxLength: 256, nullable: true),
-                    ConcurrencyStamp = table.Column<string>(nullable: true)
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -26,23 +29,23 @@ namespace MVCBlog.Data.Migrations
                 name: "AspNetUsers",
                 columns: table => new
                 {
-                    Id = table.Column<string>(nullable: false),
-                    UserName = table.Column<string>(maxLength: 256, nullable: true),
-                    NormalizedUserName = table.Column<string>(maxLength: 256, nullable: true),
-                    Email = table.Column<string>(maxLength: 256, nullable: true),
-                    NormalizedEmail = table.Column<string>(maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(nullable: false),
-                    PasswordHash = table.Column<string>(nullable: true),
-                    SecurityStamp = table.Column<string>(nullable: true),
-                    ConcurrencyStamp = table.Column<string>(nullable: true),
-                    PhoneNumber = table.Column<string>(nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
-                    LockoutEnabled = table.Column<bool>(nullable: false),
-                    AccessFailedCount = table.Column<int>(nullable: false),
-                    FirstName = table.Column<string>(maxLength: 100, nullable: false),
-                    LastName = table.Column<string>(maxLength: 100, nullable: false)
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -53,9 +56,9 @@ namespace MVCBlog.Data.Migrations
                 name: "Images",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
-                    CreatedOn = table.Column<DateTimeOffset>(nullable: false),
-                    Name = table.Column<string>(maxLength: 50, nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    CreatedOn = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -66,9 +69,9 @@ namespace MVCBlog.Data.Migrations
                 name: "Tags",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
-                    CreatedOn = table.Column<DateTimeOffset>(nullable: false),
-                    Name = table.Column<string>(maxLength: 30, nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    CreatedOn = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -79,11 +82,11 @@ namespace MVCBlog.Data.Migrations
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    RoleId = table.Column<string>(nullable: false),
-                    ClaimType = table.Column<string>(nullable: true),
-                    ClaimValue = table.Column<string>(nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -100,11 +103,11 @@ namespace MVCBlog.Data.Migrations
                 name: "AspNetUserClaims",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    UserId = table.Column<string>(nullable: false),
-                    ClaimType = table.Column<string>(nullable: true),
-                    ClaimValue = table.Column<string>(nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -121,10 +124,10 @@ namespace MVCBlog.Data.Migrations
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(nullable: false),
-                    ProviderKey = table.Column<string>(nullable: false),
-                    ProviderDisplayName = table.Column<string>(nullable: true),
-                    UserId = table.Column<string>(nullable: false)
+                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ProviderKey = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -141,8 +144,8 @@ namespace MVCBlog.Data.Migrations
                 name: "AspNetUserRoles",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(nullable: false),
-                    RoleId = table.Column<string>(nullable: false)
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -165,10 +168,10 @@ namespace MVCBlog.Data.Migrations
                 name: "AspNetUserTokens",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(nullable: false),
-                    LoginProvider = table.Column<string>(nullable: false),
-                    Name = table.Column<string>(nullable: false),
-                    Value = table.Column<string>(nullable: true)
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -185,17 +188,17 @@ namespace MVCBlog.Data.Migrations
                 name: "BlogEntries",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
-                    CreatedOn = table.Column<DateTimeOffset>(nullable: false),
-                    Header = table.Column<string>(maxLength: 150, nullable: false),
-                    Permalink = table.Column<string>(maxLength: 160, nullable: false),
-                    ShortContent = table.Column<string>(maxLength: 1500, nullable: false),
-                    Content = table.Column<string>(nullable: true),
-                    Visible = table.Column<bool>(nullable: false),
-                    PublishDate = table.Column<DateTimeOffset>(nullable: false),
-                    UpdateDate = table.Column<DateTimeOffset>(nullable: false),
-                    Visits = table.Column<int>(nullable: false),
-                    AuthorId = table.Column<string>(nullable: true)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Header = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
+                    Permalink = table.Column<string>(type: "nvarchar(160)", maxLength: 160, nullable: false),
+                    ShortContent = table.Column<string>(type: "nvarchar(1500)", maxLength: 1500, nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Visible = table.Column<bool>(type: "bit", nullable: false),
+                    PublishDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    UpdateDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    Visits = table.Column<int>(type: "int", nullable: false),
+                    AuthorId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    CreatedOn = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -212,14 +215,14 @@ namespace MVCBlog.Data.Migrations
                 name: "BlogEntryComments",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
-                    CreatedOn = table.Column<DateTimeOffset>(nullable: false),
-                    Name = table.Column<string>(maxLength: 50, nullable: false),
-                    Comment = table.Column<string>(nullable: false),
-                    Email = table.Column<string>(maxLength: 50, nullable: true),
-                    Homepage = table.Column<string>(maxLength: 100, nullable: true),
-                    AdminPost = table.Column<bool>(nullable: false),
-                    BlogEntryId = table.Column<Guid>(nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Comment = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    Homepage = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    AdminPost = table.Column<bool>(type: "bit", nullable: false),
+                    BlogEntryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedOn = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -236,11 +239,11 @@ namespace MVCBlog.Data.Migrations
                 name: "BlogEntryFiles",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
-                    CreatedOn = table.Column<DateTimeOffset>(nullable: false),
-                    Name = table.Column<string>(maxLength: 100, nullable: false),
-                    Counter = table.Column<int>(nullable: false),
-                    BlogEntryId = table.Column<Guid>(nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Counter = table.Column<int>(type: "int", nullable: false),
+                    BlogEntryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedOn = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -257,8 +260,8 @@ namespace MVCBlog.Data.Migrations
                 name: "BlogEntryTags",
                 columns: table => new
                 {
-                    BlogEntryId = table.Column<Guid>(nullable: false),
-                    TagId = table.Column<Guid>(nullable: false)
+                    BlogEntryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TagId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -349,6 +352,7 @@ namespace MVCBlog.Data.Migrations
                 unique: true);
         }
 
+        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(

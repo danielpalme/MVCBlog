@@ -16,7 +16,12 @@ public class IncrementBlogEntryVisitsCommandHandlerTest
     {
         this.unitOfWork = new InMemoryDatabaseFactory().CreateContext();
 
-        this.blogEntry = new BlogEntry("Test", "test", "Test");
+        this.blogEntry = new BlogEntry()
+        {
+            Header = "Test",
+            Permalink = "Test",
+            ShortContent = "Test"
+        };
 
         this.unitOfWork.BlogEntries.Add(this.blogEntry);
         this.unitOfWork.SaveChanges();
