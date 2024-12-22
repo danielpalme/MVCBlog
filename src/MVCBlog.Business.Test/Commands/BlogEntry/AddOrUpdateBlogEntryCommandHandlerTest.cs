@@ -41,7 +41,7 @@ public class AddOrUpdateBlogEntryCommandHandlerTest
 
         var blogEntry = new BlogEntry()
         {
-            Header = "Test",
+            Header = "Test - Test",
             Permalink = "Test",
             ShortContent = "Test"
         };
@@ -60,7 +60,7 @@ public class AddOrUpdateBlogEntryCommandHandlerTest
             {
                 Id = blogEntry.Id,
                 Header = "Test2",
-                Permalink = "Test2",
+                Permalink = "test2",
                 ShortContent = "Test2"
             },
             ["Tag2", "Tag3"]));
