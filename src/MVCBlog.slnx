@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path="stylecop.ruleset" />
+  </Folder>
+  <Project Path="MVCBlog.Business.Test/MVCBlog.Business.Test.csproj" />
+  <Project Path="MVCBlog.Business/MVCBlog.Business.csproj" />
+  <Project Path="MVCBlog.Data/MVCBlog.Data.csproj" />
+  <Project Path="MVCBlog.Localization/MVCBlog.Localization.csproj" />
+  <Project Path="MVCBlog.Web/MVCBlog.Web.csproj" />
+</Solution>
