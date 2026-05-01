@@ -7,7 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="MailKit" Version="4.16.0" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.6" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.7" />
   </ItemGroup>
   
   <ItemGroup>
