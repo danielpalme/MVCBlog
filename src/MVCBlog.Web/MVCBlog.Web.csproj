@@ -24,7 +24,7 @@
     <PackageReference Include="Scrutor" Version="7.0.0" />
     <PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
     <PackageReference Include="Serilog.Extensions.Logging.File" Version="3.0.0" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.11" ExcludeAssets="runtime" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="4.1.2" ExcludeAssets="runtime" />
   </ItemGroup>
 
   <ItemGroup>
