@@ -7,5 +7,5 @@ public class UsersViewModel
 {
     public string? SearchTerm { get; set; }
 
-    public PagedResult<User>? Users { get; set; }
+    public PagedResult<User> Users { get; set; } = null!;
 }

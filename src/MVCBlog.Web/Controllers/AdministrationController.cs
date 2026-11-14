@@ -322,7 +322,7 @@ public class AdministrationController : Controller
             {
                 if (part.Contains("@"))
                 {
-                    query = query.Where(u => u.Email.Contains(part));
+                    query = query.Where(u => u.Email!.Contains(part));
                 }
                 else
                 {

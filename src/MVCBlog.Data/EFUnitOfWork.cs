@@ -27,28 +27,28 @@ public class EFUnitOfWork : IdentityDbContext<User>
 
     public override int SaveChanges()
     {
-        this.ValidateEntitíes();
+        this.ValidateEntities();
 
         return base.SaveChanges();
     }
 
     public override int SaveChanges(bool acceptAllChangesOnSuccess)
     {
-        this.ValidateEntitíes();
+        this.ValidateEntities();
 
         return base.SaveChanges(acceptAllChangesOnSuccess);
     }
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
     {
-        this.ValidateEntitíes();
+        this.ValidateEntities();
 
         return base.SaveChangesAsync(cancellationToken);
     }
 
     public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default(CancellationToken))
     {
-        this.ValidateEntitíes();
+        this.ValidateEntities();
 
         return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
     }
@@ -60,20 +60,20 @@ public class EFUnitOfWork : IdentityDbContext<User>
         optionsBuilder.ConfigureWarnings(w => w.Ignore(RelationalEventId.PendingModelChangesWarning));
     }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    protected override void OnModelCreating(ModelBuilder builder)
     {
-        base.OnModelCreating(modelBuilder);
+        base.OnModelCreating(builder);
 
-        foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
+        foreach (var relationship in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
         {
             relationship.DeleteBehavior = DeleteBehavior.Cascade;
         }
 
-        modelBuilder.Entity<BlogEntryTag>()
+        builder.Entity<BlogEntryTag>()
             .HasKey(m => new { m.BlogEntryId, m.TagId });
     }
 
-    private void ValidateEntitíes()
+    private void ValidateEntities()
     {
         var addedOrModifiedEntities = this.ChangeTracker.Entries()
             .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified);

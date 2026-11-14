@@ -7,5 +7,5 @@ public class IndexViewModel
 {
     public string? SearchTerm { get; set; }
 
-    public PagedResult<BlogEntry>? BlogEntries { get; set; }
+    public PagedResult<BlogEntry> BlogEntries { get; set; } = null!;
 }

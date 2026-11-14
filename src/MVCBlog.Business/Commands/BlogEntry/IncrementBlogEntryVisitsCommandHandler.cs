@@ -15,7 +15,7 @@ public class IncrementBlogEntryVisitsCommandHandler :
 
     public async Task HandleAsync(IncrementBlogEntryVisitsCommand command)
     {
-        await this.unitOfWork.Database.ExecuteSqlInterpolatedAsync(
+        await this.unitOfWork.Database.ExecuteSqlAsync(
             $"UPDATE [BlogEntries] SET [Visits] = [Visits] + 1 WHERE [Id] = {command.Id}");
     }
 }

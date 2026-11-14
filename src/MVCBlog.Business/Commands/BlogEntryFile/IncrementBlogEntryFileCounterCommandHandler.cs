@@ -15,7 +15,7 @@ public class IncrementBlogEntryFileCounterCommandHandler :
 
     public async Task HandleAsync(IncrementBlogEntryFileCounterCommand command)
     {
-        await this.unitOfWork.Database.ExecuteSqlInterpolatedAsync(
+        await this.unitOfWork.Database.ExecuteSqlAsync(
             $"UPDATE [BlogEntryFiles] SET [Counter] = [Counter] + 1 WHERE [Id] = {command.Id}");
     }
 }

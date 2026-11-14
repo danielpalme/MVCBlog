@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using MailKit.Net.Smtp;
+using Microsoft.Extensions.Options;
 using MimeKit;
 
 namespace MVCBlog.Business.Email;
@@ -70,20 +71,9 @@ public class EmailNotificationService : INotificationService
         {
             using (var client = new MailKit.Net.Smtp.SmtpClient())
             {
-                // TODO: Validate certificate?!
-
-                // For demo-purposes, accept all SSL certificates (in case the server supports STARTTLS)
-                client.ServerCertificateValidationCallback = (s, c, h, e) => true;
-
                 await client.ConnectAsync(this.mailSettings.MailHost, this.mailSettings.MailPort, this.mailSettings.UseSsl);
-
-                // Note: since we don't have an OAuth2 token, disable
-                // the XOAUTH2 authentication mechanism.
-                client.AuthenticationMechanisms.Remove("XOAUTH2");
-
                 await client.AuthenticateAsync(this.mailSettings.MailUserName, this.mailSettings.MailPassword);
-
-                await client.SendAsync(mimeMessage);
+                await client.SendAsync(new SmtpSendRequest(mimeMessage));
                 await client.DisconnectAsync(true);
             }
         }
@@ -101,9 +91,9 @@ public class EmailNotificationService : INotificationService
 
     private static MailboxAddress Convert(Recipient recipient)
     {
-        var mailboxAdress = recipient.Name != null ?
-                new MailboxAddress(recipient.Name, recipient.Address)
-                : MailboxAddress.Parse(recipient.Address);
+        var mailboxAdress = recipient.Name != null
+            ? new MailboxAddress(recipient.Name, recipient.Address)
+            : MailboxAddress.Parse(recipient.Address);
 
         return mailboxAdress;
     }

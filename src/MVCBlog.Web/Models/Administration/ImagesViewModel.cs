@@ -9,7 +9,7 @@ public class ImagesViewModel
 {
     public string? SearchTerm { get; set; }
 
-    public PagedResult<Image>? Images { get; set; }
+    public PagedResult<Image> Images { get; set; } = null!;
 
     [Required(ErrorMessageResourceName = nameof(Resources.Validation_Required), ErrorMessageResourceType = typeof(Resources))]
     public IFormFile? Image { get; set; }
