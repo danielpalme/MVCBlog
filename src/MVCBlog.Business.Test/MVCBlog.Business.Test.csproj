@@ -28,9 +28,4 @@
   <ItemGroup>
     <Folder Include="Commands\" />
   </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Update="StyleCop.Analyzers" Version="1.3.180" />
-  </ItemGroup>
-
 </Project>

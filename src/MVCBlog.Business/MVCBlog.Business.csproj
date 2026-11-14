@@ -14,9 +14,4 @@
     <ProjectReference Include="..\MVCBlog.Data\MVCBlog.Data.csproj" />
     <ProjectReference Include="..\MVCBlog.Localization\MVCBlog.Localization.csproj" />
   </ItemGroup>
-  
-  <ItemGroup>
-    <PackageReference Update="StyleCop.Analyzers" Version="1.3.180" />
-  </ItemGroup>
-
 </Project>
